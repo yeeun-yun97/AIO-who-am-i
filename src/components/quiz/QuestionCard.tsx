@@ -6,36 +6,36 @@ import OptionButton from './OptionButton';
 
 interface QuestionCardProps {
   question: Question;
-  selectedOptionId?: string;
+  selectedOptionKey?: string;
   onSelectOption: (answer: Answer) => void;
 }
 
 export default function QuestionCard({
   question,
-  selectedOptionId,
+  selectedOptionKey,
   onSelectOption,
 }: QuestionCardProps) {
-  const handleSelect = (optionId: string) => {
-    const option = question.options.find((o) => o.id === optionId);
+  const handleSelect = (optionKey: string) => {
+    const option = question.options.find((o) => o.key === optionKey);
     if (option) {
       onSelectOption({
         questionId: question.id,
-        optionId: option.id,
-        scores: option.scores,
+        optionKey: option.key,
+        score: option.score,
       });
     }
   };
 
   return (
     <Card className="w-full max-w-lg mx-auto">
-      <h2 className="text-xl font-bold text-[#191F28] mb-6 leading-relaxed">{question.text}</h2>
+      <h2 className="text-xl font-bold text-[#191F28] mb-6 leading-relaxed">{question.question}</h2>
       <div className="space-y-3">
         {question.options.map((option) => (
           <OptionButton
-            key={option.id}
+            key={option.key}
             text={option.text}
-            selected={selectedOptionId === option.id}
-            onClick={() => handleSelect(option.id)}
+            selected={selectedOptionKey === option.key}
+            onClick={() => handleSelect(option.key)}
           />
         ))}
       </div>

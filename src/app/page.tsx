@@ -1,21 +1,38 @@
 'use client';
 
-import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import { useQuiz } from '@/contexts/QuizContext';
 
 export default function Home() {
-  const { reset } = useQuiz();
+  const router = useRouter();
+  const { reset, setUserInfo } = useQuiz();
+
+  const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [birthTime, setBirthTime] = useState('');
+  const [unknownTime, setUnknownTime] = useState(false);
+
+  const isFormValid = name.trim() !== '' && birthDate !== '';
 
   const handleStart = () => {
+    if (!isFormValid) return;
+
     reset();
+    setUserInfo({
+      name: name.trim(),
+      birthDate,
+      birthTime: unknownTime ? null : birthTime || null,
+    });
+    router.push('/quiz');
   };
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4 py-12">
-      <Card className="max-w-md w-full text-center p-8 md:p-12">
-        <div className="mb-8">
+      <Card className="max-w-md w-full p-8 md:p-12">
+        <div className="text-center mb-8">
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#3182F6]/10 flex items-center justify-center">
             <svg
               className="w-8 h-8 text-[#3182F6]"
@@ -35,8 +52,67 @@ export default function Home() {
             나를 알아가는 여정
           </h1>
           <p className="text-base text-[#8B95A1] leading-relaxed">
-            20개의 질문으로 발견하는 나의 성향
+            33개의 질문으로 알아보는 MBTI와 기질
           </p>
+        </div>
+
+        {/* 사용자 정보 입력 폼 */}
+        <div className="space-y-4 mb-8">
+          {/* 이름 */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-[#191F28] mb-2">
+              이름 <span className="text-[#F04452]">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="이름을 입력하세요"
+              className="w-full px-4 py-3 bg-[#F4F4F4] border-2 border-transparent rounded-xl text-[#191F28] placeholder-[#B0B8C1] focus:bg-white focus:border-[#3182F6] focus:outline-none transition-all duration-200"
+            />
+          </div>
+
+          {/* 생년월일 */}
+          <div>
+            <label htmlFor="birthDate" className="block text-sm font-medium text-[#191F28] mb-2">
+              생년월일 <span className="text-[#F04452]">*</span>
+            </label>
+            <input
+              type="date"
+              id="birthDate"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              className="w-full px-4 py-3 bg-[#F4F4F4] border-2 border-transparent rounded-xl text-[#191F28] focus:bg-white focus:border-[#3182F6] focus:outline-none transition-all duration-200"
+            />
+          </div>
+
+          {/* 태어난 시간 */}
+          <div>
+            <label htmlFor="birthTime" className="block text-sm font-medium text-[#191F28] mb-2">
+              태어난 시간
+            </label>
+            <input
+              type="time"
+              id="birthTime"
+              value={birthTime}
+              onChange={(e) => setBirthTime(e.target.value)}
+              disabled={unknownTime}
+              className="w-full px-4 py-3 bg-[#F4F4F4] border-2 border-transparent rounded-xl text-[#191F28] focus:bg-white focus:border-[#3182F6] focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            <label className="flex items-center gap-2 mt-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={unknownTime}
+                onChange={(e) => {
+                  setUnknownTime(e.target.checked);
+                  if (e.target.checked) setBirthTime('');
+                }}
+                className="w-4 h-4 rounded border-[#B0B8C1] text-[#3182F6] focus:ring-[#3182F6]"
+              />
+              <span className="text-sm text-[#8B95A1]">모르겠음</span>
+            </label>
+          </div>
         </div>
 
         <div className="bg-[#F4F4F4] rounded-xl p-4 mb-8">
@@ -49,16 +125,16 @@ export default function Home() {
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-sm">약 3-5분 소요</span>
+            <span className="text-sm">약 5-7분 소요</span>
           </div>
         </div>
 
-        <Link href="/quiz" onClick={handleStart} className="block w-full">
-          <Button size="large">시작하기</Button>
-        </Link>
+        <Button size="large" onClick={handleStart} disabled={!isFormValid}>
+          시작하기
+        </Button>
 
-        <p className="mt-6 text-xs text-[#B0B8C1]">
-          선택한 답변은 저장되지 않으며, 결과는 즉시 확인할 수 있습니다.
+        <p className="mt-6 text-xs text-[#B0B8C1] text-center">
+          입력한 정보는 결과 화면에만 표시되며, 서버에 저장되지 않습니다.
         </p>
       </Card>
     </main>

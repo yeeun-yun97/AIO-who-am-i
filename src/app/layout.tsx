@@ -4,7 +4,7 @@ import { QuizProvider } from '@/contexts/QuizContext';
 
 export const metadata: Metadata = {
   title: '나를 알아가는 여정',
-  description: '20개의 질문으로 발견하는 나의 성향',
+  description: '33개의 질문으로 알아보는 MBTI와 기질',
 };
 
 export default function RootLayout({
