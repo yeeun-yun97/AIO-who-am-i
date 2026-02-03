@@ -1,0 +1,190 @@
+// 사주 (四柱) 계산 유틸리티
+// 년주, 월주, 일주, 시주를 계산합니다.
+
+// 천간 (天干) - 10개
+const HEAVENLY_STEMS = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
+const HEAVENLY_STEMS_HANJA = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+
+// 지지 (地支) - 12개
+const EARTHLY_BRANCHES = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
+const EARTHLY_BRANCHES_HANJA = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+// 띠 (12지신)
+const ZODIAC_ANIMALS = ['쥐', '소', '호랑이', '토끼', '용', '뱀', '말', '양', '원숭이', '닭', '개', '돼지'];
+
+// 오행 (五行)
+const FIVE_ELEMENTS: Record<string, string> = {
+  '갑': '목(木)', '을': '목(木)',
+  '병': '화(火)', '정': '화(火)',
+  '무': '토(土)', '기': '토(土)',
+  '경': '금(金)', '신': '금(金)',
+  '임': '수(水)', '계': '수(水)',
+};
+
+export interface SajuPillar {
+  stem: string;      // 천간
+  branch: string;    // 지지
+  stemHanja: string;
+  branchHanja: string;
+  element: string;   // 오행
+}
+
+export interface SajuResult {
+  year: SajuPillar;   // 년주
+  month: SajuPillar;  // 월주
+  day: SajuPillar;    // 일주
+  hour: SajuPillar | null;  // 시주 (시간 모르면 null)
+  zodiac: string;     // 띠
+  summary: string;    // 사주 요약 문자열
+}
+
+// 년주 계산 (입춘 기준, 간단히 양력 기준으로 계산)
+function getYearPillar(year: number): SajuPillar {
+  // 갑자년 기준점: 1984년이 갑자년
+  const offset = (year - 4) % 60;
+  const stemIndex = offset % 10;
+  const branchIndex = offset % 12;
+
+  return {
+    stem: HEAVENLY_STEMS[stemIndex >= 0 ? stemIndex : stemIndex + 10],
+    branch: EARTHLY_BRANCHES[branchIndex >= 0 ? branchIndex : branchIndex + 12],
+    stemHanja: HEAVENLY_STEMS_HANJA[stemIndex >= 0 ? stemIndex : stemIndex + 10],
+    branchHanja: EARTHLY_BRANCHES_HANJA[branchIndex >= 0 ? branchIndex : branchIndex + 12],
+    element: FIVE_ELEMENTS[HEAVENLY_STEMS[stemIndex >= 0 ? stemIndex : stemIndex + 10]],
+  };
+}
+
+// 월주 계산
+function getMonthPillar(year: number, month: number): SajuPillar {
+  // 월건 계산 (절기 기준이지만 간단히 양력으로 근사)
+  // 인월(寅月)=양력 2월, 묘월(卯月)=양력 3월, ...
+  // 지지 배열: ['자','축','인','묘','진','사','오','미','신','유','술','해']
+  //             0    1    2    3    4    5    6    7    8    9   10   11
+  // 양력 1월->축(1), 2월->인(2), ... 11월->해(11), 12월->자(0)
+  const monthBranchIndex = month === 12 ? 0 : month; // 12월=자, 나머지는 월과 동일
+
+  // 년간에 따른 월간 계산 (갑기년 병인월, 을경년 무인월...)
+  const yearStemIndex = (year - 4) % 10;
+  const adjustedYearStem = yearStemIndex >= 0 ? yearStemIndex : yearStemIndex + 10;
+
+  // 갑/기년: 병인월 시작 (병=2)
+  // 을/경년: 무인월 시작 (무=4)
+  // 병/신년: 경인월 시작 (경=6)
+  // 정/임년: 임인월 시작 (임=8)
+  // 무/계년: 갑인월 시작 (갑=0)
+  const monthStemStart = [2, 4, 6, 8, 0, 2, 4, 6, 8, 0]; // 갑을병정무기경신임계
+
+  // 인월(2월)부터 시작하므로, 월에서 2를 빼서 offset 계산
+  const monthOffset = month >= 2 ? month - 2 : month + 10; // 1월은 전년도 자월 다음이므로 11번째
+  const monthStemIndex = (monthStemStart[adjustedYearStem] + monthOffset) % 10;
+
+  return {
+    stem: HEAVENLY_STEMS[monthStemIndex],
+    branch: EARTHLY_BRANCHES[monthBranchIndex],
+    stemHanja: HEAVENLY_STEMS_HANJA[monthStemIndex],
+    branchHanja: EARTHLY_BRANCHES_HANJA[monthBranchIndex],
+    element: FIVE_ELEMENTS[HEAVENLY_STEMS[monthStemIndex]],
+  };
+}
+
+// 일주 계산 (기준일로부터의 날짜 차이)
+function getDayPillar(year: number, month: number, day: number): SajuPillar {
+  // 기준일: 1900년 1월 1일 = 을해일(乙亥日)
+  // 천간: 을(乙) = 인덱스 1
+  // 지지: 해(亥) = 인덱스 11
+  const baseDate = new Date(1900, 0, 1);
+  const targetDate = new Date(year, month - 1, day);
+  const diffDays = Math.floor((targetDate.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  // 1900년 1월 1일은 을해일 (천간 1, 지지 11)
+  let stemIndex = (diffDays + 1) % 10;
+  let branchIndex = (diffDays + 11) % 12;
+
+  // 음수 처리
+  if (stemIndex < 0) stemIndex += 10;
+  if (branchIndex < 0) branchIndex += 12;
+
+  return {
+    stem: HEAVENLY_STEMS[stemIndex],
+    branch: EARTHLY_BRANCHES[branchIndex],
+    stemHanja: HEAVENLY_STEMS_HANJA[stemIndex],
+    branchHanja: EARTHLY_BRANCHES_HANJA[branchIndex],
+    element: FIVE_ELEMENTS[HEAVENLY_STEMS[stemIndex]],
+  };
+}
+
+// 시주 계산
+function getHourPillar(dayStem: string, hour: number): SajuPillar {
+  // 시지 계산 (자시: 23-01, 축시: 01-03, ...)
+  const hourBranchIndex = Math.floor((hour + 1) / 2) % 12;
+
+  // 일간에 따른 시간 계산
+  const dayStemIndex = HEAVENLY_STEMS.indexOf(dayStem);
+  const hourStemStart = [0, 2, 4, 6, 8, 0, 2, 4, 6, 8]; // 갑기일 갑자시, 을경일 병자시...
+  const hourStemIndex = (hourStemStart[dayStemIndex] + hourBranchIndex) % 10;
+
+  return {
+    stem: HEAVENLY_STEMS[hourStemIndex],
+    branch: EARTHLY_BRANCHES[hourBranchIndex],
+    stemHanja: HEAVENLY_STEMS_HANJA[hourStemIndex],
+    branchHanja: EARTHLY_BRANCHES_HANJA[hourBranchIndex],
+    element: FIVE_ELEMENTS[HEAVENLY_STEMS[hourStemIndex]],
+  };
+}
+
+// 띠 계산
+function getZodiac(year: number): string {
+  const index = (year - 4) % 12;
+  return ZODIAC_ANIMALS[index >= 0 ? index : index + 12];
+}
+
+// 사주 계산 메인 함수
+export function calculateSaju(
+  birthDate: string,      // YYYY-MM-DD
+  birthTime: string | null // HH:mm or null
+): SajuResult {
+  const [year, month, day] = birthDate.split('-').map(Number);
+
+  const yearPillar = getYearPillar(year);
+  const monthPillar = getMonthPillar(year, month);
+  const dayPillar = getDayPillar(year, month, day);
+
+  let hourPillar: SajuPillar | null = null;
+  if (birthTime) {
+    const hour = parseInt(birthTime.split(':')[0], 10);
+    hourPillar = getHourPillar(dayPillar.stem, hour);
+  }
+
+  const zodiac = getZodiac(year);
+
+  // 사주 요약 문자열
+  const pillars = [yearPillar, monthPillar, dayPillar, hourPillar].filter(Boolean) as SajuPillar[];
+  const summary = pillars.map(p => `${p.stem}${p.branch}`).join(' ');
+
+  return {
+    year: yearPillar,
+    month: monthPillar,
+    day: dayPillar,
+    hour: hourPillar,
+    zodiac,
+    summary,
+  };
+}
+
+// 사주 해석 (간단한 일간 기반 해석)
+export function getSajuInterpretation(dayPillar: SajuPillar): string {
+  const interpretations: Record<string, string> = {
+    '갑': '큰 나무처럼 곧고 당당하며, 리더십과 진취적 기상이 있습니다.',
+    '을': '풀과 덩굴처럼 유연하고 적응력이 뛰어나며, 섬세한 감각을 지녔습니다.',
+    '병': '태양처럼 밝고 활기차며, 열정적이고 표현력이 풍부합니다.',
+    '정': '촛불처럼 은은하고 따뜻하며, 섬세하고 배려심이 깊습니다.',
+    '무': '큰 산처럼 묵직하고 신뢰감 있으며, 안정적이고 포용력이 있습니다.',
+    '기': '논밭처럼 수용적이고 실용적이며, 착실하고 현실적입니다.',
+    '경': '바위나 쇠처럼 강직하고 결단력이 있으며, 정의감이 강합니다.',
+    '신': '보석처럼 섬세하고 예리하며, 완벽을 추구하는 성향이 있습니다.',
+    '임': '큰 바다처럼 넓고 깊으며, 지혜롭고 포용력이 있습니다.',
+    '계': '빗물처럼 맑고 순수하며, 감수성이 풍부하고 직관적입니다.',
+  };
+
+  return interpretations[dayPillar.stem] || '';
+}
