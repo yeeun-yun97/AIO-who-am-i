@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useQuiz } from '@/contexts/QuizContext';
 import { MBTIResult, TCIResult, ValueResult, MBTI_DIMENSIONS, TCI_DIMENSIONS } from '@/types/quiz';
 import { calculateSaju, SajuResult } from '@/lib/saju';
-import { saveQuizResult, SharedResult } from '@/lib/supabase';
+import { saveQuizResult, saveSharedResult, SharedResult } from '@/lib/supabase';
+import { maskName } from '@/lib/utils';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import TCIScore from '@/components/result/TCIScore';
@@ -29,6 +30,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<'summary' | 'detail'>('summary');
+  const [sharedResultId, setSharedResultId] = useState<string | null>(null);
   const savedRef = useRef(false);
 
   // 공유된 결과인지 확인
@@ -137,16 +139,37 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
           saju as unknown as Record<string, unknown>,
           tci as unknown as Record<string, unknown>,
           value as unknown as Record<string, unknown>
-        ).catch((err) => console.error('결과 저장 실패:', err));
+        )
+          .then((quizResult) => {
+            // 공유 결과 저장
+            const userName = state.userInfo?.name || '익명';
+            const maskedName = maskName(userName);
+            const title = '풍부한 감성과 깊은 사고력의 소유자!';
+            const description = `${userName}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다. 새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게 여러 각도에서 검토하는 성향을 보입니다.`;
+
+            return saveSharedResult(
+              quizResult.id,
+              maskedName,
+              title,
+              description
+            );
+          })
+          .then((sharedResult) => {
+            if (sharedResult) {
+              setSharedResultId(sharedResult.id);
+            }
+          })
+          .catch((err) => console.error('결과 저장 실패:', err));
       }
     }
   }, [state.answers, state.savedResult, state.sessionId, state.userInfo, calculateMBTI, calculateTCI, calculateValue, isSharedView, sharedResult]);
 
   // 공유하기 버튼 핸들러
   const handleShare = async () => {
-    if (!sessionIdForShare) return;
+    const idForShare = sharedResultId || sessionIdForShare;
+    if (!idForShare) return;
 
-    const shareUrl = `${window.location.origin}/results?id=${sessionIdForShare}`;
+    const shareUrl = `${window.location.origin}/results?id=${idForShare}`;
 
     // Web Share API 지원 시 사용
     if (navigator.share) {
