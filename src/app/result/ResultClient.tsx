@@ -247,7 +247,8 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         {/* 헤더 + 탭 */}
         <div className="flex items-center justify-between mb-6">
           {displayUserInfo && (
-            <h1 className="text-2xl font-bold text-[#191F28]">
+            <h1 className="text-2xl font-bold text-[#191F28] flex items-center gap-2">
+              <span className="text-[#3182F6]">✦</span>
               {displayUserInfo.name}님의 결과
             </h1>
           )}
@@ -285,28 +286,18 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         {/* 요약 탭 */}
         {activeTab === 'summary' && (
           <div className="mb-6">
-          {/* 상단: 이미지 + 핵심 정보 */}
-          <div className="flex gap-4 mb-5">
-            {/* 이미지 */}
-            <div className="w-40 h-40 flex-shrink-0 bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] rounded-2xl flex items-center justify-center">
-              <svg className="w-12 h-12 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            {/* 핵심 키워드 */}
-            <div className="flex-1 flex flex-col justify-end">
-              <p className="text-xs text-[#8B95A1] mb-1">핵심 성향</p>
-              <div className="flex flex-wrap gap-1.5">
-                <span className="px-2.5 py-1 bg-[#3182F6]/10 text-[#3182F6] text-xs font-medium rounded-full">감성적</span>
-                <span className="px-2.5 py-1 bg-[#3182F6]/10 text-[#3182F6] text-xs font-medium rounded-full">신중함</span>
-                <span className="px-2.5 py-1 bg-[#3182F6]/10 text-[#3182F6] text-xs font-medium rounded-full">공감력</span>
-                <span className="px-2.5 py-1 bg-[#3182F6]/10 text-[#3182F6] text-xs font-medium rounded-full">창의적</span>
-              </div>
-            </div>
+          {/* 이미지 - 전체 너비 */}
+          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] rounded-2xl mb-4 flex items-center justify-center">
+            <svg className="w-16 h-16 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
           </div>
 
           {/* 분석 텍스트 */}
           <div className="bg-[#FAFAFA] rounded-2xl p-5 mb-4">
+            <h3 className="text-lg font-bold text-[#191F28] mb-3">
+              풍부한 감성과 깊은 사고력의 소유자!
+            </h3>
             <p className="text-[#333D4B] leading-7 text-base">
               {displayUserInfo?.name}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다.
               새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게
@@ -319,32 +310,40 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
             </p>
           </div>
 
-          {/* 공유하기 버튼 */}
-          <button
-            onClick={handleShare}
-            className="w-full py-3 px-6 rounded-xl font-semibold text-white bg-[#3182F6] hover:bg-[#1B64DA] transition-colors"
-          >
-            {copied ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                링크가 복사됐어요!
-              </span>
-            ) : (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                  />
-                </svg>
-                공유하기
-              </span>
-            )}
-          </button>
+          {/* 버튼 영역 */}
+          <div className="flex gap-2">
+            <Link
+              href="/results"
+              className="flex-1 py-3 px-4 rounded-xl font-semibold text-[#4E5968] bg-[#F4F4F4] hover:bg-[#E5E8EB] transition-colors text-center"
+            >
+              다른 결과 구경하기
+            </Link>
+            <button
+              onClick={handleShare}
+              className="flex-1 py-3 px-4 rounded-xl font-semibold text-white bg-[#3182F6] hover:bg-[#1B64DA] transition-colors"
+            >
+              {copied ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  복사됨!
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                    />
+                  </svg>
+                  공유하기
+                </span>
+              )}
+            </button>
+          </div>
           </div>
         )}
 
