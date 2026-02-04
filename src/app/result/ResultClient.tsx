@@ -10,6 +10,8 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import TCIScore from '@/components/result/TCIScore';
 import SajuCard from '@/components/result/SajuCard';
+import ZodiacCard from '@/components/result/ZodiacCard';
+import StarSignCard from '@/components/result/StarSignCard';
 import ValueCard from '@/components/result/ValueCard';
 import results from '@/data/results.json';
 import MBTIScore from '@/components/result/MBTIScore';
@@ -256,21 +258,49 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
           )}
         </div>
 
-        {/* 사주 정보 */}
+        {/* AI 요약 */}
+        <Card className="mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#3182F6] to-[#00C471] flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h2 className="text-lg font-bold text-[#191F28]">AI 성격 분석</h2>
+          </div>
+          <p className="text-[#4E5968] leading-relaxed text-sm">
+            {displayUserInfo?.name}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다.
+            새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게
+            여러 각도에서 검토하는 성향을 보입니다. 타인의 감정에 공감하는 능력이 뛰어나며,
+            조화로운 관계를 중시합니다. 때로는 완벽을 추구하는 경향이 있어 스스로에게
+            높은 기준을 세우기도 합니다. 창의적인 문제 해결 능력과 직관력이 강점이며,
+            의미 있는 일에 깊이 몰입할 때 가장 큰 만족감을 느낍니다. 안정적인 환경에서
+            자신만의 속도로 성장해 나가는 것을 선호하며, 진정성 있는 인간관계를 소중히 여깁니다.
+          </p>
+        </Card>
+
+        {/* 동물띠 */}
+        {sajuResult && <ZodiacCard coloredZodiac={sajuResult.coloredZodiac} />}
+
+        {/* 별자리 */}
+        {sajuResult?.zodiacSign && <StarSignCard zodiacSign={sajuResult.zodiacSign} />}
+
+        {/* 사주 팔자 */}
         {sajuResult && <SajuCard saju={sajuResult} />}
 
         {/* MBTI 결과 */}
         {mbtiResult && (
           <Card className="mb-6">
-            <div className="text-center mb-6">
-              <p className="text-sm text-[#8B95A1] mb-2">나의 MBTI 유형</p>
-              <h2 className="text-4xl font-bold text-[#3182F6]">{mbtiResult.type}</h2>
-              {results.mbti[mbtiResult.type as keyof typeof results.mbti] && (
-                <p className="text-sm text-[#4E5968] mt-3 leading-relaxed">
-                  {results.mbti[mbtiResult.type as keyof typeof results.mbti]}
-                </p>
-              )}
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-[32px]">🧩</span>
+              <h2 className="text-lg font-bold text-[#191F28]">MBTI</h2>
             </div>
+            <p className="text-2xl font-bold text-[#3182F6] mb-3">{mbtiResult.type}</p>
+            {results.mbti[mbtiResult.type as keyof typeof results.mbti] && (
+              <p className="text-sm text-[#4E5968] mb-6 leading-relaxed">
+                {results.mbti[mbtiResult.type as keyof typeof results.mbti]}
+              </p>
+            )}
 
             {MBTI_DIMENSIONS.map((dim, index) => {
               const labels = getDimensionLabel(dim.id, mbtiResult);
@@ -292,7 +322,10 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         {/* TCI 결과 */}
         {tciResult && (
           <Card className="mb-6">
-            <h2 className="text-lg font-bold text-[#191F28] mb-6">기질 성향 (TCI)</h2>
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-[32px]">🎭</span>
+              <h2 className="text-lg font-bold text-[#191F28]">TCI</h2>
+            </div>
             {TCI_DIMENSIONS.map((dim, index) => {
               const result = tciResult[dim.id as keyof TCIResult];
               return (

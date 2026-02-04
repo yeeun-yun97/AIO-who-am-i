@@ -19,18 +19,6 @@ const STEM_KEY_MAP: Record<string, string> = {
   '기': '기토', '경': '경금', '신': '신금', '임': '임수', '계': '계수',
 };
 
-// 색띠 설명 찾기
-function getColoredZodiacDescription(colorKey: string, animalKey: string): string | null {
-  const key = `${colorKey}-${animalKey}` as keyof typeof results.colorAnimal;
-  return results.colorAnimal[key] || null;
-}
-
-// 별자리 설명 찾기
-function getZodiacSignDescription(nameEn: string): string | null {
-  const key = nameEn.toLowerCase() as keyof typeof results.star;
-  return results.star[key] || null;
-}
-
 // 천간(일간) 설명 찾기
 function getStemDescription(stem: string): { label: string; description: string } | null {
   const key = STEM_KEY_MAP[stem] as keyof typeof results.sajuStem;
@@ -46,14 +34,6 @@ function getBranchDescription(branch: string): { label: string; description: str
 }
 
 export default function SajuCard({ saju }: SajuCardProps) {
-  const zodiacDescription = getColoredZodiacDescription(
-    saju.coloredZodiac.colorKey,
-    saju.coloredZodiac.animalKey
-  );
-  const starDescription = saju.zodiacSign
-    ? getZodiacSignDescription(saju.zodiacSign.nameEn)
-    : null;
-
   // 일간(천간) 상세 설명
   const stemInfo = getStemDescription(saju.day.stem);
   // 일지(지지) 상세 설명
@@ -61,38 +41,13 @@ export default function SajuCard({ saju }: SajuCardProps) {
 
   return (
     <Card className="mb-6">
-      <h2 className="text-lg font-bold text-[#191F28] mb-4">사주 정보</h2>
-
-      {/* 색띠 */}
-      <div className="mb-4 pb-4 border-b border-[#E5E8EB]">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-2xl">{saju.coloredZodiac.emoji}</span>
-          <div>
-            <span className="text-lg font-bold text-[#191F28]">{saju.coloredZodiac.fullName}띠</span>
-            <span className="text-xs text-[#8B95A1] ml-2">({saju.coloredZodiac.year}년생 기준)</span>
-          </div>
-        </div>
-        {zodiacDescription && (
-          <p className="text-sm text-[#4E5968] leading-relaxed pl-9">
-            {zodiacDescription}
-          </p>
-        )}
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-[32px]">☯️</span>
+        <h2 className="text-lg font-bold text-[#191F28]">사주 팔자</h2>
       </div>
-
-      {/* 별자리 */}
-      {saju.zodiacSign && (
-        <div className="mb-4 pb-4 border-b border-[#E5E8EB]">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-2xl">{saju.zodiacSign.emoji}</span>
-            <span className="text-lg font-bold text-[#191F28]">{saju.zodiacSign.name}</span>
-          </div>
-          {starDescription && (
-            <p className="text-sm text-[#4E5968] leading-relaxed pl-9">
-              {starDescription}
-            </p>
-          )}
-        </div>
-      )}
+      <p className="text-2xl font-bold text-[#3182F6] mb-4">
+        {saju.day.stem}{saju.day.stemHanja} {saju.day.branch}{saju.day.branchHanja}
+      </p>
 
       {/* 사주 팔자 테이블 */}
       <div className="grid grid-cols-4 gap-2 mb-4">
