@@ -256,13 +256,18 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
           <div className="inline-flex bg-[#F2F2F7] p-1 rounded-lg">
             <button
               onClick={() => setActiveTab('summary')}
-              className={`py-1.5 px-3 text-sm font-medium rounded-md transition-all ${
+              className={`py-1.5 px-3 text-sm font-medium rounded-md transition-all flex items-center gap-1 ${
                 activeTab === 'summary'
                   ? 'text-[#191F28] bg-white shadow-sm'
                   : 'text-[#8B95A1]'
               }`}
             >
-              요약
+              분석
+              <span className={`text-[10px] px-1 py-0.5 rounded font-semibold ${
+                activeTab === 'summary'
+                  ? 'bg-[#3182F6] text-white'
+                  : 'bg-[#B0B8C1] text-white'
+              }`}>AI</span>
             </button>
             <button
               onClick={() => setActiveTab('detail')}
@@ -272,7 +277,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
                   : 'text-[#8B95A1]'
               }`}
             >
-              자세히
+              상세
             </button>
           </div>
         </div>
