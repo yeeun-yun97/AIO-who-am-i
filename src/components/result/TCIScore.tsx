@@ -1,15 +1,43 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import tciData from '@/data/tci.json';
+
+interface TCIEntry {
+  label: string;
+  Low: { label: string; description: string };
+  Medium: { label: string; description: string };
+  High: { label: string; description: string };
+}
 
 interface TCIScoreProps {
+  dimensionId: string;
   name: string;
   level: '높음' | '중간' | '낮음';
-  description: string;
   delay?: number;
 }
 
-export default function TCIScore({ name, level, description, delay = 0 }: TCIScoreProps) {
+// 레벨 한글 -> 영문 매핑
+const LEVEL_MAP: Record<string, 'Low' | 'Medium' | 'High'> = {
+  '낮음': 'Low',
+  '중간': 'Medium',
+  '높음': 'High',
+};
+
+// TCI 데이터에서 상세 설명 가져오기
+function getTCIDetail(dimensionId: string, level: '높음' | '중간' | '낮음') {
+  const levelKey = LEVEL_MAP[level];
+  const dimension = tciData.find(
+    (item) => dimensionId in item
+  );
+  if (!dimension) return null;
+  const entry = (dimension as unknown as Record<string, TCIEntry>)[dimensionId];
+  return entry?.[levelKey] || null;
+}
+
+export default function TCIScore({ dimensionId, name, level, delay = 0 }: TCIScoreProps) {
+  const detail = getTCIDetail(dimensionId, level);
+
   const getLevelColor = (level: string) => {
     switch (level) {
       case '높음':
@@ -38,18 +66,23 @@ export default function TCIScore({ name, level, description, delay = 0 }: TCISco
 
   return (
     <div
-      className="mb-5 last:mb-0 opacity-0 animate-fade-in"
+      className="mb-6 last:mb-0 opacity-0 animate-fade-in"
       style={{ animationDelay: `${delay}ms`, animationFillMode: 'forwards' }}
     >
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-base font-semibold text-[#191F28]">{name}</h3>
-        <span
-          className={cn('text-xs font-medium px-2 py-1 rounded-md', getLevelColor(level))}
-        >
-          {level}
-        </span>
+        <div className="flex items-center gap-2">
+          {detail && (
+            <span className="text-xs text-[#4E5968]">{detail.label}</span>
+          )}
+          <span
+            className={cn('text-xs font-medium px-2 py-1 rounded-md', getLevelColor(level))}
+          >
+            {level}
+          </span>
+        </div>
       </div>
-      <div className="h-2 bg-[#F4F4F4] rounded-full overflow-hidden mb-2">
+      <div className="h-2 bg-[#F4F4F4] rounded-full overflow-hidden">
         <div
           className={cn('h-full rounded-full transition-all duration-700 ease-out', getLevelColor(level).split(' ')[0])}
           style={{
@@ -58,7 +91,11 @@ export default function TCIScore({ name, level, description, delay = 0 }: TCISco
           }}
         />
       </div>
-      <p className="text-sm text-[#8B95A1]">{description}</p>
+      {detail && (
+        <div className="mt-3 bg-[#F8F9FA] rounded-lg p-3">
+          <p className="text-sm text-[#4E5968] leading-relaxed">{detail.description}</p>
+        </div>
+      )}
     </div>
   );
 }

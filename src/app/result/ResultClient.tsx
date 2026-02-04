@@ -320,9 +320,9 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
               return (
                 <TCIScore
                   key={dim.id}
+                  dimensionId={dim.id}
                   name={dim.name}
                   level={result.level}
-                  description={result.description}
                   delay={index * 100 + 400}
                 />
               );
