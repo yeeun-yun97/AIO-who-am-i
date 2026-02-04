@@ -146,7 +146,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
   const handleShare = async () => {
     if (!sessionIdForShare) return;
 
-    const shareUrl = `${window.location.origin}/result?id=${sessionIdForShare}`;
+    const shareUrl = `${window.location.origin}/results?id=${sessionIdForShare}`;
 
     // Web Share API 지원 시 사용
     if (navigator.share) {
