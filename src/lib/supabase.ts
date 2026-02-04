@@ -132,3 +132,42 @@ export async function getQuizResultBySessionId(sessionId: string): Promise<QuizR
 
   return data;
 }
+
+// 세션 ID로 결과 + 사용자 정보 함께 불러오기 (공유용)
+export interface SharedResult {
+  userName: string;
+  birthDate: string;
+  mbtiResult: string | null;
+  sajuResult: Record<string, unknown> | null;
+  tciScores: Record<string, unknown> | null;
+}
+
+export async function getSharedResult(sessionId: string): Promise<SharedResult | null> {
+  // 세션 정보 가져오기
+  const { data: session } = await supabase
+    .from('user_sessions')
+    .select('name, birth_date')
+    .eq('id', sessionId)
+    .single();
+
+  if (!session) return null;
+
+  // 결과 가져오기
+  const { data: result } = await supabase
+    .from('quiz_results')
+    .select('mbti_result, saju_result, tci_scores')
+    .eq('session_id', sessionId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (!result) return null;
+
+  return {
+    userName: session.name,
+    birthDate: session.birth_date,
+    mbtiResult: result.mbti_result,
+    sajuResult: result.saju_result,
+    tciScores: result.tci_scores,
+  };
+}
