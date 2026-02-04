@@ -3,11 +3,18 @@
 import { SajuResult, getSajuInterpretation } from '@/lib/saju';
 import Card from '@/components/ui/Card';
 import colorAnimalData from '@/data/color-animal.json';
+import starData from '@/data/star.json';
 
 interface ColorAnimalEntry {
   color: string;
   animal: string;
   label: string;
+  description: string;
+}
+
+interface StarEntry {
+  name: string;
+  period: string;
   description: string;
 }
 
@@ -23,33 +30,35 @@ function getColoredZodiacDescription(colorKey: string, animalKey: string): strin
   return entry?.description || null;
 }
 
+// 별자리 설명 찾기
+function getZodiacSignDescription(nameEn: string): string | null {
+  const key = nameEn.toLowerCase() as keyof typeof starData;
+  const entry = starData[key] as StarEntry | undefined;
+  return entry?.description || null;
+}
+
 export default function SajuCard({ saju }: SajuCardProps) {
   const interpretation = getSajuInterpretation(saju.day);
   const zodiacDescription = getColoredZodiacDescription(
     saju.coloredZodiac.colorKey,
     saju.coloredZodiac.animalKey
   );
+  const starDescription = saju.zodiacSign
+    ? getZodiacSignDescription(saju.zodiacSign.nameEn)
+    : null;
 
   return (
     <Card className="mb-6">
       <h2 className="text-lg font-bold text-[#191F28] mb-4">사주 정보</h2>
 
-      {/* 색띠 & 별자리 */}
+      {/* 색띠 */}
       <div className="mb-4 pb-4 border-b border-[#E5E8EB]">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">{saju.coloredZodiac.emoji}</span>
-            <div>
-              <span className="text-lg font-bold text-[#191F28]">{saju.coloredZodiac.fullName}띠</span>
-              <span className="text-xs text-[#8B95A1] ml-2">({saju.coloredZodiac.year}년생 기준)</span>
-            </div>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-2xl">{saju.coloredZodiac.emoji}</span>
+          <div>
+            <span className="text-lg font-bold text-[#191F28]">{saju.coloredZodiac.fullName}띠</span>
+            <span className="text-xs text-[#8B95A1] ml-2">({saju.coloredZodiac.year}년생 기준)</span>
           </div>
-          {saju.zodiacSign && (
-            <div className="flex items-center gap-1">
-              <span className="text-2xl">{saju.zodiacSign.emoji}</span>
-              <span className="text-sm font-medium text-[#191F28]">{saju.zodiacSign.name}</span>
-            </div>
-          )}
         </div>
         {zodiacDescription && (
           <p className="text-sm text-[#4E5968] leading-relaxed pl-9">
@@ -57,6 +66,21 @@ export default function SajuCard({ saju }: SajuCardProps) {
           </p>
         )}
       </div>
+
+      {/* 별자리 */}
+      {saju.zodiacSign && (
+        <div className="mb-4 pb-4 border-b border-[#E5E8EB]">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-2xl">{saju.zodiacSign.emoji}</span>
+            <span className="text-lg font-bold text-[#191F28]">{saju.zodiacSign.name}</span>
+          </div>
+          {starDescription && (
+            <p className="text-sm text-[#4E5968] leading-relaxed pl-9">
+              {starDescription}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* 사주 팔자 테이블 */}
       <div className="grid grid-cols-4 gap-2 mb-4">
