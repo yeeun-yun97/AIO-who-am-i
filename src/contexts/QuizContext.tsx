@@ -1,7 +1,8 @@
 'use client';
 
 import { createContext, useContext, useReducer, ReactNode } from 'react';
-import { QuizState, QuizAction, Answer, MBTIResult, TCIResult, UserInfo, SavedQuizResult } from '@/types/quiz';
+import { QuizState, QuizAction, Answer, MBTIResult, TCIResult, ValueResult, UserInfo, SavedQuizResult } from '@/types/quiz';
+import valueDescriptions from '@/data/value-result.json';
 import { questions, TOTAL_QUESTIONS } from '@/data/questions';
 
 const initialState: QuizState = {
@@ -57,6 +58,7 @@ interface QuizContextType {
   getCurrentAnswer: () => Answer | undefined;
   calculateMBTI: () => MBTIResult;
   calculateTCI: () => TCIResult;
+  calculateValue: () => ValueResult;
   setSessionId: (id: string) => void;
   setSavedResult: (result: SavedQuizResult) => void;
 }
@@ -239,6 +241,59 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     return result;
   };
 
+  const calculateValue = (): ValueResult => {
+    const scores = {
+      Stability: 0, Change: 0,
+      Relationship: 0, Individual: 0,
+      Achievement: 0, Balance: 0,
+      Reality: 0, Meaning: 0,
+    };
+
+    // 가치관 점수 합산
+    state.answers.forEach((answer) => {
+      Object.entries(answer.score).forEach(([key, value]) => {
+        if (key in scores) {
+          scores[key as keyof typeof scores] += value || 0;
+        }
+      });
+    });
+
+    // 각 차원별 결과 계산
+    const getDimensionResult = (
+      dimension: keyof typeof valueDescriptions,
+      leftKey: keyof typeof scores,
+      rightKey: keyof typeof scores
+    ) => {
+      const leftScore = scores[leftKey];
+      const rightScore = scores[rightKey];
+      const dimData = valueDescriptions[dimension] as Record<string, { label: string; description: string }>;
+
+      let dominant: string;
+      if (leftScore > rightScore) {
+        dominant = leftKey;
+      } else if (rightScore > leftScore) {
+        dominant = rightKey;
+      } else {
+        dominant = 'Balanced';
+      }
+
+      const resultData = dimData[dominant];
+      return {
+        dominant,
+        label: resultData?.label || '',
+        description: resultData?.description || '',
+        scores: { left: leftScore, right: rightScore },
+      };
+    };
+
+    return {
+      'Stability/Change': getDimensionResult('Stability/Change', 'Stability', 'Change'),
+      'Relationship/Individual': getDimensionResult('Relationship/Individual', 'Relationship', 'Individual'),
+      'Achievement/Balance': getDimensionResult('Achievement/Balance', 'Achievement', 'Balance'),
+      'Reality/Meaning': getDimensionResult('Reality/Meaning', 'Reality', 'Meaning'),
+    };
+  };
+
   return (
     <QuizContext.Provider
       value={{
@@ -251,6 +306,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         getCurrentAnswer,
         calculateMBTI,
         calculateTCI,
+        calculateValue,
         setSessionId,
         setSavedResult,
       }}

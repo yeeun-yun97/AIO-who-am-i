@@ -3,13 +3,14 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useQuiz } from '@/contexts/QuizContext';
-import { MBTIResult, TCIResult, MBTI_DIMENSIONS, TCI_DIMENSIONS } from '@/types/quiz';
+import { MBTIResult, TCIResult, ValueResult, MBTI_DIMENSIONS, TCI_DIMENSIONS } from '@/types/quiz';
 import { calculateSaju, SajuResult } from '@/lib/saju';
 import { saveQuizResult, SharedResult } from '@/lib/supabase';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import TCIScore from '@/components/result/TCIScore';
 import SajuCard from '@/components/result/SajuCard';
+import ValueCard from '@/components/result/ValueCard';
 import mbtiDescriptions from '@/data/mbti.json';
 
 interface ResultClientProps {
@@ -18,9 +19,10 @@ interface ResultClientProps {
 }
 
 export default function ResultClient({ sharedResult, sharedSessionId }: ResultClientProps) {
-  const { calculateMBTI, calculateTCI, reset, state } = useQuiz();
+  const { calculateMBTI, calculateTCI, calculateValue, reset, state } = useQuiz();
   const [mbtiResult, setMbtiResult] = useState<MBTIResult | null>(null);
   const [tciResult, setTciResult] = useState<TCIResult | null>(null);
+  const [valueResult, setValueResult] = useState<ValueResult | null>(null);
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
   const savedRef = useRef(false);
@@ -106,8 +108,10 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
     if (state.answers.length > 0) {
       const mbti = calculateMBTI();
       const tci = calculateTCI();
+      const value = calculateValue();
       setMbtiResult(mbti);
       setTciResult(tci);
+      setValueResult(value);
 
       // 결과 저장 (한 번만)
       if (state.sessionId && !savedRef.current) {
@@ -120,11 +124,12 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
           state.sessionId,
           mbti.type,
           saju as unknown as Record<string, unknown>,
-          tci as unknown as Record<string, unknown>
+          tci as unknown as Record<string, unknown>,
+          value as unknown as Record<string, unknown>
         ).catch((err) => console.error('결과 저장 실패:', err));
       }
     }
-  }, [state.answers, state.savedResult, state.sessionId, state.userInfo, calculateMBTI, calculateTCI, isSharedView, sharedResult]);
+  }, [state.answers, state.savedResult, state.sessionId, state.userInfo, calculateMBTI, calculateTCI, calculateValue, isSharedView, sharedResult]);
 
   // 공유하기 버튼 핸들러
   const handleShare = async () => {
@@ -308,7 +313,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
 
         {/* TCI 결과 */}
         {tciResult && (
-          <Card className="mb-8">
+          <Card className="mb-6">
             <h2 className="text-lg font-bold text-[#191F28] mb-6">기질 성향 (TCI)</h2>
             {TCI_DIMENSIONS.map((dim, index) => {
               const result = tciResult[dim.id as keyof TCIResult];
@@ -324,6 +329,9 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
             })}
           </Card>
         )}
+
+        {/* 가치관 결과 */}
+        {valueResult && <ValueCard value={valueResult} />}
 
         {/* 공유하기 버튼 */}
         <button

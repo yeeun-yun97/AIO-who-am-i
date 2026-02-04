@@ -22,6 +22,7 @@ export interface QuizResult {
   mbti_result: string | null;
   saju_result: Record<string, unknown> | null;
   tci_scores: Record<string, unknown> | null;
+  value_scores: Record<string, unknown> | null;
   created_at: string;
 }
 
@@ -80,7 +81,8 @@ export async function saveQuizResult(
   sessionId: string,
   mbtiResult: string,
   sajuResult: Record<string, unknown>,
-  tciScores: Record<string, unknown>
+  tciScores: Record<string, unknown>,
+  valueScores?: Record<string, unknown>
 ): Promise<QuizResult> {
   // 기존 결과가 있으면 업데이트, 없으면 생성
   const { data: existing } = await supabase
@@ -96,6 +98,7 @@ export async function saveQuizResult(
         mbti_result: mbtiResult,
         saju_result: sajuResult,
         tci_scores: tciScores,
+        value_scores: valueScores,
       })
       .eq('id', existing.id)
       .select()
@@ -112,6 +115,7 @@ export async function saveQuizResult(
       mbti_result: mbtiResult,
       saju_result: sajuResult,
       tci_scores: tciScores,
+      value_scores: valueScores,
     })
     .select()
     .single();
@@ -140,6 +144,7 @@ export interface SharedResult {
   mbtiResult: string | null;
   sajuResult: Record<string, unknown> | null;
   tciScores: Record<string, unknown> | null;
+  valueScores: Record<string, unknown> | null;
 }
 
 export async function getSharedResult(sessionId: string): Promise<SharedResult | null> {
@@ -155,7 +160,7 @@ export async function getSharedResult(sessionId: string): Promise<SharedResult |
   // 결과 가져오기
   const { data: result } = await supabase
     .from('quiz_results')
-    .select('mbti_result, saju_result, tci_scores')
+    .select('mbti_result, saju_result, tci_scores, value_scores')
     .eq('session_id', sessionId)
     .order('created_at', { ascending: false })
     .limit(1)
@@ -169,5 +174,6 @@ export async function getSharedResult(sessionId: string): Promise<SharedResult |
     mbtiResult: result.mbti_result,
     sajuResult: result.saju_result,
     tciScores: result.tci_scores,
+    valueScores: result.value_scores,
   };
 }

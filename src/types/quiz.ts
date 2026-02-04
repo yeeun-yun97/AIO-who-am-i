@@ -5,11 +5,14 @@ export type MBTITrait = 'E' | 'I' | 'N' | 'S' | 'T' | 'F' | 'J' | 'P';
 // TCI 차원 (7개)
 export type TCIDimension = 'NS' | 'HA' | 'RD' | 'PS' | 'SD' | 'CO' | 'ST';
 
+// 가치관 차원 (4개)
+export type ValueDimension = 'Stability/Change' | 'Relationship/Individual' | 'Achievement/Balance' | 'Reality/Meaning';
+
 // 모든 차원 타입
-export type Dimension = 'I/E' | 'N/S' | 'T/F' | 'J/P' | 'TCI-NS' | 'TCI-HA' | 'TCI-RD' | 'TCI-PS' | 'TCI-SD' | 'TCI-CO' | 'TCI-ST';
+export type Dimension = 'I/E' | 'N/S' | 'T/F' | 'J/P' | 'TCI-NS' | 'TCI-HA' | 'TCI-RD' | 'TCI-PS' | 'TCI-SD' | 'TCI-CO' | 'TCI-ST' | ValueDimension;
 
 // 점수 타입
-export type ScoreKey = 'E' | 'I' | 'N' | 'S' | 'T' | 'F' | 'J' | 'P' | 'NS' | 'HA' | 'RD' | 'PS' | 'SD' | 'CO' | 'ST';
+export type ScoreKey = 'E' | 'I' | 'N' | 'S' | 'T' | 'F' | 'J' | 'P' | 'NS' | 'HA' | 'RD' | 'PS' | 'SD' | 'CO' | 'ST' | 'Stability' | 'Change' | 'Relationship' | 'Individual' | 'Achievement' | 'Balance' | 'Reality' | 'Meaning';
 
 export interface Option {
   key: string;
@@ -65,6 +68,7 @@ export interface SavedQuizResult {
   mbti_result: string;
   saju_result: Record<string, unknown>;
   tci_scores: Record<string, unknown>;
+  value_scores?: Record<string, unknown>;
 }
 
 export type QuizAction =
@@ -107,6 +111,21 @@ export interface TCIResult {
   ST: { score: number; level: '높음' | '중간' | '낮음'; description: string };
 }
 
+// 가치관 결과 타입 (4개 차원)
+export interface ValueDimensionResult {
+  dominant: string;  // 'Stability' | 'Change' | 'Balanced' 등
+  label: string;     // '안정 추구형' 등
+  description: string;
+  scores: { left: number; right: number };  // 양쪽 점수
+}
+
+export interface ValueResult {
+  'Stability/Change': ValueDimensionResult;
+  'Relationship/Individual': ValueDimensionResult;
+  'Achievement/Balance': ValueDimensionResult;
+  'Reality/Meaning': ValueDimensionResult;
+}
+
 // 카테고리 정보 (결과 표시용)
 export interface DimensionInfo {
   id: string;
@@ -129,4 +148,11 @@ export const TCI_DIMENSIONS: DimensionInfo[] = [
   { id: 'SD', name: '자기주도성', description: '책임감과 목표지향적 자기통제' },
   { id: 'CO', name: '협동성', description: '타인과의 협력 및 공감 능력' },
   { id: 'ST', name: '자기초월', description: '더 넓은 관점에서 삶을 이해하려는 성향' },
+];
+
+export const VALUE_DIMENSIONS: { id: ValueDimension; name: string; left: string; right: string }[] = [
+  { id: 'Stability/Change', name: '안정 vs 변화', left: 'Stability', right: 'Change' },
+  { id: 'Relationship/Individual', name: '관계 vs 개인', left: 'Relationship', right: 'Individual' },
+  { id: 'Achievement/Balance', name: '성과 vs 균형', left: 'Achievement', right: 'Balance' },
+  { id: 'Reality/Meaning', name: '현실 vs 의미', left: 'Reality', right: 'Meaning' },
 ];
