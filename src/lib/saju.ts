@@ -13,18 +13,25 @@ const EARTHLY_BRANCHES_HANJA = ['子', '丑', '寅', '卯', '辰', '巳', '午',
 const ZODIAC_ANIMALS = ['쥐', '소', '호랑이', '토끼', '용', '뱀', '말', '양', '원숭이', '닭', '개', '돼지'];
 
 // 천간별 띠 색깔 (오행 기반)
-// 갑을(木)=청/푸른, 병정(火)=붉은, 무기(土)=황금, 경신(金)=흰/백, 임계(水)=검은
-const ZODIAC_COLORS: Record<string, { color: string; colorName: string; emoji: string }> = {
-  '갑': { color: '청', colorName: '푸른', emoji: '🌳' },
-  '을': { color: '청', colorName: '푸른', emoji: '🌿' },
-  '병': { color: '적', colorName: '붉은', emoji: '🔥' },
-  '정': { color: '적', colorName: '붉은', emoji: '🕯️' },
-  '무': { color: '황', colorName: '황금', emoji: '⛰️' },
-  '기': { color: '황', colorName: '황금', emoji: '🌾' },
-  '경': { color: '백', colorName: '흰', emoji: '⚔️' },
-  '신': { color: '백', colorName: '흰', emoji: '💎' },
-  '임': { color: '흑', colorName: '검은', emoji: '🌊' },
-  '계': { color: '흑', colorName: '검은', emoji: '💧' },
+// 갑(木양)=파란, 을(木음)=초록, 병정(火)=빨간, 무기(土)=황금, 경신(金)=흰, 임계(水)=검은
+const ZODIAC_COLORS: Record<string, { color: string; colorKey: string; colorName: string; emoji: string }> = {
+  '갑': { color: '청', colorKey: 'blue', colorName: '파란', emoji: '🌳' },
+  '을': { color: '청', colorKey: 'green', colorName: '초록', emoji: '🌿' },
+  '병': { color: '적', colorKey: 'red', colorName: '빨간', emoji: '🔥' },
+  '정': { color: '적', colorKey: 'red', colorName: '붉은', emoji: '🕯️' },
+  '무': { color: '황', colorKey: 'gold', colorName: '황금', emoji: '⛰️' },
+  '기': { color: '황', colorKey: 'gold', colorName: '황금', emoji: '🌾' },
+  '경': { color: '백', colorKey: 'white', colorName: '흰', emoji: '⚔️' },
+  '신': { color: '백', colorKey: 'white', colorName: '흰', emoji: '💎' },
+  '임': { color: '흑', colorKey: 'black', colorName: '검은', emoji: '🌊' },
+  '계': { color: '흑', colorKey: 'black', colorName: '검은', emoji: '💧' },
+};
+
+// 동물 영문 매핑 (JSON lookup용)
+const ANIMAL_KEYS: Record<string, string> = {
+  '쥐': 'rat', '소': 'ox', '호랑이': 'tiger', '토끼': 'rabbit',
+  '용': 'dragon', '뱀': 'snake', '말': 'horse', '양': 'sheep',
+  '원숭이': 'monkey', '닭': 'rooster', '개': 'dog', '돼지': 'pig',
 };
 
 // 입춘 날짜 (근사값 - 대부분 2월 3~5일 사이)
@@ -50,8 +57,10 @@ export interface SajuPillar {
 
 export interface ColoredZodiac {
   animal: string;       // 동물 (말, 용 등)
+  animalKey: string;    // 동물 영문 키 (horse, dragon 등)
   color: string;        // 색깔 한자 (청, 적, 황, 백, 흑)
-  colorName: string;    // 색깔 이름 (푸른, 붉은, 황금, 흰, 검은)
+  colorKey: string;     // 색깔 영문 키 (blue, red, gold, white, black)
+  colorName: string;    // 색깔 이름 (파란, 빨간, 황금, 흰, 검은)
   fullName: string;     // 전체 이름 (황금말띠)
   emoji: string;        // 이모지
   year: number;         // 띠 연도 (입춘 기준)
@@ -198,7 +207,9 @@ function getColoredZodiac(birthYear: number, birthMonth: number, birthDay: numbe
 
   return {
     animal,
+    animalKey: ANIMAL_KEYS[animal],
     color: colorInfo.color,
+    colorKey: colorInfo.colorKey,
     colorName: colorInfo.colorName,
     fullName: `${colorInfo.colorName}${animal}`,
     emoji: colorInfo.emoji,

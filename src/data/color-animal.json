@@ -1,0 +1,363 @@
+[
+    {
+      "color": "red",
+      "animal": "rat",
+      "label": "빨간쥐띠",
+      "description": "머리가 빠르고 판단이 민첩하지만 성급한 선택을 할 수 있습니다. 경쟁심이 강하고 목표를 향해 빠르게 움직이는 타입입니다."
+    },
+    {
+      "color": "red",
+      "animal": "ox",
+      "label": "빨간소띠",
+      "description": "끈기와 책임감이 강하지만 고집이 센 편입니다. 감정이 한번 불붙으면 쉽게 식지 않는 성향을 가집니다."
+    },
+    {
+      "color": "red",
+      "animal": "tiger",
+      "label": "빨간호랑이띠",
+      "description": "카리스마와 추진력이 강한 리더형입니다. 다만 성격이 급하고 직설적인 표현으로 마찰이 생길 수 있습니다."
+    },
+    {
+      "color": "red",
+      "animal": "rabbit",
+      "label": "빨간토끼띠",
+      "description": "부드러운 인상과 달리 내면에 강한 열정을 품고 있습니다. 감정 기복이 나타날 때가 있습니다."
+    },
+    {
+      "color": "red",
+      "animal": "dragon",
+      "label": "빨간용띠",
+      "description": "에너지와 자신감이 넘치며 큰 꿈을 꾸는 유형입니다. 다만 과욕이나 충동적인 결정에 주의가 필요합니다."
+    },
+    {
+      "color": "red",
+      "animal": "snake",
+      "label": "빨간뱀띠",
+      "description": "직관이 뛰어나고 집중력이 강합니다. 감정이 겉으로 드러나지 않지만 속은 뜨거운 편입니다."
+    },
+    {
+      "color": "red",
+      "animal": "horse",
+      "label": "빨간말띠",
+      "description": "성격이 급하고 행동력이 뛰어나며 자유를 중시합니다. 열정은 넘치지만 인내심이 부족할 수 있습니다."
+    },
+    {
+      "color": "red",
+      "animal": "sheep",
+      "label": "빨간양띠",
+      "description": "감성이 풍부하고 표현력이 강한 유형입니다. 감정에 휘둘리면 우유부단해질 수 있습니다."
+    },
+    {
+      "color": "red",
+      "animal": "monkey",
+      "label": "빨간원숭이띠",
+      "description": "재치 있고 순발력이 뛰어나며 활동적인 성향입니다. 다만 집중력이 분산되기 쉽습니다."
+    },
+    {
+      "color": "red",
+      "animal": "rooster",
+      "label": "빨간닭띠",
+      "description": "자기주장이 강하고 완벽을 추구합니다. 직설적인 태도가 갈등으로 이어질 수 있습니다."
+    },
+    {
+      "color": "red",
+      "animal": "dog",
+      "label": "빨간개띠",
+      "description": "정의감과 책임감이 강하며 사람을 지키려는 성향이 큽니다. 감정이 격해지면 극단적으로 반응할 수 있습니다."
+    },
+    {
+      "color": "red",
+      "animal": "pig",
+      "label": "빨간돼지띠",
+      "description": "정열적이고 인간관계를 중시합니다. 즐거움을 추구하다 과소비나 감정 과잉에 빠질 수 있습니다."
+    },
+    {
+      "color": "gold",
+      "animal": "rat",
+      "label": "황금쥐띠",
+      "description": "현실 감각이 뛰어나고 계산이 빠른 유형입니다. 기회를 잘 포착하지만 이익에 지나치게 민감해질 수 있습니다."
+    },
+    {
+      "color": "gold",
+      "animal": "ox",
+      "label": "황금소띠",
+      "description": "성실함과 꾸준함으로 재산과 성과를 쌓아가는 타입입니다. 변화에는 다소 보수적인 편입니다."
+    },
+    {
+      "color": "gold",
+      "animal": "tiger",
+      "label": "황금호랑이띠",
+      "description": "권위와 책임감을 함께 지닌 리더형입니다. 결과 중심적 사고로 주변을 이끌어갑니다."
+    },
+    {
+      "color": "gold",
+      "animal": "rabbit",
+      "label": "황금토끼띠",
+      "description": "신중하고 현실적인 판단으로 안정적인 선택을 합니다. 위험을 크게 감수하지 않는 성향입니다."
+    },
+    {
+      "color": "gold",
+      "animal": "dragon",
+      "label": "황금용띠",
+      "description": "큰 기회를 현실로 만드는 힘이 강합니다. 명예와 성취욕이 크며 성공 지향적인 성향입니다."
+    },
+    {
+      "color": "gold",
+      "animal": "snake",
+      "label": "황금뱀띠",
+      "description": "분석력이 뛰어나고 전략적으로 움직입니다. 돈과 정보 관리에 능하지만 속내를 잘 드러내지 않습니다."
+    },
+    {
+      "color": "gold",
+      "animal": "horse",
+      "label": "황금말띠",
+      "description": "행동력에 현실 감각이 더해진 타입입니다. 성과를 중시하며 빠른 결과를 원합니다."
+    },
+    {
+      "color": "gold",
+      "animal": "sheep",
+      "label": "황금양띠",
+      "description": "온화한 성향 속에 실리를 챙길 줄 아는 유형입니다. 감정보다 현실을 우선하는 순간이 많습니다."
+    },
+    {
+      "color": "gold",
+      "animal": "monkey",
+      "label": "황금원숭이띠",
+      "description": "재치와 계산 능력이 뛰어나 기회를 돈으로 바꾸는 데 능숙합니다. 다만 얕은 선택을 반복할 수 있습니다."
+    },
+    {
+      "color": "gold",
+      "animal": "rooster",
+      "label": "황금닭띠",
+      "description": "완성도와 결과를 중요시하는 성향입니다. 자기 관리가 철저하지만 기준이 높아 피로해질 수 있습니다."
+    },
+    {
+      "color": "gold",
+      "animal": "dog",
+      "label": "황금개띠",
+      "description": "책임감과 현실 감각이 조화를 이룹니다. 신뢰를 중시하며 안정적인 관계와 성과를 추구합니다."
+    },
+    {
+      "color": "gold",
+      "animal": "pig",
+      "label": "황금돼지띠",
+      "description": "복과 기회를 잘 모으는 타입입니다. 물질적 안정과 인간관계를 함께 중시합니다."
+    },
+    {
+      "color": "blue",
+      "animal": "rat",
+      "label": "파란쥐띠",
+      "description": "상황을 빠르게 읽고 유연하게 대처하는 지혜형입니다. 감정 변화가 잦을 수 있지만 순발력이 뛰어납니다."
+    },
+    {
+      "color": "blue",
+      "animal": "ox",
+      "label": "파란소띠",
+      "description": "차분하고 인내심이 강한 유형입니다. 느리지만 깊이 있게 목표를 향해 나아갑니다."
+    },
+    {
+      "color": "blue",
+      "animal": "tiger",
+      "label": "파란호랑이띠",
+      "description": "겉은 강해 보여도 내면은 섬세한 편입니다. 감정과 이성을 함께 활용하는 리더형입니다."
+    },
+    {
+      "color": "blue",
+      "animal": "rabbit",
+      "label": "파란토끼띠",
+      "description": "감수성과 공감 능력이 뛰어나 주변 분위기에 민감합니다. 조용한 안정감을 추구합니다."
+    },
+    {
+      "color": "blue",
+      "animal": "dragon",
+      "label": "파란용띠",
+      "description": "직관과 상상력이 풍부한 유형입니다. 큰 흐름을 읽는 능력이 뛰어나지만 현실 감각이 흔들릴 수 있습니다."
+    },
+    {
+      "color": "blue",
+      "animal": "snake",
+      "label": "파란뱀띠",
+      "description": "통찰력이 뛰어나며 감정을 깊이 품는 타입입니다. 신중하고 속을 쉽게 드러내지 않습니다."
+    },
+    {
+      "color": "blue",
+      "animal": "horse",
+      "label": "파란말띠",
+      "description": "자유로움을 추구하지만 감정의 파도에 영향을 받습니다. 혼자만의 시간이 필요합니다."
+    },
+    {
+      "color": "blue",
+      "animal": "sheep",
+      "label": "파란양띠",
+      "description": "부드럽고 배려심 깊은 성향입니다. 감정적으로 안정된 환경에서 능력을 발휘합니다."
+    },
+    {
+      "color": "blue",
+      "animal": "monkey",
+      "label": "파란원숭이띠",
+      "description": "머리가 빠르고 상황 적응력이 뛰어납니다. 감정과 계산을 동시에 활용합니다."
+    },
+    {
+      "color": "blue",
+      "animal": "rooster",
+      "label": "파란닭띠",
+      "description": "신중하고 생각이 깊은 유형입니다. 말과 행동에 무게를 두는 편입니다."
+    },
+    {
+      "color": "blue",
+      "animal": "dog",
+      "label": "파란개띠",
+      "description": "정서적 신뢰를 중시하는 유형입니다. 한 번 마음을 주면 오래 유지합니다."
+    },
+    {
+      "color": "blue",
+      "animal": "pig",
+      "label": "파란돼지띠",
+      "description": "감정적으로 여유롭고 포용력이 큽니다. 사람 사이의 흐름을 자연스럽게 이어갑니다."
+    },
+    {
+      "color": "green",
+      "animal": "rat",
+      "label": "초록쥐띠",
+      "description": "아이디어가 풍부하고 변화에 빠르게 적응합니다. 새로운 환경에서도 길을 만들어가는 타입입니다."
+    },
+    {
+      "color": "green",
+      "animal": "ox",
+      "label": "초록소띠",
+      "description": "꾸준함 속에서 성장하는 성향입니다. 느리지만 확실하게 실력을 쌓아갑니다."
+    },
+    {
+      "color": "green",
+      "animal": "tiger",
+      "label": "초록호랑이띠",
+      "description": "도전 정신과 성장 욕구가 강합니다. 새로운 길을 개척하는 데 주저함이 없습니다."
+    },
+    {
+      "color": "green",
+      "animal": "rabbit",
+      "label": "초록토끼띠",
+      "description": "관계 속에서 서서히 성장하는 유형입니다. 부드럽고 유연한 소통이 강점입니다."
+    },
+    {
+      "color": "green",
+      "animal": "dragon",
+      "label": "초록용띠",
+      "description": "잠재력과 확장성이 큰 유형입니다. 시간이 지날수록 영향력이 커집니다."
+    },
+    {
+      "color": "green",
+      "animal": "snake",
+      "label": "초록뱀띠",
+      "description": "신중하게 준비하며 기회를 키워가는 성향입니다. 내적 성장이 두드러집니다."
+    },
+    {
+      "color": "green",
+      "animal": "horse",
+      "label": "초록말띠",
+      "description": "활동성과 성장 욕구가 강합니다. 움직이며 배울 때 가장 빛납니다."
+    },
+    {
+      "color": "green",
+      "animal": "sheep",
+      "label": "초록양띠",
+      "description": "안정적인 환경에서 창의력이 살아납니다. 감성과 성장의 균형이 좋습니다."
+    },
+    {
+      "color": "green",
+      "animal": "monkey",
+      "label": "초록원숭이띠",
+      "description": "호기심과 학습 능력이 뛰어납니다. 다양한 경험을 통해 빠르게 성장합니다."
+    },
+    {
+      "color": "green",
+      "animal": "rooster",
+      "label": "초록닭띠",
+      "description": "자기 발전 욕구가 강한 유형입니다. 기준을 세우고 꾸준히 개선해 나갑니다."
+    },
+    {
+      "color": "green",
+      "animal": "dog",
+      "label": "초록개띠",
+      "description": "사람과 함께 성장하는 데서 의미를 찾습니다. 신뢰를 바탕으로 관계를 키워갑니다."
+    },
+    {
+      "color": "green",
+      "animal": "pig",
+      "label": "초록돼지띠",
+      "description": "여유 속에서 성장을 이루는 타입입니다. 자연스러운 흐름을 따릅니다."
+    },
+    {
+      "color": "white",
+      "animal": "rat",
+      "label": "흰쥐띠",
+      "description": "상황을 객관적으로 분석하며 감정에 휘둘리지 않는 타입입니다. 판단이 빠르고 냉정합니다."
+    },
+    {
+      "color": "white",
+      "animal": "ox",
+      "label": "흰소띠",
+      "description": "원칙과 규칙을 중시하는 성향입니다. 책임감이 강하고 흔들림이 적습니다."
+    },
+    {
+      "color": "white",
+      "animal": "tiger",
+      "label": "흰호랑이띠",
+      "description": "강한 의지와 명확한 기준을 가진 리더형입니다. 타협보다는 결단을 선택합니다."
+    },
+    {
+      "color": "white",
+      "animal": "rabbit",
+      "label": "흰토끼띠",
+      "description": "조용하지만 자기 기준이 분명한 유형입니다. 불필요한 갈등을 피하며 선을 지킵니다."
+    },
+    {
+      "color": "white",
+      "animal": "dragon",
+      "label": "흰용띠",
+      "description": "이상과 현실을 구분할 줄 아는 타입입니다. 큰 그림 속에서도 질서를 중시합니다."
+    },
+    {
+      "color": "white",
+      "animal": "snake",
+      "label": "흰뱀띠",
+      "description": "말수가 적고 신중한 판단을 내립니다. 깊이 생각한 뒤 움직이는 성향입니다."
+    },
+    {
+      "color": "white",
+      "animal": "horse",
+      "label": "흰말띠",
+      "description": "자유를 원하지만 스스로 규칙을 세우는 타입입니다. 절제된 행동력을 보입니다."
+    },
+    {
+      "color": "white",
+      "animal": "sheep",
+      "label": "흰양띠",
+      "description": "부드러운 겉모습과 달리 자기 원칙이 분명합니다. 감정과 거리를 두는 편입니다."
+    },
+    {
+      "color": "white",
+      "animal": "monkey",
+      "label": "흰원숭이띠",
+      "description": "재치보다는 판단을 앞세우는 유형입니다. 상황을 정리하고 구조화하는 데 강합니다."
+    },
+    {
+      "color": "white",
+      "animal": "rooster",
+      "label": "흰닭띠",
+      "description": "정확함과 완성도를 중시합니다. 기준이 높고 자기 관리가 철저합니다."
+    },
+    {
+      "color": "white",
+      "animal": "dog",
+      "label": "흰개띠",
+      "description": "의리와 원칙을 함께 지키는 성향입니다. 신뢰를 쉽게 깨지 않습니다."
+    },
+    {
+      "color": "white",
+      "animal": "pig",
+      "label": "흰돼지띠",
+      "description": "욕심을 절제하고 안정감을 추구합니다. 단순하지만 명확한 삶의 기준을 가집니다."
+    }
+  ]
+  
