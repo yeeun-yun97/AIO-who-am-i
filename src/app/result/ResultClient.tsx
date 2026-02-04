@@ -12,6 +12,19 @@ import TCIScore from '@/components/result/TCIScore';
 import SajuCard from '@/components/result/SajuCard';
 import ValueCard from '@/components/result/ValueCard';
 import mbtiDescriptions from '@/data/mbti.json';
+import mbtiDimensionData from '@/data/mbti-dimension.json';
+
+interface MBTIDimensionEntry {
+  full: string;
+  description: string;
+}
+
+// MBTI 차원별 설명 가져오기
+function getMBTIDimensionDescription(letter: string): MBTIDimensionEntry | null {
+  const dimension = mbtiDimensionData.find((item) => letter in item);
+  if (!dimension) return null;
+  return (dimension as unknown as Record<string, MBTIDimensionEntry>)[letter] || null;
+}
 
 interface ResultClientProps {
   sharedResult?: SharedResult | null;
@@ -274,20 +287,29 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
               )}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               {MBTI_DIMENSIONS.map((dim, index) => {
                 const labels = getDimensionLabel(dim.id, mbtiResult);
                 const isRight = ['E', 'N', 'T', 'J'].includes(labels.dominant as string);
+                const dimensionDetail =
+                  labels.dominant !== 'Ambivert' && labels.dominant !== '중간'
+                    ? getMBTIDimensionDescription(labels.dominant as string)
+                    : null;
 
                 return (
                   <div key={dim.id} className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <span className="text-sm font-medium text-[#191F28]">{dim.name}</span>
-                      <span className="text-sm font-bold text-[#3182F6]">
-                        {labels.dominant === 'Ambivert' || labels.dominant === '중간'
-                          ? labels.dominant
-                          : `${labels.dominant} (${labels.percentage}%)`}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        {dimensionDetail && (
+                          <span className="text-xs text-[#4E5968]">{dimensionDetail.full}</span>
+                        )}
+                        <span className="text-sm font-bold text-[#3182F6]">
+                          {labels.dominant === 'Ambivert' || labels.dominant === '중간'
+                            ? labels.dominant
+                            : `${labels.dominant} (${labels.percentage}%)`}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-[#8B95A1] w-16 text-right">{labels.left}</span>
@@ -304,6 +326,13 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
                       </div>
                       <span className="text-xs text-[#8B95A1] w-16">{labels.right}</span>
                     </div>
+                    {dimensionDetail && (
+                      <div className="mt-2 bg-[#F8F9FA] rounded-lg p-3">
+                        <p className="text-sm text-[#4E5968] leading-relaxed">
+                          {dimensionDetail.description}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 );
               })}
