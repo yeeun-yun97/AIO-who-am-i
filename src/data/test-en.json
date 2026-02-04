@@ -1,0 +1,619 @@
+[
+  {
+    "dimension": "I/E",
+    "description": "Questions to distinguish energy direction (Extraversion/Introversion)",
+    "questions": [
+      {
+        "id": "Q1",
+        "question": "You have a completely free holiday with no plans. What do you do?",
+        "options": [
+          { "key": "A", "text": "I need to call people and do something", "score": { "E": 2, "I": 0 } },
+          { "key": "B", "text": "Being alone is fine, but I usually end up meeting someone", "score": { "E": 1, "I": 0 } },
+          { "key": "C", "text": "I rest alone and reach out to others briefly if needed", "score": { "E": 0, "I": 1 } },
+          { "key": "D", "text": "Having no plans at all is the absolute best", "score": { "E": 0, "I": 2 } }
+        ]
+      },
+      {
+        "id": "Q2",
+        "question": "When you return home after a day of meeting many people?",
+        "options": [
+          { "key": "A", "text": "I still have energy and can keep hanging out", "score": { "E": 2, "I": 0 } },
+          { "key": "B", "text": "I'm tired, but I feel good", "score": { "E": 1, "I": 0 } },
+          { "key": "C", "text": "I'm satisfied, but I definitely need some alone time", "score": { "E": 0, "I": 1 } },
+          { "key": "D", "text": "Exhausted... I don't want to see anyone for a while", "score": { "E": 0, "I": 2 } }
+        ]
+      },
+      {
+        "id": "Q3",
+        "question": "When you go to a gathering full of new people?",
+        "options": [
+          { "key": "A", "text": "I tend to strike up conversations first and liven up the mood", "score": { "E": 2, "I": 0 } },
+          { "key": "B", "text": "I mingle naturally if someone talks to me first", "score": { "E": 1, "I": 0 } },
+          { "key": "C", "text": "I observe first and only talk to those I feel a connection with", "score": { "E": 0, "I": 1 } },
+          { "key": "D", "text": "I stay as quiet as possible and want to leave early", "score": { "E": 0, "I": 2 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "result": [
+        { "condition": "E > I", "type": "E (Extraversion)" },
+        { "condition": "I > E", "type": "I (Introversion)" },
+        { "condition": "E == I", "type": "Ambivert" }
+      ]
+    }
+  },
+  {
+    "dimension": "N/S",
+    "description": "Questions to distinguish information perception (Intuition / Sensing)",
+    "questions": [
+      {
+        "id": "Q1",
+        "question": "When learning a new concept, which explanation resonates with you most?",
+        "options": [
+          { "key": "A", "text": "Explaining the 'why' through metaphors and concepts", "score": { "N": 2, "S": 0 } },
+          { "key": "B", "text": "Outlining the overall structure and core ideas first", "score": { "N": 1, "S": 0 } },
+          { "key": "C", "text": "Showing real-life cases and examples one by one", "score": { "N": 0, "S": 1 } },
+          { "key": "D", "text": "Organizing definitions, data, and procedures step-by-step", "score": { "N": 0, "S": 2 } }
+        ]
+      },
+      {
+        "id": "Q2",
+        "question": "When solving a problem, what do you think about more often?",
+        "options": [
+          { "key": "A", "text": "What kind of possibilities could this lead to?", "score": { "N": 2, "S": 0 } },
+          { "key": "B", "text": "I could apply this to other areas as well", "score": { "N": 1, "S": 0 } },
+          { "key": "C", "text": "What is the most realistic method in the current situation?", "score": { "N": 0, "S": 1 } },
+          { "key": "D", "text": "What were the methods that proved successful in the past?", "score": { "N": 0, "S": 2 } }
+        ]
+      },
+      {
+        "id": "Q3",
+        "question": "During a conversation, I usually:",
+        "options": [
+          { "key": "A", "text": "Talk a lot about ideas, metaphors, and possibilities", "score": { "N": 2, "S": 0 } },
+          { "key": "B", "text": "Naturally jump to related thoughts from the main topic", "score": { "N": 1, "S": 0 } },
+          { "key": "C", "text": "Talk mainly about personal experiences or actual cases", "score": { "N": 0, "S": 1 } },
+          { "key": "D", "text": "Tend to speak by organizing mainly around facts", "score": { "N": 0, "S": 2 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "result": [
+        { "condition": "N > S", "type": "N (Intuition)" },
+        { "condition": "S > N", "type": "S (Sensing)" },
+        { "condition": "N == S", "type": "Balanced" }
+      ]
+    }
+  },
+  {
+    "dimension": "T/F",
+    "description": "Questions to distinguish decision-making criteria (Thinking / Feeling)",
+    "questions": [
+      {
+        "id": "Q1",
+        "question": "When making an important decision, I usually:",
+        "options": [
+          { "key": "A", "text": "Choose the option that is most logically sound", "score": { "T": 2, "F": 0 } },
+          { "key": "B", "text": "Prioritize objective criteria and only use emotions as reference", "score": { "T": 1, "F": 0 } },
+          { "key": "C", "text": "Adjust the decision while considering people's feelings", "score": { "T": 0, "F": 1 } },
+          { "key": "D", "text": "Think that how I feel about it is the most important factor", "score": { "T": 0, "F": 2 } }
+        ]
+      },
+      {
+        "id": "Q2",
+        "question": "When someone shares their struggles with me, I:",
+        "options": [
+          { "key": "A", "text": "Start by suggesting solutions and organizing the situation", "score": { "T": 2, "F": 0 } },
+          { "key": "B", "text": "Analyze the cause of the problem for them", "score": { "T": 1, "F": 0 } },
+          { "key": "C", "text": "Empathize and help them process their emotions", "score": { "T": 0, "F": 1 } },
+          { "key": "D", "text": "Just listen and provide comfort", "score": { "T": 0, "F": 2 } }
+        ]
+      },
+      {
+        "id": "Q3",
+        "question": "What do I care about most in a conflict situation?",
+        "options": [
+          { "key": "A", "text": "Who is right and who is wrong", "score": { "T": 2, "F": 0 } },
+          { "key": "B", "text": "Whether rational standards were followed", "score": { "T": 1, "F": 0 } },
+          { "key": "C", "text": "Whether the other person's feelings were hurt", "score": { "T": 0, "F": 1 } },
+          { "key": "D", "text": "Whether the relationship can be restored", "score": { "T": 0, "F": 2 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "result": [
+        { "condition": "T > F", "type": "T (Thinking)" },
+        { "condition": "F > T", "type": "F (Feeling)" },
+        { "condition": "T == F", "type": "Balanced" }
+      ]
+    }
+  },  
+  {
+    "dimension": "J/P",
+    "description": "Questions to distinguish lifestyle and planning tendencies (Judging / Perceiving)",
+    "questions": [
+      {
+        "id": "Q1",
+        "question": "When preparing for work or an appointment, I:",
+        "options": [
+          { "key": "A", "text": "Make a plan in advance and follow it exactly", "score": { "J": 2, "P": 0 } },
+          { "key": "B", "text": "Set a general framework and adjust as I go", "score": { "J": 1, "P": 0 } },
+          { "key": "C", "text": "Decide on the fly depending on the situation", "score": { "J": 0, "P": 1 } },
+          { "key": "D", "text": "Feel more comfortable doing things spontaneously without a plan", "score": { "J": 0, "P": 2 } }
+        ]
+      },
+      {
+        "id": "Q2",
+        "question": "When a deadline or schedule approaches, I:",
+        "options": [
+          { "key": "A", "text": "Feel at ease only if I finish it well in advance", "score": { "J": 2, "P": 0 } },
+          { "key": "B", "text": "Proceed steadily with plenty of time to spare", "score": { "J": 1, "P": 0 } },
+          { "key": "C", "text": "Focus better when there is some pressure", "score": { "J": 0, "P": 1 } },
+          { "key": "D", "text": "Often end up doing everything right before the deadline", "score": { "J": 0, "P": 2 } }
+        ]
+      },
+      {
+        "id": "Q3",
+        "question": "When making travel or weekend plans, I:",
+        "options": [
+          { "key": "A", "text": "Find joy in the process of creating an itinerary", "score": { "J": 2, "P": 0 } },
+          { "key": "B", "text": "At least decide on the places I want to visit in advance", "score": { "J": 1, "P": 0 } },
+          { "key": "C", "text": "Go with the flow once I arrive at the destination", "score": { "J": 0, "P": 1 } },
+          { "key": "D", "text": "Think leaving without any plans is the best", "score": { "J": 0, "P": 2 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "result": [
+        { "condition": "J > P", "type": "J (Judging)" },
+        { "condition": "P > J", "type": "P (Perceiving)" },
+        { "condition": "J == P", "type": "Balanced" }
+      ]
+    }
+  },
+  {
+    "dimension": "TCI-NS",
+    "description": "Questions to measure Novelty Seeking tendency",
+    "questions": [
+      {
+        "id": "Q5",
+        "question": "If a sudden new opportunity arises...",
+        "options": [
+          { "key": "A", "text": "I dive in immediately without much hesitation", "score": { "NS": 2 } },
+          { "key": "B", "text": "I try it if it looks interesting", "score": { "NS": 1 } },
+          { "key": "C", "text": "I decide after careful review", "score": { "NS": 0 } },
+          { "key": "D", "text": "I prefer to stick with familiar methods", "score": { "NS": -1 } }
+        ]
+      },
+      {
+        "id": "Q6",
+        "question": "When there is very little change in my daily routine, I:",
+        "options": [
+          { "key": "A", "text": "Get bored and intentionally create changes", "score": { "NS": 2 } },
+          { "key": "B", "text": "End up looking for something new", "score": { "NS": 1 } },
+          { "key": "C", "text": "Tend to feel comfortable with it", "score": { "NS": 0 } },
+          { "key": "D", "text": "Prefer not having any changes at all", "score": { "NS": -1 } }
+        ]
+      },
+      {
+        "id": "Q7",
+        "question": "Faced with a choice that involves some risk, I:",
+        "options": [
+          { "key": "A", "text": "Try it if it seems fun, even if it's risky", "score": { "NS": 2 } },
+          { "key": "B", "text": "Try it if I feel I can handle the risk", "score": { "NS": 1 } },
+          { "key": "C", "text": "Need safety to be guaranteed first", "score": { "NS": 0 } },
+          { "key": "D", "text": "Avoid risky choices as much as possible", "score": { "NS": -1 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "interpretation": [
+        { "range": "High", "description": "Impulsive and prefers new stimuli" },
+        { "range": "Medium", "description": "Pursues novelty and stability in balance depending on the situation" },
+        { "range": "Low", "description": "Prefers stable and familiar ways" }
+      ]
+    }
+  },
+  {
+    "dimension": "TCI-HA",
+    "description": "Questions to measure Harm Avoidance tendency",
+    "questions": [
+      {
+        "id": "Q8",
+        "question": "When placed in an uncertain situation, I:",
+        "options": [
+          { "key": "A", "text": "Just go for it without much worry", "score": { "HA": -2 } },
+          { "key": "B", "text": "Feel a bit nervous but can handle it", "score": { "HA": -1 } },
+          { "key": "C", "text": "Weigh various possibilities carefully", "score": { "HA": 0 } },
+          { "key": "D", "text": "End up worrying about the worst-case scenario first", "score": { "HA": 1 } }
+        ]
+      },
+      {
+        "id": "Q9",
+        "question": "Faced with a task where I might make a mistake, I:",
+        "options": [
+          { "key": "A", "text": "Think mistakes are just part of the experience", "score": { "HA": -2 } },
+          { "key": "B", "text": "Am careful but don't worry too much", "score": { "HA": -1 } },
+          { "key": "C", "text": "Prepare thoroughly to avoid making mistakes", "score": { "HA": 0 } },
+          { "key": "D", "text": "Find it burdensome to even start for fear of making a mistake", "score": { "HA": 1 } }
+        ]
+      },
+      {
+        "id": "Q10",
+        "question": "When thinking about the future, I:",
+        "options": [
+          { "key": "A", "text": "Feel anticipation and excitement first", "score": { "HA": -2 } },
+          { "key": "B", "text": "Feel a mix of good things and worries", "score": { "HA": -1 } },
+          { "key": "C", "text": "Try to prepare realistically", "score": { "HA": 0 } },
+          { "key": "D", "text": "Have anxious elements come to mind first", "score": { "HA": 1 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "interpretation": [
+        { "range": "High", "description": "High anxiety sensitivity, cautious, and avoids risk" },
+        { "range": "Medium", "description": "Balances caution and challenge depending on the situation" },
+        { "range": "Low", "description": "Optimistic and has less fear regarding risks" }
+      ]
+    }
+  },
+  {
+    "dimension": "TCI-RD",
+    "description": "Questions to measure Reward Dependence tendency",
+    "questions": [
+      {
+        "id": "Q11",
+        "question": "How others perceive me is to me:",
+        "options": [
+          { "key": "A", "text": "Something I hardly care about", "score": { "RD": -2 } },
+          { "key": "B", "text": "Something I'm conscious of occasionally, but doesn't affect me much", "score": { "RD": -1 } },
+          { "key": "C", "text": "Something I feel is important to some extent", "score": { "RD": 0 } },
+          { "key": "D", "text": "Quite important and influences my behavior", "score": { "RD": 1 } }
+        ]
+      },
+      {
+        "id": "Q12",
+        "question": "When I receive praise or recognition, I:",
+        "options": [
+          { "key": "A", "text": "Think it's nice to have, but I'm fine without it", "score": { "RD": -2 } },
+          { "key": "B", "text": "Feel good, but it doesn't change much for me", "score": { "RD": -1 } },
+          { "key": "C", "text": "Tend to feel motivated by it", "score": { "RD": 0 } },
+          { "key": "D", "text": "Find that it greatly influences my future actions", "score": { "RD": 1 } }
+        ]
+      },
+      {
+        "id": "Q13",
+        "question": "In relationships with people, I:",
+        "options": [
+          { "key": "A", "text": "Think it's fine to only reach out when needed", "score": { "RD": -2 } },
+          { "key": "B", "text": "Value relationships but think independence is more important", "score": { "RD": -1 } },
+          { "key": "C", "text": "Make an effort to maintain relationships consistently", "score": { "RD": 0 } },
+          { "key": "D", "text": "Feel that emotional bonds and intimacy are very important", "score": { "RD": 1 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "interpretation": [
+        { "range": "High", "description": "Sensitive to others' reactions and values emotional bonds" },
+        { "range": "Medium", "description": "Maintains a balance between relationships and independence" },
+        { "range": "Low", "description": "Independent and not easily swayed by external recognition" }
+      ]
+    }
+  },
+  {
+    "dimension": "TCI-PS",
+    "description": "Questions to measure Persistence tendency",
+    "questions": [
+      {
+        "id": "Q14",
+        "question": "When a task takes longer than expected, I:",
+        "options": [
+          { "key": "A", "text": "Push through steadily until it's finished", "score": { "PS": 2 } },
+          { "key": "B", "text": "Continue as much as possible even if it's hard", "score": { "PS": 1 } },
+          { "key": "C", "text": "Judge whether to stop based on the situation", "score": { "PS": 0 } },
+          { "key": "D", "text": "Quit early if it doesn't seem efficient", "score": { "PS": -1 } }
+        ]
+      },
+      {
+        "id": "Q15",
+        "question": "When given a repetitive and boring task, I:",
+        "options": [
+          { "key": "A", "text": "Carry it out silently until the end", "score": { "PS": 2 } },
+          { "key": "B", "text": "Complain but ultimately complete it", "score": { "PS": 1 } },
+          { "key": "C", "text": "End up taking frequent breaks in between", "score": { "PS": 0 } },
+          { "key": "D", "text": "Lose interest and let go of it quickly", "score": { "PS": -1 } }
+        ]
+      },
+      {
+        "id": "Q16",
+        "question": "When I experience multiple failures, I:",
+        "options": [
+          { "key": "A", "text": "Keep trying by changing methods until it works", "score": { "PS": 2 } },
+          { "key": "B", "text": "Rest a bit and then challenge myself again", "score": { "PS": 1 } },
+          { "key": "C", "text": "Recalculate the probability of success", "score": { "PS": 0 } },
+          { "key": "D", "text": "Feel it's better to find a different path", "score": { "PS": -1 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "interpretation": [
+        { "range": "High", "description": "Persistent and makes continuous efforts until goals are achieved" },
+        { "range": "Medium", "description": "Adjusts between persisting and giving up based on the situation" },
+        { "range": "Low", "description": "Flexible but may feel burdened by long-term persistence" }
+      ]
+    }
+  }  ,
+  {
+    "dimension": "TCI-SD",
+    "description": "Questions to measure Self-Directedness tendency",
+    "questions": [
+      {
+        "id": "Q17",
+        "question": "When I need to set goals, I:",
+        "options": [
+          { "key": "A", "text": "Set clear goals and take responsibility until the end", "score": { "SD": 2 } },
+          { "key": "B", "text": "Set goals but adjust them according to the situation", "score": { "SD": 1 } },
+          { "key": "C", "text": "Find my goals changing frequently with the flow", "score": { "SD": 0 } },
+          { "key": "D", "text": "Respond as things come without clear goals", "score": { "SD": -1 } }
+        ]
+      },
+      {
+        "id": "Q18",
+        "question": "When a problem arises, I usually:",
+        "options": [
+          { "key": "A", "text": "View it as my responsibility and look for a solution", "score": { "SD": 2 } },
+          { "key": "B", "text": "Analyze the situation and do what I can", "score": { "SD": 1 } },
+          { "key": "C", "text": "Feel that external factors have a large influence", "score": { "SD": 0 } },
+          { "key": "D", "text": "Feel like it's the fault of the environment or others", "score": { "SD": -1 } }
+        ]
+      },
+      {
+        "id": "Q19",
+        "question": "Looking back on my life in the long run:",
+        "options": [
+          { "key": "A", "text": "I feel my choices made me who I am today", "score": { "SD": 2 } },
+          { "key": "B", "text": "I think I have generally set my own direction", "score": { "SD": 1 } },
+          { "key": "C", "text": "I also feel like I've been dragged by circumstances", "score": { "SD": 0 } },
+          { "key": "D", "text": "There were many things beyond my control", "score": { "SD": -1 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "interpretation": [
+        { "range": "High", "description": "High responsibility, self-control, and goal-oriented" },
+        { "range": "Medium", "description": "Shows both self-direction and flexibility depending on the situation" },
+        { "range": "Low", "description": "Highly influenced by the external environment; may struggle with setting direction" }
+      ]
+    }
+  },
+  {
+    "dimension": "TCI-CO",
+    "description": "Questions to measure Cooperativeness tendency",
+    "questions": [
+      {
+        "id": "Q20",
+        "question": "When I have to work with someone who has different opinions, I:",
+        "options": [
+          { "key": "A", "text": "Try to find a compromise where we can both understand each other", "score": { "CO": 2 } },
+          { "key": "B", "text": "Listen to the other's opinion and try to coordinate", "score": { "CO": 1 } },
+          { "key": "C", "text": "Think I just need to perform my own role faithfully", "score": { "CO": 0 } },
+          { "key": "D", "text": "Don't really make a special effort to align", "score": { "CO": -1 } }
+        ]
+      },
+      {
+        "id": "Q21",
+        "question": "What do I value most in a conflict situation?",
+        "options": [
+          { "key": "A", "text": "A resolution where no one gets hurt", "score": { "CO": 2 } },
+          { "key": "B", "text": "The relationship not being severely damaged", "score": { "CO": 1 } },
+          { "key": "C", "text": "The problem being settled", "score": { "CO": 0 } },
+          { "key": "D", "text": "My position being clearly communicated", "score": { "CO": -1 } }
+        ]
+      },
+      {
+        "id": "Q22",
+        "question": "When someone looks like they need help, I:",
+        "options": [
+          { "key": "A", "text": "Help first even if it's not my job", "score": { "CO": 2 } },
+          { "key": "B", "text": "Tend to help if I have the time and energy", "score": { "CO": 1 } },
+          { "key": "C", "text": "Help if there is a request", "score": { "CO": 0 } },
+          { "key": "D", "text": "Think it's better for everyone to focus on their own work", "score": { "CO": -1 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "interpretation": [
+        { "range": "High", "description": "High empathy; values cooperation and consideration" },
+        { "range": "Medium", "description": "Adjusts between cooperation and individual standards based on the situation" },
+        { "range": "Low", "description": "Independent and tends to prioritize individual standards" }
+      ]
+    }
+  },
+  {
+    "dimension": "TCI-ST",
+    "description": "Questions to measure Self-Transcendence tendency",
+    "questions": [
+      {
+        "id": "Q23",
+        "question": "In life, what do I usually think I find meaning in?",
+        "options": [
+          { "key": "A", "text": "Personal goals and achievements", "score": { "ST": -2 } },
+          { "key": "B", "text": "Relationships with close people", "score": { "ST": -1 } },
+          { "key": "C", "text": "Considering the values of society or the community", "score": { "ST": 1 } },
+          { "key": "D", "text": "Meanings on a cosmic, philosophical, or spiritual dimension", "score": { "ST": 2 } }
+        ]
+      },
+      {
+        "id": "Q24",
+        "question": "When looking at a problem, how do I mainly think?",
+        "options": [
+          { "key": "A", "text": "Focus only on practical solutions", "score": { "ST": -2 } },
+          { "key": "B", "text": "Solve it by cooperating with people", "score": { "ST": -1 } },
+          { "key": "C", "text": "Try to understand the problem in a larger context", "score": { "ST": 1 } },
+          { "key": "D", "text": "Explore the meaning and essence rather than the problem itself", "score": { "ST": 2 } }
+        ]
+      },
+      {
+        "id": "Q25",
+        "question": "When looking at my own life or experiences, I:",
+        "options": [
+          { "key": "A", "text": "Center them around my personal interests and goals", "score": { "ST": -2 } },
+          { "key": "B", "text": "Mainly view them as connected to family and friends", "score": { "ST": -1 } },
+          { "key": "C", "text": "Understand them within a social or environmental context", "score": { "ST": 1 } },
+          { "key": "D", "text": "Reflect from the perspective of nature, the universe, or spiritual dimensions", "score": { "ST": 2 } }
+        ]
+      }
+    ],
+    "scoring_rule": {
+      "interpretation": [
+        { "range": "High", "description": "Transcends the self and tries to understand life from a broad perspective" },
+        { "range": "Medium", "description": "Balances self and others depending on the situation and need" },
+        { "range": "Low", "description": "Tends to focus on personal and realistic perspectives" }
+      ]
+    }
+  },
+  {
+    "dimension": "Stability/Change",
+    "description": "Whether you value stability or change more",
+    "questions": [
+      {
+        "id": "V1_Q1",
+        "question": "Faced with a choice that could significantly disrupt your current life, what do you do?",
+        "options": [
+          { "key": "A", "text": "I choose new possibilities even if they are risky", "score": { "Change": 2, "Stability": 0 } },
+          { "key": "B", "text": "It is worth calculating the risk", "score": { "Change": 1, "Stability": 0 } },
+          { "key": "C", "text": "I feel there's no particular need to change", "score": { "Change": 0, "Stability": 1 } },
+          { "key": "D", "text": "I avoid any possibility of breaking my current stability", "score": { "Change": 0, "Stability": 2 } }
+        ]
+      },
+      {
+        "id": "V1_Q2",
+        "question": "When you have to adapt to a new environment, you:",
+        "options": [
+          { "key": "A", "text": "Feel fluttery and full of anticipation", "score": { "Change": 2, "Stability": 0 } },
+          { "key": "B", "text": "Feel nervous, but it's not bad", "score": { "Change": 1, "Stability": 0 } },
+          { "key": "C", "text": "Experience high stress until I get used to it", "score": { "Change": 0, "Stability": 1 } },
+          { "key": "D", "text": "Would rather avoid it if possible", "score": { "Change": 0, "Stability": 2 } }
+        ]
+      },
+      {
+        "id": "V1_Q3",
+        "question": "If you had to choose between a predictable life and an unpredictable life?",
+        "options": [
+          { "key": "A", "text": "An interesting life even with many variables", "score": { "Change": 2, "Stability": 0 } },
+          { "key": "B", "text": "A life with some slight changes", "score": { "Change": 1, "Stability": 0 } },
+          { "key": "C", "text": "A generally stable life", "score": { "Change": 0, "Stability": 1 } },
+          { "key": "D", "text": "A predictable and stable life", "score": { "Change": 0, "Stability": 2 } }
+        ]
+      }
+    ]
+  },
+  {
+    "dimension": "Relationship/Individual",
+    "description": "Which value you prioritize more: relationships or the individual",
+    "questions": [
+      {
+        "id": "V2_Q1",
+        "question": "When making an important decision, I:",
+        "options": [
+          { "key": "A", "text": "Prioritize what I want above all else", "score": { "Individual": 2, "Relationship": 0 } },
+          { "key": "B", "text": "Consider the influence of others, though it's my choice", "score": { "Individual": 1, "Relationship": 0 } },
+          { "key": "C", "text": "Think first about harmony with people around me", "score": { "Individual": 0, "Relationship": 1 } },
+          { "key": "D", "text": "Don't make the choice if it will break relationships", "score": { "Individual": 0, "Relationship": 2 } }
+        ]
+      },
+      {
+        "id": "V2_Q2",
+        "question": "If someone could be disappointed by your choice?",
+        "options": [
+          { "key": "A", "text": "I still can't change my choice", "score": { "Individual": 2, "Relationship": 0 } },
+          { "key": "B", "text": "I explain it but stick to my choice", "score": { "Individual": 1, "Relationship": 0 } },
+          { "key": "C", "text": "I consider the other person's position more", "score": { "Individual": 0, "Relationship": 1 } },
+          { "key": "D", "text": "I avoid choices that disappoint others", "score": { "Individual": 0, "Relationship": 2 } }
+        ]
+      },
+      {
+        "id": "V2_Q3",
+        "question": "What do you feel is more important in the long run?",
+        "options": [
+          { "key": "A", "text": "Living the life I want", "score": { "Individual": 2, "Relationship": 0 } },
+          { "key": "B", "text": "Maintaining my autonomy", "score": { "Individual": 1, "Relationship": 0 } },
+          { "key": "C", "text": "Having people to walk through life with", "score": { "Individual": 0, "Relationship": 1 } },
+          { "key": "D", "text": "Stability and continuity in relationships", "score": { "Individual": 0, "Relationship": 2 } }
+        ]
+      }
+    ]
+  },
+  {
+    "dimension": "Achievement/Balance",
+    "description": "Where you place more value: achievement or balance",
+    "questions": [
+      {
+        "id": "V3_Q1",
+        "question": "My attitude toward work or goals is:",
+        "options": [
+          { "key": "A", "text": "Results are the most important thing", "score": { "Achievement": 2, "Balance": 0 } },
+          { "key": "B", "text": "Achieve results but don't overdo it", "score": { "Achievement": 1, "Balance": 0 } },
+          { "key": "C", "text": "A sustainable pace is important", "score": { "Achievement": 0, "Balance": 1 } },
+          { "key": "D", "text": "Life balance comes before achievement", "score": { "Achievement": 0, "Balance": 2 } }
+        ]
+      },
+      {
+        "id": "V3_Q2",
+        "question": "If you had to choose between rest and work?",
+        "options": [
+          { "key": "A", "text": "I choose work even if I could rest", "score": { "Achievement": 2, "Balance": 0 } },
+          { "key": "B", "text": "I prioritize work depending on the situation", "score": { "Achievement": 1, "Balance": 0 } },
+          { "key": "C", "text": "I protect my rest time as much as possible", "score": { "Achievement": 0, "Balance": 1 } },
+          { "key": "D", "text": "If rest is compromised, everything falls apart", "score": { "Achievement": 0, "Balance": 2 } }
+        ]
+      },
+      {
+        "id": "V3_Q3",
+        "question": "In which situation would you feel the most regret?",
+        "options": [
+          { "key": "A", "text": "Finishing without having given my absolute best", "score": { "Achievement": 2, "Balance": 0 } },
+          { "key": "B", "text": "Not pushing myself a bit further", "score": { "Achievement": 1, "Balance": 0 } },
+          { "key": "C", "text": "Getting burnt out by overdoing it", "score": { "Achievement": 0, "Balance": 1 } },
+          { "key": "D", "text": "Just being busy without having enjoyed life", "score": { "Achievement": 0, "Balance": 2 } }
+        ]
+      }
+    ]
+  },
+  {
+    "dimension": "Reality/Meaning",
+    "description": "Which you prioritize more: realistic efficiency or meaning",
+    "questions": [
+      {
+        "id": "V4_Q1",
+        "question": "When starting something new, what is your criterion?",
+        "options": [
+          { "key": "A", "text": "I check if there are practical benefits and stability first", "score": { "Reality": 2, "Meaning": 0 } },
+          { "key": "B", "text": "Benefits are important, but I also consider if there's experience or learning", "score": { "Reality": 1, "Meaning": 1 } },
+          { "key": "C", "text": "I take on the challenge if there is meaning and value, even if benefits are lacking", "score": { "Reality": 0, "Meaning": 2 } },
+          { "key": "D", "text": "Meaning and satisfaction are absolutely the most important; practical gains come later", "score": { "Reality": 0, "Meaning": 2 } }
+        ]
+      },
+      {
+        "id": "V4_Q2",
+        "question": "What if a job pays well but is meaningless?",
+        "options": [
+          { "key": "A", "text": "I can do it if the conditions are good", "score": { "Reality": 2, "Meaning": 0 } },
+          { "key": "B", "text": "It's possible if it's for a short term", "score": { "Reality": 1, "Meaning": 0 } },
+          { "key": "C", "text": "It would be hard to do for a long time", "score": { "Reality": 0, "Meaning": 1 } },
+          { "key": "D", "text": "I wouldn't choose it at all", "score": { "Reality": 0, "Meaning": 2 } }
+        ]
+      },
+      {
+        "id": "V4_Q3",
+        "question": "In what moment do you feel satisfaction?",
+        "options": [
+          { "key": "A", "text": "When the actual results are good and goals are achieved", "score": { "Reality": 2, "Meaning": 0 } },
+          { "key": "B", "text": "When results are good and it was a meaningful experience", "score": { "Reality": 1, "Meaning": 1 } },
+          { "key": "C", "text": "I'm satisfied if it was meaningful, even if results were slightly lacking", "score": { "Reality": 0, "Meaning": 2 } },
+          { "key": "D", "text": "I'm satisfied only when I feel meaning and value", "score": { "Reality": 0, "Meaning": 2 } }
+        ]
+      }
+    ]
+  }
+]
