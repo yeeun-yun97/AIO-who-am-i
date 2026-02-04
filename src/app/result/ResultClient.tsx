@@ -37,7 +37,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
       return sharedResult.sajuResult as unknown as SajuResult;
     }
     if (state.userInfo?.birthDate) {
-      return calculateSaju(state.userInfo.birthDate, state.userInfo.birthTime);
+      return calculateSaju(state.userInfo.birthDate, null);
     }
     return null;
   }, [isSharedView, sharedResult, state.userInfo]);
@@ -48,7 +48,6 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
       return {
         name: sharedResult.userName,
         birthDate: sharedResult.birthDate,
-        birthTime: null as string | null,
       };
     }
     return state.userInfo;
@@ -118,7 +117,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
       if (state.sessionId && !savedRef.current) {
         savedRef.current = true;
         const saju = state.userInfo?.birthDate
-          ? calculateSaju(state.userInfo.birthDate, state.userInfo.birthTime)
+          ? calculateSaju(state.userInfo.birthDate, null)
           : null;
 
         saveQuizResult(
@@ -253,8 +252,6 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
           {displayUserInfo && (
             <p className="text-sm text-[#8B95A1]">
               {displayUserInfo.birthDate.replace(/-/g, '.')}
-              {displayUserInfo.birthTime && ` ${displayUserInfo.birthTime}`}
-              {displayUserInfo.birthTime === null && ' (시간 미상)'}
             </p>
           )}
         </div>

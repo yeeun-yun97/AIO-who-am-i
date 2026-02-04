@@ -51,7 +51,6 @@ export interface Answer {
 export interface UserInfo {
   name: string;
   birthDate: string; // YYYY-MM-DD
-  birthTime: string | null; // HH:mm or null if unknown
 }
 
 export interface QuizState {

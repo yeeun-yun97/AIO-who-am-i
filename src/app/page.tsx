@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import DateSelect from '@/components/ui/DateSelect';
 import { useQuiz } from '@/contexts/QuizContext';
 import { findOrCreateSession } from '@/lib/supabase';
 
@@ -13,8 +14,6 @@ export default function Home() {
 
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
-  const [birthTime, setBirthTime] = useState('');
-  const [unknownTime, setUnknownTime] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const isFormValid = name.trim() !== '' && birthDate !== '';
@@ -38,7 +37,6 @@ export default function Home() {
       setUserInfo({
         name: name.trim(),
         birthDate,
-        birthTime: unknownTime ? null : birthTime || null,
       });
 
       // 기존 결과가 있으면 결과 페이지로 이동
@@ -56,7 +54,6 @@ export default function Home() {
         setUserInfo({
           name: name.trim(),
           birthDate,
-          birthTime: unknownTime ? null : birthTime || null,
         });
         router.push('/quiz');
       }
@@ -67,7 +64,6 @@ export default function Home() {
       setUserInfo({
         name: name.trim(),
         birthDate,
-        birthTime: unknownTime ? null : birthTime || null,
       });
       router.push('/quiz');
     } finally {
@@ -98,7 +94,7 @@ export default function Home() {
             나를 알아가는 여정
           </h1>
           <p className="text-base text-[#8B95A1] leading-relaxed">
-            33개의 질문으로 알아보는 MBTI와 기질
+            45개의 질문으로 알아보는 MBTI와 기질
           </p>
         </div>
 
@@ -121,44 +117,12 @@ export default function Home() {
 
           {/* 생년월일 */}
           <div>
-            <label htmlFor="birthDate" className="block text-sm font-medium text-[#191F28] mb-2">
+            <label className="block text-sm font-medium text-[#191F28] mb-2">
               생년월일 <span className="text-[#F04452]">*</span>
             </label>
-            <input
-              type="date"
-              id="birthDate"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full px-4 py-3 bg-[#F4F4F4] border-2 border-transparent rounded-xl text-[#191F28] focus:bg-white focus:border-[#3182F6] focus:outline-none transition-all duration-200"
-            />
+            <DateSelect value={birthDate} onChange={setBirthDate} />
           </div>
 
-          {/* 태어난 시간 */}
-          <div>
-            <label htmlFor="birthTime" className="block text-sm font-medium text-[#191F28] mb-2">
-              태어난 시간
-            </label>
-            <input
-              type="time"
-              id="birthTime"
-              value={birthTime}
-              onChange={(e) => setBirthTime(e.target.value)}
-              disabled={unknownTime}
-              className="w-full px-4 py-3 bg-[#F4F4F4] border-2 border-transparent rounded-xl text-[#191F28] focus:bg-white focus:border-[#3182F6] focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            />
-            <label className="flex items-center gap-2 mt-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={unknownTime}
-                onChange={(e) => {
-                  setUnknownTime(e.target.checked);
-                  if (e.target.checked) setBirthTime('');
-                }}
-                className="w-4 h-4 rounded border-[#B0B8C1] text-[#3182F6] focus:ring-[#3182F6]"
-              />
-              <span className="text-sm text-[#8B95A1]">모르겠음</span>
-            </label>
-          </div>
         </div>
 
         <div className="bg-[#F4F4F4] rounded-xl p-4 mb-8">
