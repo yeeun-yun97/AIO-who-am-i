@@ -23,10 +23,7 @@ export default function StarSignCard({ zodiacSign }: StarSignCardProps) {
 
   return (
     <Card className="mb-6">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-[32px]">{zodiacSign.emoji}</span>
-        <h2 className="text-lg font-bold text-[#191F28]">별자리</h2>
-      </div>
+      <h2 className="text-lg font-bold text-[#191F28] mb-4">별자리</h2>
       <p className="text-2xl font-bold text-[#3182F6] mb-3">{zodiacSign.name}</p>
       {description && (
         <p className="text-sm text-[#4E5968] leading-relaxed">

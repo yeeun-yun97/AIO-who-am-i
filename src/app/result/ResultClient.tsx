@@ -28,6 +28,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
   const [valueResult, setValueResult] = useState<ValueResult | null>(null);
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<'summary' | 'detail'>('summary');
   const savedRef = useRef(false);
 
   // 공유된 결과인지 확인
@@ -79,6 +80,9 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
       if (sharedResult.tciScores) {
         setTciResult(sharedResult.tciScores as unknown as TCIResult);
       }
+      if (sharedResult.valueScores) {
+        setValueResult(sharedResult.valueScores as unknown as ValueResult);
+      }
       return;
     }
 
@@ -86,6 +90,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
     if (state.savedResult) {
       const savedMbti = state.savedResult.mbti_result;
       const savedTci = state.savedResult.tci_scores as unknown as TCIResult;
+      const savedValue = state.savedResult.value_scores as unknown as ValueResult;
 
       if (savedMbti) {
         setMbtiResult({
@@ -102,6 +107,10 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
 
       if (savedTci) {
         setTciResult(savedTci);
+      }
+
+      if (savedValue) {
+        setValueResult(savedValue);
       }
       return;
     }
@@ -235,52 +244,110 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
   return (
     <main className="min-h-screen flex flex-col items-center px-4 py-12">
       <div className="w-full max-w-lg">
-        {/* 헤더 */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#00C471]/10 flex items-center justify-center">
-            <svg className="w-8 h-8 text-[#00C471]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+        {/* 헤더 + 탭 */}
+        <div className="flex items-center justify-between mb-6">
+          {displayUserInfo && (
+            <h1 className="text-2xl font-bold text-[#191F28]">
+              {displayUserInfo.name}님의 결과
+            </h1>
+          )}
+
+          {/* 탭 - iOS 스타일 세그먼트 컨트롤 */}
+          <div className="inline-flex bg-[#F2F2F7] p-1 rounded-lg">
+            <button
+              onClick={() => setActiveTab('summary')}
+              className={`py-1.5 px-3 text-sm font-medium rounded-md transition-all ${
+                activeTab === 'summary'
+                  ? 'text-[#191F28] bg-white shadow-sm'
+                  : 'text-[#8B95A1]'
+              }`}
+            >
+              요약
+            </button>
+            <button
+              onClick={() => setActiveTab('detail')}
+              className={`py-1.5 px-3 text-sm font-medium rounded-md transition-all ${
+                activeTab === 'detail'
+                  ? 'text-[#191F28] bg-white shadow-sm'
+                  : 'text-[#8B95A1]'
+              }`}
+            >
+              자세히
+            </button>
           </div>
-          {displayUserInfo && (
-            <p className="text-lg font-semibold text-[#3182F6] mb-2">{displayUserInfo.name}님의 결과</p>
-          )}
-          <h1 className="text-2xl md:text-3xl font-bold text-[#191F28] mb-2">테스트 완료!</h1>
-          {displayUserInfo && (
-            <p className="text-sm text-[#8B95A1]">
-              {displayUserInfo.birthDate.replace(/-/g, '.')}
-            </p>
-          )}
         </div>
 
-        {/* AI 요약 */}
-        <Card className="mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#3182F6] to-[#00C471] flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        {/* 요약 탭 */}
+        {activeTab === 'summary' && (
+          <div className="mb-6">
+          {/* 상단: 이미지 + 핵심 정보 */}
+          <div className="flex gap-4 mb-5">
+            {/* 이미지 */}
+            <div className="w-40 h-40 flex-shrink-0 bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] rounded-2xl flex items-center justify-center">
+              <svg className="w-12 h-12 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <h2 className="text-lg font-bold text-[#191F28]">AI 성격 분석</h2>
+            {/* 핵심 키워드 */}
+            <div className="flex-1 flex flex-col justify-end">
+              <p className="text-xs text-[#8B95A1] mb-1">핵심 성향</p>
+              <div className="flex flex-wrap gap-1.5">
+                <span className="px-2.5 py-1 bg-[#3182F6]/10 text-[#3182F6] text-xs font-medium rounded-full">감성적</span>
+                <span className="px-2.5 py-1 bg-[#3182F6]/10 text-[#3182F6] text-xs font-medium rounded-full">신중함</span>
+                <span className="px-2.5 py-1 bg-[#3182F6]/10 text-[#3182F6] text-xs font-medium rounded-full">공감력</span>
+                <span className="px-2.5 py-1 bg-[#3182F6]/10 text-[#3182F6] text-xs font-medium rounded-full">창의적</span>
+              </div>
+            </div>
           </div>
-          <p className="text-[#4E5968] leading-relaxed text-sm">
-            {displayUserInfo?.name}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다.
-            새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게
-            여러 각도에서 검토하는 성향을 보입니다. 타인의 감정에 공감하는 능력이 뛰어나며,
-            조화로운 관계를 중시합니다. 때로는 완벽을 추구하는 경향이 있어 스스로에게
-            높은 기준을 세우기도 합니다. 창의적인 문제 해결 능력과 직관력이 강점이며,
-            의미 있는 일에 깊이 몰입할 때 가장 큰 만족감을 느낍니다. 안정적인 환경에서
-            자신만의 속도로 성장해 나가는 것을 선호하며, 진정성 있는 인간관계를 소중히 여깁니다.
-          </p>
-        </Card>
 
-        {/* 동물띠 */}
-        {sajuResult && <ZodiacCard coloredZodiac={sajuResult.coloredZodiac} />}
+          {/* 분석 텍스트 */}
+          <div className="bg-[#FAFAFA] rounded-2xl p-5 mb-4">
+            <p className="text-[#333D4B] leading-7 text-base">
+              {displayUserInfo?.name}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다.
+              새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게
+              여러 각도에서 검토하는 성향을 보입니다.
+            </p>
+            <p className="text-[#333D4B] leading-7 text-base mt-4">
+              타인의 감정에 공감하는 능력이 뛰어나며, 조화로운 관계를 중시합니다.
+              창의적인 문제 해결 능력과 직관력이 강점이며, 의미 있는 일에 깊이 몰입할 때
+              가장 큰 만족감을 느낍니다.
+            </p>
+          </div>
+
+          {/* 공유하기 버튼 */}
+          <button
+            onClick={handleShare}
+            className="w-full py-3 px-6 rounded-xl font-semibold text-white bg-[#3182F6] hover:bg-[#1B64DA] transition-colors"
+          >
+            {copied ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                링크가 복사됐어요!
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                  />
+                </svg>
+                공유하기
+              </span>
+            )}
+          </button>
+          </div>
+        )}
+
+        {/* 자세히 탭 */}
+        {activeTab === 'detail' && (
+          <>
+            {/* 동물띠 */}
+            {sajuResult && <ZodiacCard coloredZodiac={sajuResult.coloredZodiac} />}
 
         {/* 별자리 */}
         {sajuResult?.zodiacSign && <StarSignCard zodiacSign={sajuResult.zodiacSign} />}
@@ -291,10 +358,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         {/* MBTI 결과 */}
         {mbtiResult && (
           <Card className="mb-6">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-[32px]">🧩</span>
-              <h2 className="text-lg font-bold text-[#191F28]">MBTI</h2>
-            </div>
+            <h2 className="text-lg font-bold text-[#191F28] mb-4">MBTI</h2>
             <p className="text-2xl font-bold text-[#3182F6] mb-3">{mbtiResult.type}</p>
             {results.mbti[mbtiResult.type as keyof typeof results.mbti] && (
               <p className="text-sm text-[#4E5968] mb-6 leading-relaxed">
@@ -322,10 +386,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         {/* TCI 결과 */}
         {tciResult && (
           <Card className="mb-6">
-            <div className="flex items-center gap-2 mb-6">
-              <span className="text-[32px]">🎭</span>
-              <h2 className="text-lg font-bold text-[#191F28]">TCI</h2>
-            </div>
+            <h2 className="text-lg font-bold text-[#191F28] mb-6">TCI</h2>
             {TCI_DIMENSIONS.map((dim, index) => {
               const result = tciResult[dim.id as keyof TCIResult];
               return (
@@ -342,34 +403,10 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         )}
 
         {/* 가치관 결과 */}
-        {valueResult && <ValueCard value={valueResult} />}
-
-        {/* 공유하기 버튼 */}
-        <button
-          onClick={handleShare}
-          className="w-full py-4 px-6 rounded-xl font-semibold text-white bg-[#3182F6] hover:bg-[#1B64DA] transition-colors relative"
-        >
-          {copied ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              링크가 복사됐어요!
-            </span>
-          ) : (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                />
-              </svg>
-              공유하기
-            </span>
-          )}
-        </button>
+            {/* 가치관 결과 */}
+            {valueResult && <ValueCard value={valueResult} />}
+          </>
+        )}
       </div>
     </main>
   );

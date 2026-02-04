@@ -41,10 +41,7 @@ export default function SajuCard({ saju }: SajuCardProps) {
 
   return (
     <Card className="mb-6">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-[32px]">☯️</span>
-        <h2 className="text-lg font-bold text-[#191F28]">사주 팔자</h2>
-      </div>
+      <h2 className="text-lg font-bold text-[#191F28] mb-4">사주 팔자</h2>
       <p className="text-2xl font-bold text-[#3182F6] mb-4">
         {saju.day.stem}{saju.day.stemHanja} {saju.day.branch}{saju.day.branchHanja}
       </p>

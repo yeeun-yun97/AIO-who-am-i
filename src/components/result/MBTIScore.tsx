@@ -52,20 +52,23 @@ export default function MBTIScore({
           </span>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-[#8B95A1] w-16 text-right">{leftLabel}</span>
-        <div className="flex-1 h-2 bg-[#F4F4F4] rounded-full overflow-hidden relative">
-          <div
-            className="absolute top-0 h-full bg-[#3182F6] rounded-full transition-all duration-700 ease-out"
-            style={{
-              width: `${percentage}%`,
-              left: isRight ? 'auto' : 0,
-              right: isRight ? 0 : 'auto',
-              transitionDelay: `${delay}ms`,
-            }}
-          />
-        </div>
-        <span className="text-xs text-[#8B95A1] w-16">{rightLabel}</span>
+      {/* 좌우 라벨 */}
+      <div className="flex justify-between mb-1">
+        <span className="text-xs text-[#8B95A1]">{leftLabel}</span>
+        <span className="text-xs text-[#8B95A1]">{rightLabel}</span>
+      </div>
+
+      {/* 프로그레스 바 */}
+      <div className="h-2 bg-[#F4F4F4] rounded-full overflow-hidden relative">
+        <div
+          className="absolute top-0 h-full bg-[#3182F6] rounded-full transition-all duration-700 ease-out"
+          style={{
+            width: `${percentage}%`,
+            left: isRight ? 'auto' : 0,
+            right: isRight ? 0 : 'auto',
+            transitionDelay: `${delay}ms`,
+          }}
+        />
       </div>
       {detail && (
         <div className="mt-3 bg-[#F8F9FA] rounded-lg p-3">
