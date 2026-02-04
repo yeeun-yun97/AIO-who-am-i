@@ -53,6 +53,9 @@ next-env.d.ts
 # OS
 Thumbs.db
 
+# docs
+/docs/
+
 # Optional: Local env files
 .env.local
 .env.development.local
