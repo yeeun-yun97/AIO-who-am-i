@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useReducer, ReactNode } from 'react';
 import { QuizState, QuizAction, Answer, MBTIResult, TCIResult, ValueResult, UserInfo, SavedQuizResult } from '@/types/quiz';
-import valueDescriptions from '@/data/value-result.json';
+import results from '@/data/results.json';
 import { questions, TOTAL_QUESTIONS } from '@/data/questions';
 
 const initialState: QuizState = {
@@ -260,13 +260,13 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
     // 각 차원별 결과 계산
     const getDimensionResult = (
-      dimension: keyof typeof valueDescriptions,
+      dimension: keyof typeof results.value,
       leftKey: keyof typeof scores,
       rightKey: keyof typeof scores
     ) => {
       const leftScore = scores[leftKey];
       const rightScore = scores[rightKey];
-      const dimData = valueDescriptions[dimension] as Record<string, { label: string; description: string }>;
+      const dimData = results.value[dimension] as Record<string, { label: string; description: string }>;
 
       let dominant: string;
       if (leftScore > rightScore) {

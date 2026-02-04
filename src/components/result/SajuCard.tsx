@@ -2,23 +2,7 @@
 
 import { SajuResult } from '@/lib/saju';
 import Card from '@/components/ui/Card';
-import colorAnimalData from '@/data/color-animal.json';
-import starData from '@/data/star.json';
-import stemData from '@/data/saju-stem.json';
-import branchData from '@/data/saju-branch.json';
-
-interface ColorAnimalEntry {
-  color: string;
-  animal: string;
-  label: string;
-  description: string;
-}
-
-interface StarEntry {
-  name: string;
-  period: string;
-  description: string;
-}
+import results from '@/data/results.json';
 
 interface SajuEntry {
   label: string;
@@ -37,30 +21,27 @@ const STEM_KEY_MAP: Record<string, string> = {
 
 // 색띠 설명 찾기
 function getColoredZodiacDescription(colorKey: string, animalKey: string): string | null {
-  const entry = (colorAnimalData as ColorAnimalEntry[]).find(
-    (item) => item.color === colorKey && item.animal === animalKey
-  );
-  return entry?.description || null;
+  const key = `${colorKey}-${animalKey}` as keyof typeof results.colorAnimal;
+  return results.colorAnimal[key] || null;
 }
 
 // 별자리 설명 찾기
 function getZodiacSignDescription(nameEn: string): string | null {
-  const key = nameEn.toLowerCase() as keyof typeof starData;
-  const entry = starData[key] as StarEntry | undefined;
-  return entry?.description || null;
+  const key = nameEn.toLowerCase() as keyof typeof results.star;
+  return results.star[key] || null;
 }
 
 // 천간(일간) 설명 찾기
 function getStemDescription(stem: string): { label: string; description: string } | null {
-  const key = STEM_KEY_MAP[stem] as keyof typeof stemData;
+  const key = STEM_KEY_MAP[stem] as keyof typeof results.sajuStem;
   if (!key) return null;
-  const entry = stemData[key] as SajuEntry | undefined;
+  const entry = results.sajuStem[key] as SajuEntry | undefined;
   return entry || null;
 }
 
 // 지지(일지) 설명 찾기
 function getBranchDescription(branch: string): { label: string; description: string } | null {
-  const entry = branchData[branch as keyof typeof branchData] as SajuEntry | undefined;
+  const entry = results.sajuBranch[branch as keyof typeof results.sajuBranch] as SajuEntry | undefined;
   return entry || null;
 }
 

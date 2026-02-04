@@ -11,7 +11,7 @@ import Button from '@/components/ui/Button';
 import TCIScore from '@/components/result/TCIScore';
 import SajuCard from '@/components/result/SajuCard';
 import ValueCard from '@/components/result/ValueCard';
-import mbtiDescriptions from '@/data/mbti.json';
+import results from '@/data/results.json';
 import MBTIScore from '@/components/result/MBTIScore';
 
 interface ResultClientProps {
@@ -268,9 +268,9 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
             <div className="text-center mb-6">
               <p className="text-sm text-[#8B95A1] mb-2">나의 MBTI 유형</p>
               <h2 className="text-4xl font-bold text-[#3182F6]">{mbtiResult.type}</h2>
-              {mbtiDescriptions[mbtiResult.type as keyof typeof mbtiDescriptions] && (
+              {results.mbti[mbtiResult.type as keyof typeof results.mbti] && (
                 <p className="text-sm text-[#4E5968] mt-3 leading-relaxed">
-                  {mbtiDescriptions[mbtiResult.type as keyof typeof mbtiDescriptions]}
+                  {results.mbti[mbtiResult.type as keyof typeof results.mbti]}
                 </p>
               )}
             </div>

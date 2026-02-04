@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import mbtiDimensionData from '@/data/mbti-dimension.json';
+import results from '@/data/results.json';
 
 interface MBTIDimensionEntry {
   full: string;
@@ -19,7 +19,7 @@ interface MBTIScoreProps {
 
 // MBTI 차원별 설명 가져오기
 function getMBTIDimensionDescription(letter: string): MBTIDimensionEntry | null {
-  const dimension = mbtiDimensionData.find((item) => letter in item);
+  const dimension = results.mbtiDimension.find((item) => letter in item);
   if (!dimension) return null;
   return (dimension as unknown as Record<string, MBTIDimensionEntry>)[letter] || null;
 }

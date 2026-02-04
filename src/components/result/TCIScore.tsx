@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import tciData from '@/data/tci.json';
+import results from '@/data/results.json';
 
 interface TCIEntry {
   label: string;
@@ -27,7 +27,7 @@ const LEVEL_MAP: Record<string, 'Low' | 'Medium' | 'High'> = {
 // TCI 데이터에서 상세 설명 가져오기
 function getTCIDetail(dimensionId: string, level: '높음' | '중간' | '낮음') {
   const levelKey = LEVEL_MAP[level];
-  const dimension = tciData.find(
+  const dimension = results.tci.find(
     (item) => dimensionId in item
   );
   if (!dimension) return null;
