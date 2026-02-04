@@ -48,7 +48,7 @@ export default function MBTIScore({
             <span className="text-xs text-[#4E5968]">{detail.full}</span>
           )}
           <span className={cn('text-xs font-medium px-2 py-1 rounded-md bg-[#3182F6] text-white')}>
-            {isMiddle ? dominant : `${dominant} ${percentage}%`}
+            {isMiddle ? dominant : `${percentage}%`}
           </span>
         </div>
       </div>
