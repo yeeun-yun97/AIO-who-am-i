@@ -586,12 +586,12 @@
     "questions": [
       {
         "id": "V4_Q1",
-        "question": "선택의 기준으로 더 중요한 것은?",
+        "question": "새로운 일을 시작해야 하는데, 당신의 기준은?",
         "options": [
-          { "key": "A", "text": "현실적으로 이득이 되는가", "score": { "Reality": 2, "Meaning": 0 } },
-          { "key": "B", "text": "효율과 만족을 함께 본다", "score": { "Reality": 1, "Meaning": 0 } },
-          { "key": "C", "text": "의미가 있다면 감수할 수 있다", "score": { "Reality": 0, "Meaning": 1 } },
-          { "key": "D", "text": "의미 없는 선택은 하지 않는다", "score": { "Reality": 0, "Meaning": 2 } }
+          { "key": "A", "text": "실질적인 이익과 안정성이 있는지 먼저 확인한다", "score": { "Reality": 2, "Meaning": 0 } },
+          { "key": "B", "text": "이익도 중요하지만, 경험이나 배움이 있는지도 고려한다", "score": { "Reality": 1, "Meaning": 1 } },
+          { "key": "C", "text": "이익이 조금 부족해도 의미와 가치가 있다면 도전한다", "score": { "Reality": 0, "Meaning": 2 } },
+          { "key": "D", "text": "무조건 의미와 만족이 가장 중요하다, 실리는 나중 문제", "score": { "Reality": 0, "Meaning": 2 } }
         ]
       },
       {
@@ -606,12 +606,12 @@
       },
       {
         "id": "V4_Q3",
-        "question": "내가 만족감을 느끼는 순간은?",
+        "question": "당신이 만족을 느끼는 순간은?",
         "options": [
-          { "key": "A", "text": "현실적인 성과가 눈에 보일 때", "score": { "Reality": 2, "Meaning": 0 } },
-          { "key": "B", "text": "효율적으로 해냈다고 느낄 때", "score": { "Reality": 1, "Meaning": 0 } },
-          { "key": "C", "text": "내가 의미 있는 일을 했다고 느낄 때", "score": { "Reality": 0, "Meaning": 1 } },
-          { "key": "D", "text": "가치 있는 방향으로 살고 있다고 느낄 때", "score": { "Reality": 0, "Meaning": 2 } }
+          { "key": "A", "text": "실제 결과가 좋고 목표를 달성했을 때", "score": { "Reality": 2, "Meaning": 0 } },
+          { "key": "B", "text": "결과도 좋고 의미 있는 경험이었을 때", "score": { "Reality": 1, "Meaning": 1 } },
+          { "key": "C", "text": "결과가 조금 부족해도 의미가 있다면 만족한다", "score": { "Reality": 0, "Meaning": 2 } },
+          { "key": "D", "text": "오직 의미와 가치가 느껴질 때 만족한다", "score": { "Reality": 0, "Meaning": 2 } }
         ]
       }
     ]

@@ -58,7 +58,7 @@ const FIXED_ORDER = [
   'J/P-Q3',      // 여행이나 주말 계획
   'TCI-CO-Q20',  // 의견이 다른 사람과 함께 일해야 할 때
   // 22-24
-  'Reality/Meaning-V4_Q1',      // 선택의 기준으로 더 중요한 것
+  'Reality/Meaning-V4_Q1',      // 새로운 일을 시작할 때 기준
   'Stability/Change-V1_Q2',     // 새로운 환경에 적응해야 할 때
   'Relationship/Individual-V2_Q2', // 누군가가 실망할 수 있다면
   // 25-27
@@ -76,7 +76,7 @@ const FIXED_ORDER = [
   // 34-36
   'Relationship/Individual-V2_Q3', // 장기적으로 더 중요한 것
   'Achievement/Balance-V3_Q3',  // 가장 후회할 것 같은 상황
-  'Reality/Meaning-V4_Q3',      // 만족감을 느끼는 순간
+  'Reality/Meaning-V4_Q3',      // 당신이 만족을 느끼는 순간
   // 37-39
   'TCI-CO-Q21',  // 갈등 상황에서 중요하게 여기는 것
   'TCI-NS-Q7',   // 위험 요소가 있는 선택
