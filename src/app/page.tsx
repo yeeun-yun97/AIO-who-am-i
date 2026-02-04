@@ -5,28 +5,74 @@ import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import { useQuiz } from '@/contexts/QuizContext';
+import { findOrCreateSession } from '@/lib/supabase';
 
 export default function Home() {
   const router = useRouter();
-  const { reset, setUserInfo } = useQuiz();
+  const { reset, setUserInfo, setSessionId, setSavedResult } = useQuiz();
 
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [birthTime, setBirthTime] = useState('');
   const [unknownTime, setUnknownTime] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isFormValid = name.trim() !== '' && birthDate !== '';
 
-  const handleStart = () => {
-    if (!isFormValid) return;
+  const handleStart = async () => {
+    if (!isFormValid || isLoading) return;
 
-    reset();
-    setUserInfo({
-      name: name.trim(),
-      birthDate,
-      birthTime: unknownTime ? null : birthTime || null,
-    });
-    router.push('/quiz');
+    setIsLoading(true);
+
+    try {
+      // Supabase에서 세션 확인/생성
+      const { session, existingResult } = await findOrCreateSession(
+        name.trim(),
+        birthDate
+      );
+
+      // 세션 ID 저장
+      setSessionId(session.id);
+
+      // 사용자 정보 설정
+      setUserInfo({
+        name: name.trim(),
+        birthDate,
+        birthTime: unknownTime ? null : birthTime || null,
+      });
+
+      // 기존 결과가 있으면 결과 페이지로 이동
+      if (existingResult && existingResult.mbti_result) {
+        setSavedResult({
+          mbti_result: existingResult.mbti_result,
+          saju_result: existingResult.saju_result as Record<string, unknown>,
+          tci_scores: existingResult.tci_scores as Record<string, unknown>,
+        });
+        router.push('/result');
+      } else {
+        // 새로 시작
+        reset();
+        setSessionId(session.id);
+        setUserInfo({
+          name: name.trim(),
+          birthDate,
+          birthTime: unknownTime ? null : birthTime || null,
+        });
+        router.push('/quiz');
+      }
+    } catch (error) {
+      console.error('세션 생성 실패:', error);
+      // 에러 시에도 로컬로 진행
+      reset();
+      setUserInfo({
+        name: name.trim(),
+        birthDate,
+        birthTime: unknownTime ? null : birthTime || null,
+      });
+      router.push('/quiz');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -129,12 +175,12 @@ export default function Home() {
           </div>
         </div>
 
-        <Button size="large" onClick={handleStart} disabled={!isFormValid}>
-          시작하기
+        <Button size="large" onClick={handleStart} disabled={!isFormValid || isLoading}>
+          {isLoading ? '확인 중...' : '시작하기'}
         </Button>
 
         <p className="mt-6 text-xs text-[#B0B8C1] text-center">
-          입력한 정보는 결과 화면에만 표시되며, 서버에 저장되지 않습니다.
+          이미 테스트한 적이 있다면 결과를 바로 확인할 수 있습니다.
         </p>
       </Card>
     </main>

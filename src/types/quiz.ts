@@ -56,13 +56,24 @@ export interface QuizState {
   currentIndex: number;
   answers: Answer[];
   isCompleted: boolean;
+  sessionId: string | null;
+  savedResult: SavedQuizResult | null;
+}
+
+// 저장된 퀴즈 결과
+export interface SavedQuizResult {
+  mbti_result: string;
+  saju_result: Record<string, unknown>;
+  tci_scores: Record<string, unknown>;
 }
 
 export type QuizAction =
   | { type: 'SET_USER_INFO'; payload: UserInfo }
   | { type: 'SELECT_OPTION'; payload: Answer }
   | { type: 'NEXT_QUESTION' }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'SET_SESSION_ID'; payload: string }
+  | { type: 'SET_SAVED_RESULT'; payload: SavedQuizResult };
 
 // MBTI 결과 타입
 export interface MBTIResult {

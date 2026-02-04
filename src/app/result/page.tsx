@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useQuiz } from '@/contexts/QuizContext';
 import { MBTIResult, TCIResult, MBTI_DIMENSIONS, TCI_DIMENSIONS } from '@/types/quiz';
 import { calculateSaju, SajuResult } from '@/lib/saju';
+import { saveQuizResult } from '@/lib/supabase';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import TCIScore from '@/components/result/TCIScore';
@@ -15,6 +16,7 @@ export default function ResultPage() {
   const [mbtiResult, setMbtiResult] = useState<MBTIResult | null>(null);
   const [tciResult, setTciResult] = useState<TCIResult | null>(null);
   const [mounted, setMounted] = useState(false);
+  const savedRef = useRef(false);
 
   // 사주 계산
   const sajuResult = useMemo<SajuResult | null>(() => {
@@ -24,19 +26,66 @@ export default function ResultPage() {
     return null;
   }, [state.userInfo]);
 
+  // 저장된 결과가 있으면 사용
   useEffect(() => {
     setMounted(true);
-    if (state.answers.length > 0) {
-      setMbtiResult(calculateMBTI());
-      setTciResult(calculateTCI());
+
+    // 저장된 결과가 있으면 복원
+    if (state.savedResult) {
+      // MBTI 결과 복원
+      const savedMbti = state.savedResult.mbti_result;
+      const savedTci = state.savedResult.tci_scores as unknown as TCIResult;
+
+      if (savedMbti) {
+        // 간단하게 타입만 표시 (상세 점수는 저장된 게 없으면 기본값)
+        setMbtiResult({
+          type: savedMbti,
+          scores: { E: 0, I: 0, N: 0, S: 0, T: 0, F: 0, J: 0, P: 0 },
+          dimensions: {
+            IE: { dominant: savedMbti[0] as 'E' | 'I' | 'Ambivert', percentage: 75 },
+            NS: { dominant: savedMbti[1] as 'N' | 'S' | '중간', percentage: 75 },
+            TF: { dominant: savedMbti[2] as 'T' | 'F' | '중간', percentage: 75 },
+            JP: { dominant: savedMbti[3] as 'J' | 'P' | '중간', percentage: 75 },
+          },
+        });
+      }
+
+      if (savedTci) {
+        setTciResult(savedTci);
+      }
+      return;
     }
-  }, [state.answers, calculateMBTI, calculateTCI]);
+
+    // 새로 계산
+    if (state.answers.length > 0) {
+      const mbti = calculateMBTI();
+      const tci = calculateTCI();
+      setMbtiResult(mbti);
+      setTciResult(tci);
+
+      // 결과 저장 (한 번만)
+      if (state.sessionId && !savedRef.current) {
+        savedRef.current = true;
+        const saju = state.userInfo?.birthDate
+          ? calculateSaju(state.userInfo.birthDate, state.userInfo.birthTime)
+          : null;
+
+        saveQuizResult(
+          state.sessionId,
+          mbti.type,
+          saju as unknown as Record<string, unknown>,
+          tci as unknown as Record<string, unknown>
+        ).catch((err) => console.error('결과 저장 실패:', err));
+      }
+    }
+  }, [state.answers, state.savedResult, state.sessionId, state.userInfo, calculateMBTI, calculateTCI]);
 
   if (!mounted) {
     return null;
   }
 
-  if (state.answers.length === 0) {
+  // 테스트 완료 안 했고, 저장된 결과도 없는 경우
+  if (state.answers.length === 0 && !state.savedResult) {
     return (
       <main className="min-h-screen flex items-center justify-center px-4 py-12">
         <Card className="max-w-md w-full text-center p-8">

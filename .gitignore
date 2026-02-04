@@ -43,8 +43,12 @@ next-env.d.ts
 # IDE
 .idea/
 .vscode/
+.cursor/
 *.swp
 *.swo
+
+# MCP
+.mcp.json
 
 # OS
 Thumbs.db

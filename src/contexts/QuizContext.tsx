@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useReducer, ReactNode } from 'react';
-import { QuizState, QuizAction, Answer, MBTIResult, TCIResult, UserInfo } from '@/types/quiz';
+import { QuizState, QuizAction, Answer, MBTIResult, TCIResult, UserInfo, SavedQuizResult } from '@/types/quiz';
 import { questions, TOTAL_QUESTIONS } from '@/data/questions';
 
 const initialState: QuizState = {
@@ -9,6 +9,8 @@ const initialState: QuizState = {
   currentIndex: 0,
   answers: [],
   isCompleted: false,
+  sessionId: null,
+  savedResult: null,
 };
 
 function quizReducer(state: QuizState, action: QuizAction): QuizState {
@@ -34,6 +36,12 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
     case 'RESET':
       return initialState;
 
+    case 'SET_SESSION_ID':
+      return { ...state, sessionId: action.payload };
+
+    case 'SET_SAVED_RESULT':
+      return { ...state, savedResult: action.payload };
+
     default:
       return state;
   }
@@ -49,6 +57,8 @@ interface QuizContextType {
   getCurrentAnswer: () => Answer | undefined;
   calculateMBTI: () => MBTIResult;
   calculateTCI: () => TCIResult;
+  setSessionId: (id: string) => void;
+  setSavedResult: (result: SavedQuizResult) => void;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -70,6 +80,14 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   const reset = () => {
     dispatch({ type: 'RESET' });
+  };
+
+  const setSessionId = (id: string) => {
+    dispatch({ type: 'SET_SESSION_ID', payload: id });
+  };
+
+  const setSavedResult = (result: SavedQuizResult) => {
+    dispatch({ type: 'SET_SAVED_RESULT', payload: result });
   };
 
   const getCurrentAnswer = () => {
@@ -233,6 +251,8 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         getCurrentAnswer,
         calculateMBTI,
         calculateTCI,
+        setSessionId,
+        setSavedResult,
       }}
     >
       {children}
