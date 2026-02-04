@@ -34,14 +34,22 @@ export default function SajuCard({ saju }: SajuCardProps) {
     <Card className="mb-6">
       <h2 className="text-lg font-bold text-[#191F28] mb-4">사주 정보</h2>
 
-      {/* 색띠 */}
+      {/* 색띠 & 별자리 */}
       <div className="mb-4 pb-4 border-b border-[#E5E8EB]">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-2xl">{saju.coloredZodiac.emoji}</span>
-          <div>
-            <span className="text-lg font-bold text-[#191F28]">{saju.coloredZodiac.fullName}띠</span>
-            <span className="text-xs text-[#8B95A1] ml-2">({saju.coloredZodiac.year}년생 기준)</span>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">{saju.coloredZodiac.emoji}</span>
+            <div>
+              <span className="text-lg font-bold text-[#191F28]">{saju.coloredZodiac.fullName}띠</span>
+              <span className="text-xs text-[#8B95A1] ml-2">({saju.coloredZodiac.year}년생 기준)</span>
+            </div>
           </div>
+          {saju.zodiacSign && (
+            <div className="flex items-center gap-1">
+              <span className="text-2xl">{saju.zodiacSign.emoji}</span>
+              <span className="text-sm font-medium text-[#191F28]">{saju.zodiacSign.name}</span>
+            </div>
+          )}
         </div>
         {zodiacDescription && (
           <p className="text-sm text-[#4E5968] leading-relaxed pl-9">

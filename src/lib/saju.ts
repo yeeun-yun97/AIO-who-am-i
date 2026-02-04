@@ -38,6 +38,22 @@ const ANIMAL_KEYS: Record<string, string> = {
 // 정확한 입춘 시각은 매년 다르지만, 간단히 2월 4일 기준으로 계산
 const IPCHUN_DEFAULT_DATE = { month: 2, day: 4 };
 
+// 별자리 정보
+const ZODIAC_SIGNS = [
+  { name: '염소자리', nameEn: 'Capricorn', emoji: '♑', startMonth: 12, startDay: 22, endMonth: 1, endDay: 19 },
+  { name: '물병자리', nameEn: 'Aquarius', emoji: '♒', startMonth: 1, startDay: 20, endMonth: 2, endDay: 18 },
+  { name: '물고기자리', nameEn: 'Pisces', emoji: '♓', startMonth: 2, startDay: 19, endMonth: 3, endDay: 20 },
+  { name: '양자리', nameEn: 'Aries', emoji: '♈', startMonth: 3, startDay: 21, endMonth: 4, endDay: 19 },
+  { name: '황소자리', nameEn: 'Taurus', emoji: '♉', startMonth: 4, startDay: 20, endMonth: 5, endDay: 20 },
+  { name: '쌍둥이자리', nameEn: 'Gemini', emoji: '♊', startMonth: 5, startDay: 21, endMonth: 6, endDay: 20 },
+  { name: '게자리', nameEn: 'Cancer', emoji: '♋', startMonth: 6, startDay: 21, endMonth: 7, endDay: 22 },
+  { name: '사자자리', nameEn: 'Leo', emoji: '♌', startMonth: 7, startDay: 23, endMonth: 8, endDay: 22 },
+  { name: '처녀자리', nameEn: 'Virgo', emoji: '♍', startMonth: 8, startDay: 23, endMonth: 9, endDay: 22 },
+  { name: '천칭자리', nameEn: 'Libra', emoji: '♎', startMonth: 9, startDay: 23, endMonth: 10, endDay: 22 },
+  { name: '전갈자리', nameEn: 'Scorpio', emoji: '♏', startMonth: 10, startDay: 23, endMonth: 11, endDay: 21 },
+  { name: '사수자리', nameEn: 'Sagittarius', emoji: '♐', startMonth: 11, startDay: 22, endMonth: 12, endDay: 21 },
+];
+
 // 오행 (五行)
 const FIVE_ELEMENTS: Record<string, string> = {
   '갑': '목(木)', '을': '목(木)',
@@ -53,6 +69,12 @@ export interface SajuPillar {
   stemHanja: string;
   branchHanja: string;
   element: string;   // 오행
+}
+
+export interface ZodiacSign {
+  name: string;       // 한글 이름 (양자리, 황소자리 등)
+  nameEn: string;     // 영문 이름 (Aries, Taurus 등)
+  emoji: string;      // 별자리 기호
 }
 
 export interface ColoredZodiac {
@@ -73,6 +95,7 @@ export interface SajuResult {
   hour: SajuPillar | null;  // 시주 (시간 모르면 null)
   zodiac: string;     // 띠 (기존 호환용)
   coloredZodiac: ColoredZodiac;  // 색띠 정보
+  zodiacSign: ZodiacSign;  // 별자리 정보
   summary: string;    // 사주 요약 문자열
 }
 
@@ -217,6 +240,28 @@ function getColoredZodiac(birthYear: number, birthMonth: number, birthDay: numbe
   };
 }
 
+// 별자리 계산
+function getZodiacSign(month: number, day: number): ZodiacSign {
+  for (const sign of ZODIAC_SIGNS) {
+    // 염소자리처럼 연도를 걸치는 경우
+    if (sign.startMonth > sign.endMonth) {
+      if ((month === sign.startMonth && day >= sign.startDay) ||
+          (month === sign.endMonth && day <= sign.endDay)) {
+        return { name: sign.name, nameEn: sign.nameEn, emoji: sign.emoji };
+      }
+    } else {
+      // 일반적인 경우
+      if ((month === sign.startMonth && day >= sign.startDay) ||
+          (month === sign.endMonth && day <= sign.endDay) ||
+          (month > sign.startMonth && month < sign.endMonth)) {
+        return { name: sign.name, nameEn: sign.nameEn, emoji: sign.emoji };
+      }
+    }
+  }
+  // 기본값 (도달하지 않음)
+  return { name: '양자리', nameEn: 'Aries', emoji: '♈' };
+}
+
 // 사주 계산 메인 함수
 export function calculateSaju(
   birthDate: string,      // YYYY-MM-DD
@@ -236,6 +281,7 @@ export function calculateSaju(
 
   const zodiac = getZodiac(year);
   const coloredZodiac = getColoredZodiac(year, month, day);
+  const zodiacSign = getZodiacSign(month, day);
 
   // 사주 요약 문자열
   const pillars = [yearPillar, monthPillar, dayPillar, hourPillar].filter(Boolean) as SajuPillar[];
@@ -248,6 +294,7 @@ export function calculateSaju(
     hour: hourPillar,
     zodiac,
     coloredZodiac,
+    zodiacSign,
     summary,
   };
 }
