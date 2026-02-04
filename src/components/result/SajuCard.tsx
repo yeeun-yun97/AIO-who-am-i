@@ -14,10 +14,15 @@ export default function SajuCard({ saju }: SajuCardProps) {
     <Card className="mb-6">
       <h2 className="text-lg font-bold text-[#191F28] mb-4">사주 정보</h2>
 
-      {/* 띠 */}
-      <div className="flex items-center gap-2 mb-4 pb-4 border-b border-[#E5E8EB]">
-        <span className="text-sm text-[#8B95A1]">띠:</span>
-        <span className="text-base font-semibold text-[#191F28]">{saju.zodiac}띠</span>
+      {/* 색띠 */}
+      <div className="flex items-center justify-between mb-4 pb-4 border-b border-[#E5E8EB]">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">{saju.coloredZodiac.emoji}</span>
+          <div>
+            <span className="text-lg font-bold text-[#191F28]">{saju.coloredZodiac.fullName}띠</span>
+            <span className="text-xs text-[#8B95A1] ml-2">({saju.coloredZodiac.year}년생 기준)</span>
+          </div>
+        </div>
       </div>
 
       {/* 사주 팔자 테이블 */}

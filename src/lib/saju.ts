@@ -12,6 +12,25 @@ const EARTHLY_BRANCHES_HANJA = ['子', '丑', '寅', '卯', '辰', '巳', '午',
 // 띠 (12지신)
 const ZODIAC_ANIMALS = ['쥐', '소', '호랑이', '토끼', '용', '뱀', '말', '양', '원숭이', '닭', '개', '돼지'];
 
+// 천간별 띠 색깔 (오행 기반)
+// 갑을(木)=청/푸른, 병정(火)=붉은, 무기(土)=황금, 경신(金)=흰/백, 임계(水)=검은
+const ZODIAC_COLORS: Record<string, { color: string; colorName: string; emoji: string }> = {
+  '갑': { color: '청', colorName: '푸른', emoji: '🌳' },
+  '을': { color: '청', colorName: '푸른', emoji: '🌿' },
+  '병': { color: '적', colorName: '붉은', emoji: '🔥' },
+  '정': { color: '적', colorName: '붉은', emoji: '🕯️' },
+  '무': { color: '황', colorName: '황금', emoji: '⛰️' },
+  '기': { color: '황', colorName: '황금', emoji: '🌾' },
+  '경': { color: '백', colorName: '흰', emoji: '⚔️' },
+  '신': { color: '백', colorName: '흰', emoji: '💎' },
+  '임': { color: '흑', colorName: '검은', emoji: '🌊' },
+  '계': { color: '흑', colorName: '검은', emoji: '💧' },
+};
+
+// 입춘 날짜 (근사값 - 대부분 2월 3~5일 사이)
+// 정확한 입춘 시각은 매년 다르지만, 간단히 2월 4일 기준으로 계산
+const IPCHUN_DEFAULT_DATE = { month: 2, day: 4 };
+
 // 오행 (五行)
 const FIVE_ELEMENTS: Record<string, string> = {
   '갑': '목(木)', '을': '목(木)',
@@ -29,12 +48,22 @@ export interface SajuPillar {
   element: string;   // 오행
 }
 
+export interface ColoredZodiac {
+  animal: string;       // 동물 (말, 용 등)
+  color: string;        // 색깔 한자 (청, 적, 황, 백, 흑)
+  colorName: string;    // 색깔 이름 (푸른, 붉은, 황금, 흰, 검은)
+  fullName: string;     // 전체 이름 (황금말띠)
+  emoji: string;        // 이모지
+  year: number;         // 띠 연도 (입춘 기준)
+}
+
 export interface SajuResult {
   year: SajuPillar;   // 년주
   month: SajuPillar;  // 월주
   day: SajuPillar;    // 일주
   hour: SajuPillar | null;  // 시주 (시간 모르면 null)
-  zodiac: string;     // 띠
+  zodiac: string;     // 띠 (기존 호환용)
+  coloredZodiac: ColoredZodiac;  // 색띠 정보
   summary: string;    // 사주 요약 문자열
 }
 
@@ -132,10 +161,49 @@ function getHourPillar(dayStem: string, hour: number): SajuPillar {
   };
 }
 
-// 띠 계산
+// 입춘 기준 띠 연도 계산
+// 입춘(2월 4일 전후) 이전 출생자는 전년도 띠를 사용
+function getZodiacYear(year: number, month: number, day: number): number {
+  // 입춘 전이면 전년도로 계산
+  if (month < IPCHUN_DEFAULT_DATE.month ||
+      (month === IPCHUN_DEFAULT_DATE.month && day < IPCHUN_DEFAULT_DATE.day)) {
+    return year - 1;
+  }
+  return year;
+}
+
+// 띠 계산 (기존 호환용)
 function getZodiac(year: number): string {
   const index = (year - 4) % 12;
   return ZODIAC_ANIMALS[index >= 0 ? index : index + 12];
+}
+
+// 색띠 계산 (입춘 기준)
+function getColoredZodiac(birthYear: number, birthMonth: number, birthDay: number): ColoredZodiac {
+  // 입춘 기준 띠 연도 확정
+  const zodiacYear = getZodiacYear(birthYear, birthMonth, birthDay);
+
+  // 천간 계산 (연도의 천간)
+  const stemIndex = (zodiacYear - 4) % 10;
+  const adjustedStemIndex = stemIndex >= 0 ? stemIndex : stemIndex + 10;
+  const stem = HEAVENLY_STEMS[adjustedStemIndex];
+
+  // 지지 계산 (연도의 지지 = 띠)
+  const branchIndex = (zodiacYear - 4) % 12;
+  const adjustedBranchIndex = branchIndex >= 0 ? branchIndex : branchIndex + 12;
+  const animal = ZODIAC_ANIMALS[adjustedBranchIndex];
+
+  // 색깔 정보
+  const colorInfo = ZODIAC_COLORS[stem];
+
+  return {
+    animal,
+    color: colorInfo.color,
+    colorName: colorInfo.colorName,
+    fullName: `${colorInfo.colorName}${animal}`,
+    emoji: colorInfo.emoji,
+    year: zodiacYear,
+  };
 }
 
 // 사주 계산 메인 함수
@@ -156,6 +224,7 @@ export function calculateSaju(
   }
 
   const zodiac = getZodiac(year);
+  const coloredZodiac = getColoredZodiac(year, month, day);
 
   // 사주 요약 문자열
   const pillars = [yearPillar, monthPillar, dayPillar, hourPillar].filter(Boolean) as SajuPillar[];
@@ -167,6 +236,7 @@ export function calculateSaju(
     day: dayPillar,
     hour: hourPillar,
     zodiac,
+    coloredZodiac,
     summary,
   };
 }
