@@ -36,10 +36,11 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
   const [valueResult, setValueResult] = useState<ValueResult | null>(null);
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'summary' | 'detail'>('summary');
+  const [activeTab, setActiveTab] = useState<'summary' | 'detail'>('detail');
   const [sharedResultId, setSharedResultId] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResponse | null>(null);
+  const [hasSeenAiAnalysis, setHasSeenAiAnalysis] = useState(false);
   const savedRef = useRef(false);
 
   // 공유된 결과인지 확인
@@ -70,12 +71,22 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
   // 공유할 세션 ID
   const sessionIdForShare = sharedSessionId || state.sessionId;
 
+  // 탭 전환 핸들러
+  const handleTabChange = (tab: 'summary' | 'detail') => {
+    setActiveTab(tab);
+    if (tab === 'summary') {
+      setHasSeenAiAnalysis(true);
+    }
+  };
+
   // 저장된 결과가 있으면 사용
   useEffect(() => {
     setMounted(true);
 
-    // 공유된 결과 표시
+    // 공유된 결과 표시 (이미 AI가 있으므로 summary 탭으로 시작)
     if (isSharedView && sharedResult) {
+      setActiveTab('summary');
+      setHasSeenAiAnalysis(true);
       if (sharedResult.mbtiResult) {
         setMbtiResult({
           type: sharedResult.mbtiResult,
@@ -97,8 +108,11 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
       return;
     }
 
-    // 저장된 결과가 있으면 복원
+    // 저장된 결과가 있으면 복원 (이미 AI가 있으므로 summary 탭으로 시작)
     if (state.savedResult) {
+      setActiveTab('summary');
+      setHasSeenAiAnalysis(true);
+      
       const savedMbti = state.savedResult.mbti_result;
       const savedTci = state.savedResult.tci_scores as unknown as TCIResult;
       const savedValue = state.savedResult.value_scores as unknown as ValueResult;
@@ -348,8 +362,8 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
           {/* 탭 - iOS 스타일 세그먼트 컨트롤 */}
           <div className="inline-flex bg-[#F2F2F7] p-1 rounded-lg">
             <button
-              onClick={() => setActiveTab('summary')}
-              className={`py-1.5 px-3 text-sm font-medium rounded-md transition-all flex items-center gap-1 ${
+              onClick={() => handleTabChange('summary')}
+              className={`relative py-1.5 px-3 text-sm font-medium rounded-md transition-all flex items-center gap-1 ${
                 activeTab === 'summary'
                   ? 'text-[#191F28] bg-white shadow-sm'
                   : 'text-[#8B95A1]'
@@ -361,9 +375,13 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
                   ? 'bg-[#3182F6] text-white'
                   : 'bg-[#B0B8C1] text-white'
               }`}>AI</span>
+              {/* 알림 배지 - AI 완료되었고 아직 안 본 경우 */}
+              {!aiLoading && aiAnalysis && !hasSeenAiAnalysis && (
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#FF3B30] rounded-full animate-pulse" />
+              )}
             </button>
             <button
-              onClick={() => setActiveTab('detail')}
+              onClick={() => handleTabChange('detail')}
               className={`py-1.5 px-3 text-sm font-medium rounded-md transition-all ${
                 activeTab === 'detail'
                   ? 'text-[#191F28] bg-white shadow-sm'
@@ -546,6 +564,19 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         {/* 가치관 결과 */}
             {/* 가치관 결과 */}
             {valueResult && <ValueCard value={valueResult} />}
+
+            {/* AI 분석 완료 시 하단 버튼 */}
+            {(!aiLoading && aiAnalysis) || state.savedResult || isSharedView ? (
+              <button
+                onClick={() => handleTabChange('summary')}
+                className="w-full mt-6 py-4 bg-gradient-to-r from-[#3182F6] to-[#1B64DA] text-white rounded-2xl font-bold text-base shadow-lg hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+              >
+                <span>{t('result.viewAiAnalysis')}</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            ) : null}
           </>
         )}
       </div>
