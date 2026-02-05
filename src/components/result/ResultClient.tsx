@@ -452,6 +452,11 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
               )}
             </button>
           </div>
+
+          {/* 안내 문구 */}
+          <p className="mt-4 text-xs text-[#B0B8C1] text-center leading-relaxed">
+            재미로 보는 테스트예요. AI 분석은 부정확할 수 있어요.
+          </p>
           </div>
         )}
 

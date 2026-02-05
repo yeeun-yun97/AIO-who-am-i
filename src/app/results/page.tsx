@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import {
   getPublicResults,
   getSharedResultById,
@@ -146,10 +147,19 @@ function ResultsContent() {
     return (
       <main className="min-h-screen px-4 py-8">
         <div className="max-w-lg mx-auto">
-          <h1 className="text-xl font-bold text-[#191F28] mb-6 flex items-center gap-2">
-            <span>👀</span>
-            다른 결과 구경하기
-          </h1>
+          <div className="flex items-center gap-3 mb-6">
+            <Link
+              href="/"
+              className="flex items-center justify-center text-[#3182F6] hover:text-[#1B64DA] transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </Link>
+            <h1 className="text-xl font-bold text-[#191F28]">
+              다른 결과 구경하기
+            </h1>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             {[...Array(6)].map((_, i) => (
               <div
@@ -177,10 +187,19 @@ function ResultsContent() {
     return (
       <main className="min-h-screen px-4 py-8">
         <div className="max-w-lg mx-auto">
-          <h1 className="text-xl font-bold text-[#191F28] mb-6 flex items-center gap-2">
-            <span>👀</span>
-            다른 결과 구경하기
-          </h1>
+          <div className="flex items-center gap-3 mb-6">
+            <Link
+              href="/"
+              className="flex items-center justify-center text-[#3182F6] hover:text-[#1B64DA] transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </Link>
+            <h1 className="text-xl font-bold text-[#191F28]">
+              다른 결과 구경하기
+            </h1>
+          </div>
           <div className="text-center py-12">
             <p className="text-[#8B95A1]">아직 공유된 결과가 없어요.</p>
             <p className="text-[#8B95A1] text-sm mt-2">테스트를 완료하고 첫 번째로 공유해보세요!</p>
@@ -194,10 +213,29 @@ function ResultsContent() {
     <main className="min-h-screen px-4 py-8">
       <div className="max-w-lg mx-auto">
         {/* 헤더 */}
-        <h1 className="text-xl font-bold text-[#191F28] mb-6 flex items-center gap-2">
-          <span>👀</span>
-          다른 결과 구경하기
-        </h1>
+        <div className="flex items-center gap-3 mb-6">
+          <Link
+            href="/"
+            className="flex items-center justify-center text-[#3182F6] hover:text-[#1B64DA] transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
+          <h1 className="text-xl font-bold text-[#191F28]">
+            다른 결과 구경하기
+          </h1>
+        </div>
+
+        {/* 안내 문구 */}
+        <div className="mb-4 px-4 py-3 bg-[#F4F4F4] rounded-xl flex gap-3">
+          <svg className="w-4 h-4 text-[#8B95A1] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="text-xs text-[#8B95A1] leading-relaxed">
+            이 테스트는 재미를 위한 콘텐츠예요. AI의 분석 결과는 참고용이며, 실제 성격이나 특성을 정확하게 반영하지 않을 수 있어요.
+          </p>
+        </div>
 
         {/* 그리드 */}
         <div className="grid grid-cols-2 gap-3">
@@ -309,10 +347,19 @@ function ResultsLoading() {
   return (
     <main className="min-h-screen px-4 py-8">
       <div className="max-w-lg mx-auto">
-        <h1 className="text-xl font-bold text-[#191F28] mb-6 flex items-center gap-2">
-          <span>👀</span>
-          다른 결과 구경하기
-        </h1>
+        <div className="flex items-center gap-3 mb-6">
+          <Link
+            href="/"
+            className="flex items-center justify-center text-[#3182F6] hover:text-[#1B64DA] transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
+          <h1 className="text-xl font-bold text-[#191F28]">
+            다른 결과 구경하기
+          </h1>
+        </div>
         <div className="grid grid-cols-2 gap-3">
           {[...Array(6)].map((_, i) => (
             <div
