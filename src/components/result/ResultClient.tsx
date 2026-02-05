@@ -237,20 +237,6 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
 
     const shareUrl = `${window.location.origin}/${locale}/results?id=${idForShare}`;
 
-    // Web Share API 지원 시 사용
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: t('result.yourResult', { name: displayUserInfo?.name || '' }),
-          text: mbtiResult ? `MBTI: ${mbtiResult.type}` : t('common.appName'),
-          url: shareUrl,
-        });
-        return;
-      } catch {
-        // 사용자가 취소하거나 실패하면 클립보드 복사로 폴백
-      }
-    }
-
     // 클립보드 복사
     try {
       await navigator.clipboard.writeText(shareUrl);
