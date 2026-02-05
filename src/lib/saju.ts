@@ -2,8 +2,8 @@
 // 년주, 월주, 일주, 시주를 계산합니다.
 
 // 천간 (天干) - 10개
-const HEAVENLY_STEMS = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
-const HEAVENLY_STEMS_HANJA = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+const HEAVENLY_STEMS = ['갑목', '을목', '병화', '정화', '무토', '기토', '경금', '신금', '임수', '계수'];
+const HEAVENLY_STEMS_HANJA = ['甲木', '乙木', '丙火', '丁火', '戊土', '己土', '庚金', '辛金', '壬水', '癸水'];
 const HEAVENLY_STEMS_EN = ['Gap', 'Eul', 'Byeong', 'Jeong', 'Mu', 'Gi', 'Gyeong', 'Sin', 'Im', 'Gye'];
 
 // 지지 (地支) - 12개
@@ -55,6 +55,15 @@ const ZODIAC_SIGNS = [
   { name: '전갈자리', nameEn: 'Scorpio', emoji: '♏', startMonth: 10, startDay: 23, endMonth: 11, endDay: 21 },
   { name: '사수자리', nameEn: 'Sagittarius', emoji: '♐', startMonth: 11, startDay: 22, endMonth: 12, endDay: 21 },
 ];
+
+// 오행 (五行)
+export const FIVE_ELEMENTS_EN: Record<string, string> = {
+  '목': 'mok',
+  '화': 'hwa',
+  '토': 'to',
+  '금': 'geum',
+  '수': 'su',
+};
 
 // 오행 (五行)
 const FIVE_ELEMENTS: Record<string, string> = {
@@ -230,7 +239,8 @@ function getColoredZodiac(birthYear: number, birthMonth: number, birthDay: numbe
   // 천간 계산 (연도의 천간)
   const stemIndex = (zodiacYear - 4) % 10;
   const adjustedStemIndex = stemIndex >= 0 ? stemIndex : stemIndex + 10;
-  const stem = HEAVENLY_STEMS[adjustedStemIndex];
+  // HEAVENLY_STEMS가 '갑목' 등으로 변경되었으므로 첫 글자만 추출하여 ZODIAC_COLORS 매핑
+  const stem = HEAVENLY_STEMS[adjustedStemIndex].charAt(0);
 
   // 지지 계산 (연도의 지지 = 띠)
   const branchIndex = (zodiacYear - 4) % 12;

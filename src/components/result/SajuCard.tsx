@@ -1,6 +1,6 @@
 'use client';
 
-import { SajuResult } from '@/lib/saju';
+import { SajuResult, FIVE_ELEMENTS_EN } from '@/lib/saju';
 import Card from '@/components/ui/Card';
 import { useLocale, useTranslations } from 'next-intl';
 import { Locale } from '@/i18n/config';
@@ -29,7 +29,7 @@ export default function SajuCard({ saju }: SajuCardProps) {
 
   // 천간(일간) 설명 찾기
   const getStemDescription = (stem: string): { label: string; description: string } | null => {
-    const key = STEM_KEY_MAP[stem] as keyof typeof resultsData.sajuStem;
+    const key = stem as keyof typeof resultsData.sajuStem;
     if (!key) return null;
     const entry = resultsData.sajuStem[key] as SajuEntry | undefined;
     return entry || null;
@@ -51,97 +51,43 @@ export default function SajuCard({ saju }: SajuCardProps) {
       <h2 className="text-lg font-bold text-[#191F28] mb-4">{t('title')}</h2>
       <p className="text-2xl font-bold text-[#3182F6] mb-4">
         {locale === 'en' 
-          ? `${saju.day.stemEn} ${saju.day.branchEn} (${saju.day.stemHanja}${saju.day.branchHanja})`
-          : `${saju.day.stem}${saju.day.stemHanja} ${saju.day.branch}${saju.day.branchHanja}`}
+          ? `${saju.day.stemHanja.charAt(0)}${saju.day.branchHanja} (${saju.day.stemEn} ${saju.day.branchEn})`
+          : `${saju.day.stemHanja.charAt(0)}${saju.day.branchHanja} (${saju.day.stem.substring(0, saju.day.stem.length - 1)}${saju.day.branch})`}
       </p>
 
       {/* 사주 팔자 테이블 */}
-      <div className="grid grid-cols-4 gap-2 mb-4">
-        {/* 헤더 */}
-        <div className="text-center text-xs text-[#8B95A1] pb-2">{t('hour')}</div>
-        <div className="text-center text-xs text-[#8B95A1] pb-2">{t('day')}</div>
-        <div className="text-center text-xs text-[#8B95A1] pb-2">{t('month')}</div>
-        <div className="text-center text-xs text-[#8B95A1] pb-2">{t('year')}</div>
-
+      <div className="flex gap-3 mb-6 justify-center">
         {/* 천간 */}
-        <div className="text-center">
-          {saju.hour ? (
-            <div className="bg-[#F4F4F4] rounded-lg py-3">
-              <span className="text-xl font-bold text-[#191F28]">
-                {locale === 'en' ? saju.hour.stemEn : saju.hour.stem}
+        <div className="text-center flex-1 max-w-[120px]">
+          <div className="bg-[#3182F6]/10 rounded-lg py-5 border-2 border-[#3182F6]">
+            <div className="mb-1">
+              <span className="text-3xl font-bold text-[#3182F6]">
+                {saju.day.stemHanja.charAt(0)}
               </span>
-              <span className="text-xs text-[#8B95A1] block">{saju.hour.stemHanja}</span>
+              <span className="text-lg font-bold text-[#3182F6]">
+                {saju.day.stemHanja.charAt(1)}
+              </span>
             </div>
-          ) : (
-            <div className="bg-[#F4F4F4] rounded-lg py-3">
-              <span className="text-xl text-[#B0B8C1]">?</span>
-              <span className="text-xs text-[#B0B8C1] block">{t('unknown')}</span>
-            </div>
-          )}
-        </div>
-        <div className="text-center">
-          <div className="bg-[#3182F6]/10 rounded-lg py-3 border-2 border-[#3182F6]">
-            <span className="text-xl font-bold text-[#3182F6]">
-              {locale === 'en' ? saju.day.stemEn : saju.day.stem}
+            <span className="text-sm text-[#3182F6]">
+              {locale === 'en' ? saju.day.stemEn : saju.day.stem.substring(0, saju.day.stem.length - 1)}
+              <span className="text-xs text-[#3182F6]/70 ml-0.5">
+                {locale === 'en' 
+                  ? `-${FIVE_ELEMENTS_EN[saju.day.stem.substring(saju.day.stem.length - 1)] || saju.day.stem.substring(saju.day.stem.length - 1)}`
+                  : saju.day.stem.substring(saju.day.stem.length - 1)}
+              </span>
             </span>
-            <span className="text-xs text-[#3182F6] block">{saju.day.stemHanja}</span>
-          </div>
-        </div>
-        <div className="text-center">
-          <div className="bg-[#F4F4F4] rounded-lg py-3">
-            <span className="text-xl font-bold text-[#191F28]">
-              {locale === 'en' ? saju.month.stemEn : saju.month.stem}
-            </span>
-            <span className="text-xs text-[#8B95A1] block">{saju.month.stemHanja}</span>
-          </div>
-        </div>
-        <div className="text-center">
-          <div className="bg-[#F4F4F4] rounded-lg py-3">
-            <span className="text-xl font-bold text-[#191F28]">
-              {locale === 'en' ? saju.year.stemEn : saju.year.stem}
-            </span>
-            <span className="text-xs text-[#8B95A1] block">{saju.year.stemHanja}</span>
           </div>
         </div>
 
         {/* 지지 */}
-        <div className="text-center">
-          {saju.hour ? (
-            <div className="bg-[#F4F4F4] rounded-lg py-3">
-              <span className="text-xl font-bold text-[#191F28]">
-                {locale === 'en' ? saju.hour.branchEn : saju.hour.branch}
-              </span>
-              <span className="text-xs text-[#8B95A1] block">{saju.hour.branchHanja}</span>
-            </div>
-          ) : (
-            <div className="bg-[#F4F4F4] rounded-lg py-3">
-              <span className="text-xl text-[#B0B8C1]">?</span>
-              <span className="text-xs text-[#B0B8C1] block">{t('unknown')}</span>
-            </div>
-          )}
-        </div>
-        <div className="text-center">
-          <div className="bg-[#3182F6]/10 rounded-lg py-3 border-2 border-[#3182F6]">
-            <span className="text-xl font-bold text-[#3182F6]">
+        <div className="text-center flex-1 max-w-[120px]">
+          <div className="bg-[#3182F6]/10 rounded-lg py-5 border-2 border-[#3182F6]">
+            <span className="text-3xl font-bold text-[#3182F6] block mb-1">
+              {saju.day.branchHanja}
+            </span>
+            <span className="text-sm text-[#3182F6]">
               {locale === 'en' ? saju.day.branchEn : saju.day.branch}
             </span>
-            <span className="text-xs text-[#3182F6] block">{saju.day.branchHanja}</span>
-          </div>
-        </div>
-        <div className="text-center">
-          <div className="bg-[#F4F4F4] rounded-lg py-3">
-            <span className="text-xl font-bold text-[#191F28]">
-              {locale === 'en' ? saju.month.branchEn : saju.month.branch}
-            </span>
-            <span className="text-xs text-[#8B95A1] block">{saju.month.branchHanja}</span>
-          </div>
-        </div>
-        <div className="text-center">
-          <div className="bg-[#F4F4F4] rounded-lg py-3">
-            <span className="text-xl font-bold text-[#191F28]">
-              {locale === 'en' ? saju.year.branchEn : saju.year.branch}
-            </span>
-            <span className="text-xs text-[#8B95A1] block">{saju.year.branchHanja}</span>
           </div>
         </div>
       </div>
@@ -151,7 +97,7 @@ export default function SajuCard({ saju }: SajuCardProps) {
         <div className="bg-[#F4F4F4] rounded-xl p-4 mb-3">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-sm font-semibold text-[#191F28]">
-              {t('stem')} {locale === 'en' ? saju.day.stemEn : saju.day.stem}({saju.day.stemHanja})
+              {t('stem')} {locale === 'en' ? saju.day.stemEn : saju.day.stem.substring(0, saju.day.stem.length - 1)}({saju.day.stemHanja.charAt(0)})
             </span>
             <span className="text-xs px-2 py-0.5 bg-[#3182F6]/10 text-[#3182F6] rounded-full">
               {stemInfo.label}
