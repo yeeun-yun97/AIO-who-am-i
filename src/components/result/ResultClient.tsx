@@ -235,7 +235,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
     const idForShare = sharedResultId || sessionIdForShare;
     if (!idForShare) return;
 
-    const shareUrl = `${window.location.origin}/${locale}/results?id=${idForShare}`;
+    const shareUrl = `${window.location.origin}/${locale}/result/${idForShare}`;
 
     // 클립보드 복사
     try {
