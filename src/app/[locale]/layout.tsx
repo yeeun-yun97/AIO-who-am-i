@@ -1,0 +1,62 @@
+import type { Metadata } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, setRequestLocale } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { locales, type Locale } from '@/i18n/config';
+import { QuizProvider } from '@/contexts/QuizContext';
+import '../globals.css';
+
+type Props = {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+};
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+
+  const titles = {
+    ko: '나를 알아가는 여정',
+    en: 'Journey of Self-Discovery',
+  };
+
+  const descriptions = {
+    ko: '45개의 질문으로 알아보는 MBTI와 기질',
+    en: 'Discover your MBTI and temperament through 45 questions',
+  };
+
+  return {
+    title: titles[locale as Locale] || titles.ko,
+    description: descriptions[locale as Locale] || descriptions.ko,
+  };
+}
+
+export default async function LocaleLayout({ children, params }: Props) {
+  const { locale } = await params;
+
+  // Validate that the incoming `locale` parameter is valid
+  if (!locales.includes(locale as Locale)) {
+    notFound();
+  }
+
+  // Enable static rendering
+  setRequestLocale(locale);
+
+  // Get messages for the current locale
+  const messages = await getMessages();
+
+  return (
+    <html lang={locale}>
+      <body className="min-h-screen bg-white">
+        <NextIntlClientProvider messages={messages}>
+          <QuizProvider locale={locale as Locale}>
+            {children}
+          </QuizProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
+}

@@ -1,0 +1,81 @@
+{
+  "common": {
+    "appName": "Journey of Self-Discovery",
+    "start": "Start",
+    "next": "Next",
+    "close": "Close",
+    "share": "Share",
+    "copied": "Copied!",
+    "loading": "Checking...",
+    "testStart": "Start Test"
+  },
+  "intro": {
+    "title": "Journey of Self-Discovery",
+    "description": "Discover your MBTI and temperament through 45 questions",
+    "nameLabel": "Name",
+    "namePlaceholder": "Enter your name",
+    "birthLabel": "Birth Date",
+    "duration": "About 5-7 minutes",
+    "existingResult": "If you've taken the test before, you can view your results directly."
+  },
+  "quiz": {
+    "viewResult": "View Results"
+  },
+  "result": {
+    "yourResult": "{name}'s Results",
+    "analysis": "Analysis",
+    "detail": "Details",
+    "browseOthers": "Browse Others' Results",
+    "disclaimer": "This is just for fun. AI analysis may not be accurate.",
+    "aiAnalyzing": "AI is analyzing...",
+    "defaultTitle": "A person with rich emotions and deep thinking!",
+    "defaultDescription": "{name} is someone with rich inner emotions and deep thinking abilities. While open to new ideas and possibilities, you tend to carefully examine decisions from multiple angles.\n\nYou excel at empathizing with others' emotions and value harmonious relationships. Creative problem-solving and intuition are your strengths, and you feel most satisfied when deeply immersed in meaningful work."
+  },
+  "gallery": {
+    "title": "Browse Others' Results",
+    "disclaimer": "This test is for entertainment purposes. AI analysis results are for reference only and may not accurately reflect actual personality or characteristics.",
+    "regenerate": "Regenerate",
+    "generating": "Generating...",
+    "noResults": "No shared results yet.",
+    "noResultsHint": "Complete the test and be the first to share!",
+    "loadError": "Failed to load results.",
+    "regenerateError": "Failed to regenerate. Please try again later.",
+    "resultOf": "{name}'s Results"
+  },
+  "dateSelect": {
+    "weekdays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "yearSuffix": "",
+    "monthSuffix": "",
+    "placeholder": "Select your birth date"
+  },
+  "error": {
+    "notFound": "Results not found",
+    "notFoundDesc": "The link is invalid or the results have been deleted.",
+    "incompleteTest": "Test not completed yet",
+    "incompleteTestDesc": "Please complete the test first."
+  },
+  "mbti": {
+    "dimensions": {
+      "IE": {
+        "name": "Energy Direction",
+        "I": "I (Introversion)",
+        "E": "E (Extraversion)"
+      },
+      "NS": {
+        "name": "Perception Function",
+        "S": "S (Sensing)",
+        "N": "N (Intuition)"
+      },
+      "TF": {
+        "name": "Judging Function",
+        "F": "F (Feeling)",
+        "T": "T (Thinking)"
+      },
+      "JP": {
+        "name": "Lifestyle",
+        "P": "P (Perceiving)",
+        "J": "J (Judging)"
+      }
+    }
+  }
+}

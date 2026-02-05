@@ -1,5 +1,7 @@
 import { Question, RawDimensionData } from '@/types/quiz';
-import rawData from '@/data/test.json';
+import rawDataKo from '@/data/test.json';
+import rawDataEn from '@/data/test-en.json';
+import { Locale } from '@/i18n/config';
 
 // JSON 데이터를 Question 배열로 변환
 function parseQuestions(data: RawDimensionData[]): Question[] {
@@ -23,8 +25,9 @@ function parseQuestions(data: RawDimensionData[]): Question[] {
   return questions;
 }
 
-// 원본 질문
-const allQuestions = parseQuestions(rawData as RawDimensionData[]);
+// 언어별 질문 데이터
+const allQuestionsKo = parseQuestions(rawDataKo as RawDimensionData[]);
+const allQuestionsEn = parseQuestions(rawDataEn as RawDimensionData[]);
 
 // 미리 섞어둔 고정 순서 (MBTI, TCI, 가치관 균형있게 배치)
 // MBTI 12문항 + TCI 21문항 + 가치관 12문항 = 45문항
@@ -91,10 +94,18 @@ const FIXED_ORDER = [
   'TCI-ST-Q25',  // 자신의 삶이나 경험을 바라볼 때
 ];
 
-// 고정 순서대로 질문 배열 생성
+// 고정 순서대로 질문 배열 생성 (한국어 - 기본)
 export const questions: Question[] = FIXED_ORDER.map(
-  (id) => allQuestions.find((q) => q.id === id)!
+  (id) => allQuestionsKo.find((q) => q.id === id)!
 ).filter(Boolean);
+
+// 언어별 질문 가져오기
+export function getQuestionsByLocale(locale: Locale): Question[] {
+  const allQuestions = locale === 'en' ? allQuestionsEn : allQuestionsKo;
+  return FIXED_ORDER.map(
+    (id) => allQuestions.find((q) => q.id === id)!
+  ).filter(Boolean);
+}
 
 // 총 질문 수
 export const TOTAL_QUESTIONS = questions.length;

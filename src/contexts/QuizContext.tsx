@@ -1,9 +1,11 @@
 'use client';
 
-import { createContext, useContext, useReducer, ReactNode } from 'react';
+import { createContext, useContext, useReducer, ReactNode, useMemo } from 'react';
 import { QuizState, QuizAction, Answer, MBTIResult, TCIResult, ValueResult, UserInfo, SavedQuizResult } from '@/types/quiz';
 import results from '@/data/results.json';
-import { questions, TOTAL_QUESTIONS } from '@/data/questions';
+import resultsEn from '@/data/results-en.json';
+import { getQuestionsByLocale, TOTAL_QUESTIONS } from '@/data/questions';
+import { Locale } from '@/i18n/config';
 
 const initialState: QuizState = {
   userInfo: null,
@@ -61,12 +63,18 @@ interface QuizContextType {
   calculateValue: () => ValueResult;
   setSessionId: (id: string) => void;
   setSavedResult: (result: SavedQuizResult) => void;
+  locale: Locale;
+  questions: ReturnType<typeof getQuestionsByLocale>;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
-export function QuizProvider({ children }: { children: ReactNode }) {
+export function QuizProvider({ children, locale = 'ko' }: { children: ReactNode; locale?: Locale }) {
   const [state, dispatch] = useReducer(quizReducer, initialState);
+
+  // 언어별 질문과 결과 데이터
+  const questions = useMemo(() => getQuestionsByLocale(locale), [locale]);
+  const resultsData = locale === 'en' ? resultsEn : results;
 
   const setUserInfo = (info: UserInfo) => {
     dispatch({ type: 'SET_USER_INFO', payload: info });
@@ -121,31 +129,34 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       return Math.round((Math.max(a, b) / (total === 0 ? 1 : total)) * 100);
     };
 
+    const middleLabel = locale === 'en' ? 'Balanced' : '중간';
+    const ambivertLabel = locale === 'en' ? 'Ambivert' : 'Ambivert';
+
     const dimensions = {
       IE: {
-        dominant: scores.E > scores.I ? 'E' : scores.I > scores.E ? 'I' : 'Ambivert',
+        dominant: scores.E > scores.I ? 'E' : scores.I > scores.E ? 'I' : ambivertLabel,
         percentage: getPercentage(scores.E, scores.I),
       } as { dominant: 'E' | 'I' | 'Ambivert'; percentage: number },
       NS: {
-        dominant: scores.N > scores.S ? 'N' : scores.S > scores.N ? 'S' : '중간',
+        dominant: scores.N > scores.S ? 'N' : scores.S > scores.N ? 'S' : middleLabel,
         percentage: getPercentage(scores.N, scores.S),
       } as { dominant: 'N' | 'S' | '중간'; percentage: number },
       TF: {
-        dominant: scores.T > scores.F ? 'T' : scores.F > scores.T ? 'F' : '중간',
+        dominant: scores.T > scores.F ? 'T' : scores.F > scores.T ? 'F' : middleLabel,
         percentage: getPercentage(scores.T, scores.F),
       } as { dominant: 'T' | 'F' | '중간'; percentage: number },
       JP: {
-        dominant: scores.J > scores.P ? 'J' : scores.P > scores.J ? 'P' : '중간',
+        dominant: scores.J > scores.P ? 'J' : scores.P > scores.J ? 'P' : middleLabel,
         percentage: getPercentage(scores.J, scores.P),
       } as { dominant: 'J' | 'P' | '중간'; percentage: number },
     };
 
     // MBTI 타입 문자열 생성
     const type = [
-      dimensions.IE.dominant === 'Ambivert' ? 'X' : dimensions.IE.dominant,
-      dimensions.NS.dominant === '중간' ? 'X' : dimensions.NS.dominant,
-      dimensions.TF.dominant === '중간' ? 'X' : dimensions.TF.dominant,
-      dimensions.JP.dominant === '중간' ? 'X' : dimensions.JP.dominant,
+      dimensions.IE.dominant === ambivertLabel ? 'X' : dimensions.IE.dominant,
+      dimensions.NS.dominant === middleLabel ? 'X' : dimensions.NS.dominant,
+      dimensions.TF.dominant === middleLabel ? 'X' : dimensions.TF.dominant,
+      dimensions.JP.dominant === middleLabel ? 'X' : dimensions.JP.dominant,
     ].join('');
 
     return { type, scores, dimensions };
@@ -164,7 +175,8 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     });
 
     // TCI 해석 함수
-    const getLevel = (score: number, dimension: keyof typeof scores): '높음' | '중간' | '낮음' => {
+    type TCILevel = '높음' | '중간' | '낮음';
+    const getLevel = (score: number, dimension: keyof typeof scores): TCILevel => {
       // 각 차원별 점수 범위에 따라 레벨 판정
       // 3문항 기준: 최대 +6, 최소 -3 (또는 -6)
       if (dimension === 'NS' || dimension === 'PS' || dimension === 'SD' || dimension === 'CO') {
@@ -260,13 +272,13 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
     // 각 차원별 결과 계산
     const getDimensionResult = (
-      dimension: keyof typeof results.value,
+      dimension: keyof typeof resultsData.value,
       leftKey: keyof typeof scores,
       rightKey: keyof typeof scores
     ) => {
       const leftScore = scores[leftKey];
       const rightScore = scores[rightKey];
-      const dimData = results.value[dimension] as Record<string, { label: string; description: string }>;
+      const dimData = resultsData.value[dimension] as Record<string, { label: string; description: string }>;
 
       let dominant: string;
       if (leftScore > rightScore) {
@@ -309,6 +321,8 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         calculateValue,
         setSessionId,
         setSavedResult,
+        locale,
+        questions,
       }}
     >
       {children}

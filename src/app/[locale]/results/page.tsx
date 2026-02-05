@@ -2,7 +2,8 @@
 
 import { Suspense, useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import {
   getPublicResults,
   getSharedResultById,
@@ -11,6 +12,7 @@ import {
   updateSharedResult,
   SharedResultPublic
 } from '@/lib/supabase';
+import { Locale } from '@/i18n/config';
 
 interface DisplayResult {
   id: string;
@@ -21,13 +23,17 @@ interface DisplayResult {
   imageUrl: string | null;
 }
 
-function toDisplayResult(result: SharedResultPublic): DisplayResult {
+function toDisplayResult(result: SharedResultPublic, locale: Locale): DisplayResult {
+  // 영어인 경우 영어 타이틀/설명 사용 (없으면 한국어 폴백)
+  const title = locale === 'en' && result.title_en ? result.title_en : result.title;
+  const description = locale === 'en' && result.description_en ? result.description_en : result.description;
+
   return {
     id: result.id,
     quizResultId: result.quiz_result_id,
     name: result.user_name_privacy,
-    title: result.title,
-    description: result.description,
+    title,
+    description,
     imageUrl: result.image_url,
   };
 }
@@ -35,6 +41,8 @@ function toDisplayResult(result: SharedResultPublic): DisplayResult {
 function ResultsContent() {
   const searchParams = useSearchParams();
   const highlightId = searchParams.get('id');
+  const t = useTranslations();
+  const locale = useLocale() as Locale;
   const [results, setResults] = useState<DisplayResult[]>([]);
   const [selectedResult, setSelectedResult] = useState<DisplayResult | null>(null);
   const [loading, setLoading] = useState(true);
@@ -86,7 +94,7 @@ function ResultsContent() {
       );
 
       if (updated) {
-        const newDisplayResult = toDisplayResult(updated);
+        const newDisplayResult = toDisplayResult(updated, locale);
         setSelectedResult(newDisplayResult);
         // 목록도 업데이트
         setResults((prev) =>
@@ -95,7 +103,7 @@ function ResultsContent() {
       }
     } catch (err) {
       console.error('재생성 실패:', err);
-      alert('다시 생성에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      alert(t('gallery.regenerateError'));
     } finally {
       setRegenerating(false);
     }
@@ -107,16 +115,16 @@ function ResultsContent() {
       try {
         setLoading(true);
         const data = await getPublicResults(50);
-        setResults(data.map(toDisplayResult));
+        setResults(data.map((r) => toDisplayResult(r, locale)));
       } catch (err) {
         console.error('결과 불러오기 실패:', err);
-        setError('결과를 불러오는데 실패했습니다.');
+        setError(t('gallery.loadError'));
       } finally {
         setLoading(false);
       }
     }
     fetchResults();
-  }, []);
+  }, [locale, t]);
 
   // 하이라이트된 아이템을 맨 위로 정렬
   const sortedResults = useMemo(() => {
@@ -136,12 +144,12 @@ function ResultsContent() {
         // 목록에 없으면 직접 조회
         getSharedResultById(highlightId).then((data) => {
           if (data) {
-            setSelectedResult(toDisplayResult(data));
+            setSelectedResult(toDisplayResult(data, locale));
           }
         });
       }
     }
-  }, [highlightId, results]);
+  }, [highlightId, results, locale]);
 
   if (loading) {
     return (
@@ -157,7 +165,7 @@ function ResultsContent() {
               </svg>
             </Link>
             <h1 className="text-xl font-bold text-[#191F28]">
-              다른 결과 구경하기
+              {t('gallery.title')}
             </h1>
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -197,12 +205,12 @@ function ResultsContent() {
               </svg>
             </Link>
             <h1 className="text-xl font-bold text-[#191F28]">
-              다른 결과 구경하기
+              {t('gallery.title')}
             </h1>
           </div>
           <div className="text-center py-12">
-            <p className="text-[#8B95A1]">아직 공유된 결과가 없어요.</p>
-            <p className="text-[#8B95A1] text-sm mt-2">테스트를 완료하고 첫 번째로 공유해보세요!</p>
+            <p className="text-[#8B95A1]">{t('gallery.noResults')}</p>
+            <p className="text-[#8B95A1] text-sm mt-2">{t('gallery.noResultsHint')}</p>
           </div>
         </div>
       </main>
@@ -223,7 +231,7 @@ function ResultsContent() {
             </svg>
           </Link>
           <h1 className="text-xl font-bold text-[#191F28]">
-            다른 결과 구경하기
+            {t('gallery.title')}
           </h1>
         </div>
 
@@ -233,7 +241,7 @@ function ResultsContent() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p className="text-xs text-[#8B95A1] leading-relaxed">
-            이 테스트는 재미를 위한 콘텐츠예요. AI의 분석 결과는 참고용이며, 실제 성격이나 특성을 정확하게 반영하지 않을 수 있어요.
+            {t('gallery.disclaimer')}
           </p>
         </div>
 
@@ -296,7 +304,7 @@ function ResultsContent() {
 
             {/* 콘텐츠 */}
             <div className="p-5">
-              <p className="text-sm text-[#8B95A1] mb-1">{selectedResult.name}님의 결과</p>
+              <p className="text-sm text-[#8B95A1] mb-1">{t('gallery.resultOf', { name: selectedResult.name })}</p>
               <h3 className="text-lg font-bold text-[#191F28] mb-3">{selectedResult.title}</h3>
               <p className="text-[#4E5968] leading-relaxed text-sm">{selectedResult.description}</p>
 
@@ -306,7 +314,7 @@ function ResultsContent() {
                   onClick={() => setSelectedResult(null)}
                   className="flex-1 py-3 rounded-xl font-semibold text-[#4E5968] bg-[#F4F4F4] hover:bg-[#E5E8EB] transition-colors"
                 >
-                  닫기
+                  {t('common.close')}
                 </button>
                 <button
                   onClick={handleRegenerate}
@@ -323,14 +331,14 @@ function ResultsContent() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      생성 중...
+                      {t('gallery.generating')}
                     </>
                   ) : (
                     <>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                       </svg>
-                      다시 생성
+                      {t('gallery.regenerate')}
                     </>
                   )}
                 </button>
@@ -344,6 +352,8 @@ function ResultsContent() {
 }
 
 function ResultsLoading() {
+  const t = useTranslations();
+
   return (
     <main className="min-h-screen px-4 py-8">
       <div className="max-w-lg mx-auto">
@@ -357,7 +367,7 @@ function ResultsLoading() {
             </svg>
           </Link>
           <h1 className="text-xl font-bold text-[#191F28]">
-            다른 결과 구경하기
+            {t('gallery.title')}
           </h1>
         </div>
         <div className="grid grid-cols-2 gap-3">

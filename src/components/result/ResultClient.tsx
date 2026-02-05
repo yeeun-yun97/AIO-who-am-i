@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState, useMemo, useRef } from 'react';
-import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { useQuiz } from '@/contexts/QuizContext';
-import { MBTIResult, TCIResult, ValueResult, MBTI_DIMENSIONS, TCI_DIMENSIONS } from '@/types/quiz';
+import { MBTIResult, TCIResult, ValueResult, TCI_DIMENSIONS } from '@/types/quiz';
 import { calculateSaju, SajuResult } from '@/lib/saju';
 import { saveQuizResult, saveSharedResult, generateAIAnalysis, AIAnalysisResponse, SharedResult } from '@/lib/supabase';
 import { maskName } from '@/lib/utils';
@@ -15,7 +16,9 @@ import ZodiacCard from '@/components/result/ZodiacCard';
 import StarSignCard from '@/components/result/StarSignCard';
 import ValueCard from '@/components/result/ValueCard';
 import results from '@/data/results.json';
+import resultsEn from '@/data/results-en.json';
 import MBTIScore from '@/components/result/MBTIScore';
+import { Locale } from '@/i18n/config';
 
 interface ResultClientProps {
   sharedResult?: SharedResult | null;
@@ -23,6 +26,10 @@ interface ResultClientProps {
 }
 
 export default function ResultClient({ sharedResult, sharedSessionId }: ResultClientProps) {
+  const t = useTranslations();
+  const locale = useLocale() as Locale;
+  const resultsData = locale === 'en' ? resultsEn : results;
+
   const { calculateMBTI, calculateTCI, calculateValue, reset, state } = useQuiz();
   const [mbtiResult, setMbtiResult] = useState<MBTIResult | null>(null);
   const [tciResult, setTciResult] = useState<TCIResult | null>(null);
@@ -183,9 +190,9 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
             setAiLoading(false);
 
             // 공유 결과 저장 (AI 분석 결과 포함)
-            const title = analysis?.title_ko || '풍부한 감성과 깊은 사고력의 소유자!';
+            const title = analysis?.title_ko || t('result.defaultTitle');
             const description = analysis?.description_ko ||
-              `${userName}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다. 새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게 여러 각도에서 검토하는 성향을 보입니다.`;
+              t('result.defaultDescription', { name: userName });
 
             const sharedResult = await saveSharedResult(
               quizResult.id,
@@ -207,21 +214,21 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
           });
       }
     }
-  }, [state.answers, state.savedResult, state.sessionId, state.userInfo, calculateMBTI, calculateTCI, calculateValue, isSharedView, sharedResult]);
+  }, [state.answers, state.savedResult, state.sessionId, state.userInfo, calculateMBTI, calculateTCI, calculateValue, isSharedView, sharedResult, t]);
 
   // 공유하기 버튼 핸들러
   const handleShare = async () => {
     const idForShare = sharedResultId || sessionIdForShare;
     if (!idForShare) return;
 
-    const shareUrl = `${window.location.origin}/results?id=${idForShare}`;
+    const shareUrl = `${window.location.origin}/${locale}/results?id=${idForShare}`;
 
     // Web Share API 지원 시 사용
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `${displayUserInfo?.name}님의 심리테스트 결과`,
-          text: mbtiResult ? `MBTI: ${mbtiResult.type}` : '심리테스트 결과를 확인해보세요!',
+          title: t('result.yourResult', { name: displayUserInfo?.name || '' }),
+          text: mbtiResult ? `MBTI: ${mbtiResult.type}` : t('common.appName'),
           url: shareUrl,
         });
         return;
@@ -249,10 +256,10 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
     return (
       <main className="min-h-screen flex items-center justify-center px-4 py-12">
         <Card className="max-w-md w-full text-center p-8">
-          <h1 className="text-xl font-bold text-[#191F28] mb-4">결과를 찾을 수 없어요</h1>
-          <p className="text-[#8B95A1] mb-8">링크가 잘못되었거나 결과가 삭제되었어요.</p>
+          <h1 className="text-xl font-bold text-[#191F28] mb-4">{t('error.notFound')}</h1>
+          <p className="text-[#8B95A1] mb-8">{t('error.notFoundDesc')}</p>
           <Link href="/" onClick={reset}>
-            <Button size="large">테스트 시작하기</Button>
+            <Button size="large">{t('common.testStart')}</Button>
           </Link>
         </Card>
       </main>
@@ -264,10 +271,10 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
     return (
       <main className="min-h-screen flex items-center justify-center px-4 py-12">
         <Card className="max-w-md w-full text-center p-8">
-          <h1 className="text-xl font-bold text-[#191F28] mb-4">아직 테스트를 완료하지 않았어요</h1>
-          <p className="text-[#8B95A1] mb-8">테스트를 먼저 진행해주세요.</p>
+          <h1 className="text-xl font-bold text-[#191F28] mb-4">{t('error.incompleteTest')}</h1>
+          <p className="text-[#8B95A1] mb-8">{t('error.incompleteTestDesc')}</p>
           <Link href="/" onClick={reset}>
-            <Button size="large">테스트 시작하기</Button>
+            <Button size="large">{t('common.testStart')}</Button>
           </Link>
         </Card>
       </main>
@@ -278,29 +285,29 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
     switch (dimension) {
       case 'IE':
         return {
-          left: 'I (내향)',
-          right: 'E (외향)',
+          left: t('mbti.dimensions.IE.I'),
+          right: t('mbti.dimensions.IE.E'),
           dominant: mbti.dimensions.IE.dominant,
           percentage: mbti.dimensions.IE.percentage,
         };
       case 'NS':
         return {
-          left: 'S (감각)',
-          right: 'N (직관)',
+          left: t('mbti.dimensions.NS.S'),
+          right: t('mbti.dimensions.NS.N'),
           dominant: mbti.dimensions.NS.dominant,
           percentage: mbti.dimensions.NS.percentage,
         };
       case 'TF':
         return {
-          left: 'F (감정)',
-          right: 'T (사고)',
+          left: t('mbti.dimensions.TF.F'),
+          right: t('mbti.dimensions.TF.T'),
           dominant: mbti.dimensions.TF.dominant,
           percentage: mbti.dimensions.TF.percentage,
         };
       case 'JP':
         return {
-          left: 'P (인식)',
-          right: 'J (판단)',
+          left: t('mbti.dimensions.JP.P'),
+          right: t('mbti.dimensions.JP.J'),
           dominant: mbti.dimensions.JP.dominant,
           percentage: mbti.dimensions.JP.percentage,
         };
@@ -308,6 +315,23 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         return { left: '', right: '', dominant: '', percentage: 50 };
     }
   };
+
+  // 언어별 AI 분석 텍스트
+  const aiTitle = locale === 'en' && aiAnalysis?.title_en
+    ? aiAnalysis.title_en
+    : aiAnalysis?.title_ko || t('result.defaultTitle');
+
+  const aiDescription = locale === 'en' && aiAnalysis?.description_en
+    ? aiAnalysis.description_en
+    : aiAnalysis?.description_ko || t('result.defaultDescription', { name: displayUserInfo?.name || '' });
+
+  // MBTI 차원 정보 (언어별)
+  const MBTI_DIMENSIONS_LOCALIZED = [
+    { id: 'IE', name: t('mbti.dimensions.IE.name') },
+    { id: 'NS', name: t('mbti.dimensions.NS.name') },
+    { id: 'TF', name: t('mbti.dimensions.TF.name') },
+    { id: 'JP', name: t('mbti.dimensions.JP.name') },
+  ];
 
   return (
     <main className="min-h-screen flex flex-col items-center px-4 py-12">
@@ -317,7 +341,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
           {displayUserInfo && (
             <h1 className="text-2xl font-bold text-[#191F28] flex items-center gap-2">
               <span className="text-[#3182F6]">✦</span>
-              {displayUserInfo.name}님의 결과
+              {t('result.yourResult', { name: displayUserInfo.name })}
             </h1>
           )}
 
@@ -331,7 +355,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
                   : 'text-[#8B95A1]'
               }`}
             >
-              분석
+              {t('result.analysis')}
               <span className={`text-[10px] px-1 py-0.5 rounded font-semibold ${
                 activeTab === 'summary'
                   ? 'bg-[#3182F6] text-white'
@@ -346,7 +370,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
                   : 'text-[#8B95A1]'
               }`}
             >
-              상세
+              {t('result.detail')}
             </button>
           </div>
         </div>
@@ -363,7 +387,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                <p className="text-[#4E5968] font-medium">AI가 분석 중이에요...</p>
+                <p className="text-[#4E5968] font-medium">{t('result.aiAnalyzing')}</p>
               </div>
 
               {/* 텍스트 스켈레톤 */}
@@ -385,7 +409,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
                 <div className="w-full aspect-[4/3] rounded-2xl mb-4 overflow-hidden">
                   <img
                     src={aiAnalysis.image_url}
-                    alt="AI 생성 이미지"
+                    alt="AI generated image"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -400,9 +424,9 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
               {/* 분석 텍스트 */}
               <div className="bg-[#FAFAFA] rounded-2xl p-5 mb-4">
                 <h3 className="text-lg font-bold text-[#191F28] mb-3">
-                  {aiAnalysis?.title_ko || '풍부한 감성과 깊은 사고력의 소유자!'}
+                  {aiTitle}
                 </h3>
-                {(aiAnalysis?.description_ko || `${displayUserInfo?.name}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다. 새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게 여러 각도에서 검토하는 성향을 보입니다.\n\n타인의 감정에 공감하는 능력이 뛰어나며, 조화로운 관계를 중시합니다. 창의적인 문제 해결 능력과 직관력이 강점이며, 의미 있는 일에 깊이 몰입할 때 가장 큰 만족감을 느낍니다.`)
+                {aiDescription
                   .split('\n\n')
                   .map((paragraph, index) => (
                     <p key={index} className={`text-[#333D4B] leading-7 text-base ${index > 0 ? 'mt-4' : ''}`}>
@@ -419,7 +443,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
               href="/results"
               className="flex-1 py-3 px-4 rounded-xl font-semibold text-[#4E5968] bg-[#F4F4F4] hover:bg-[#E5E8EB] transition-colors text-center"
             >
-              다른 결과 구경하기
+              {t('result.browseOthers')}
             </Link>
             <button
               onClick={handleShare}
@@ -435,7 +459,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  복사됨!
+                  {t('common.copied')}
                 </span>
               ) : (
                 <span className="flex items-center justify-center gap-2">
@@ -447,7 +471,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
                       d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
                     />
                   </svg>
-                  공유하기
+                  {t('common.share')}
                 </span>
               )}
             </button>
@@ -455,7 +479,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
 
           {/* 안내 문구 */}
           <p className="mt-4 text-xs text-[#B0B8C1] text-center leading-relaxed">
-            재미로 보는 테스트예요. AI 분석은 부정확할 수 있어요.
+            {t('result.disclaimer')}
           </p>
           </div>
         )}
@@ -477,13 +501,13 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
           <Card className="mb-6">
             <h2 className="text-lg font-bold text-[#191F28] mb-4">MBTI</h2>
             <p className="text-2xl font-bold text-[#3182F6] mb-3">{mbtiResult.type}</p>
-            {results.mbti[mbtiResult.type as keyof typeof results.mbti] && (
+            {resultsData.mbti[mbtiResult.type as keyof typeof resultsData.mbti] && (
               <p className="text-sm text-[#4E5968] mb-6 leading-relaxed">
-                {results.mbti[mbtiResult.type as keyof typeof results.mbti]}
+                {resultsData.mbti[mbtiResult.type as keyof typeof resultsData.mbti]}
               </p>
             )}
 
-            {MBTI_DIMENSIONS.map((dim, index) => {
+            {MBTI_DIMENSIONS_LOCALIZED.map((dim, index) => {
               const labels = getDimensionLabel(dim.id, mbtiResult);
               return (
                 <MBTIScore

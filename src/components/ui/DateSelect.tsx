@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
+import { Locale } from '@/i18n/config';
 
 interface DateSelectProps {
   value: string; // YYYY-MM-DD
@@ -9,9 +11,14 @@ interface DateSelectProps {
 }
 
 export default function DateSelect({ value, onChange, className = '' }: DateSelectProps) {
+  const t = useTranslations('dateSelect');
+  const locale = useLocale() as Locale;
   const [isOpen, setIsOpen] = useState(false);
   const [viewYear, setViewYear] = useState(1990);
   const [viewMonth, setViewMonth] = useState(1);
+
+  // 언어별 요일
+  const weekdays = t.raw('weekdays') as string[];
 
   // value가 있으면 해당 날짜로 뷰 설정
   useEffect(() => {
@@ -85,8 +92,19 @@ export default function DateSelect({ value, onChange, className = '' }: DateSele
 
   // 표시용 텍스트
   const displayText = value
-    ? value.replace(/-/g, '. ')
-    : '태어난 날을 선택하세요';
+    ? locale === 'en'
+      ? new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+      : value.replace(/-/g, '. ')
+    : t('placeholder');
+
+  // 년/월 표시 형식
+  const formatYear = (y: number) => locale === 'en' ? String(y) : `${y}${t('yearSuffix')}`;
+  const formatMonth = (m: number) => {
+    if (locale === 'en') {
+      return new Date(2000, m - 1, 1).toLocaleDateString('en-US', { month: 'long' });
+    }
+    return `${m}${t('monthSuffix')}`;
+  };
 
   return (
     <>
@@ -129,7 +147,7 @@ export default function DateSelect({ value, onChange, className = '' }: DateSele
                   className="h-10 px-3 bg-[#F4F4F4] rounded-lg text-[#191F28] font-bold text-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3182F6]"
                 >
                   {years.map((y) => (
-                    <option key={y} value={y}>{y}년</option>
+                    <option key={y} value={y}>{formatYear(y)}</option>
                   ))}
                 </select>
 
@@ -140,7 +158,7 @@ export default function DateSelect({ value, onChange, className = '' }: DateSele
                   className="h-10 px-3 bg-[#F4F4F4] rounded-lg text-[#191F28] font-bold text-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3182F6]"
                 >
                   {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                    <option key={m} value={m}>{m}월</option>
+                    <option key={m} value={m}>{formatMonth(m)}</option>
                   ))}
                 </select>
               </div>
@@ -157,7 +175,7 @@ export default function DateSelect({ value, onChange, className = '' }: DateSele
 
             {/* 요일 헤더 */}
             <div className="grid grid-cols-7 gap-1 mb-2">
-              {['일', '월', '화', '수', '목', '금', '토'].map((d, i) => (
+              {weekdays.map((d, i) => (
                 <div
                   key={d}
                   className={`h-8 flex items-center justify-center text-xs font-medium ${
