@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useQuiz } from '@/contexts/QuizContext';
 import { MBTIResult, TCIResult, ValueResult, MBTI_DIMENSIONS, TCI_DIMENSIONS } from '@/types/quiz';
 import { calculateSaju, SajuResult } from '@/lib/saju';
-import { saveQuizResult, saveSharedResult, SharedResult } from '@/lib/supabase';
+import { saveQuizResult, saveSharedResult, generateAIAnalysis, AIAnalysisResponse, SharedResult } from '@/lib/supabase';
 import { maskName } from '@/lib/utils';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -31,6 +31,8 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<'summary' | 'detail'>('summary');
   const [sharedResultId, setSharedResultId] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResponse | null>(null);
   const savedRef = useRef(false);
 
   // 공유된 결과인지 확인
@@ -129,37 +131,80 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
       // 결과 저장 (한 번만)
       if (state.sessionId && !savedRef.current) {
         savedRef.current = true;
+        setAiLoading(true);
+
         const saju = state.userInfo?.birthDate
           ? calculateSaju(state.userInfo.birthDate, null)
           : null;
 
-        saveQuizResult(
+        const userName = state.userInfo?.name || '익명';
+        const maskedName = maskName(userName);
+
+        // AI 분석과 결과 저장을 병렬로 시작
+        const aiAnalysisPromise = saju ? generateAIAnalysis({
+          userName,
+          mbti: {
+            type: mbti.type,
+            dimensions: mbti.dimensions,
+          },
+          tci: tci as unknown as Record<string, { level: string; score?: number }>,
+          saju: {
+            coloredZodiac: {
+              animal: saju.coloredZodiac.animal,
+              colorName: saju.coloredZodiac.colorName,
+              fullName: saju.coloredZodiac.fullName,
+            },
+            zodiacSign: {
+              name: saju.zodiacSign.name,
+              nameEn: saju.zodiacSign.nameEn,
+              emoji: saju.zodiacSign.emoji,
+            },
+          },
+          value: value as unknown as Record<string, { score: number; rank: number }>,
+        }).catch((err) => {
+          console.error('AI 분석 실패:', err);
+          return null;
+        }) : Promise.resolve(null);
+
+        const quizResultPromise = saveQuizResult(
           state.sessionId,
           mbti.type,
           saju as unknown as Record<string, unknown>,
           tci as unknown as Record<string, unknown>,
           value as unknown as Record<string, unknown>
-        )
-          .then((quizResult) => {
-            // 공유 결과 저장
-            const userName = state.userInfo?.name || '익명';
-            const maskedName = maskName(userName);
-            const title = '풍부한 감성과 깊은 사고력의 소유자!';
-            const description = `${userName}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다. 새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게 여러 각도에서 검토하는 성향을 보입니다.`;
+        );
 
-            return saveSharedResult(
+        Promise.all([aiAnalysisPromise, quizResultPromise])
+          .then(async ([analysis, quizResult]) => {
+            // AI 분석 결과 설정
+            if (analysis) {
+              setAiAnalysis(analysis);
+            }
+            setAiLoading(false);
+
+            // 공유 결과 저장 (AI 분석 결과 포함)
+            const title = analysis?.title_ko || '풍부한 감성과 깊은 사고력의 소유자!';
+            const description = analysis?.description_ko ||
+              `${userName}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다. 새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게 여러 각도에서 검토하는 성향을 보입니다.`;
+
+            const sharedResult = await saveSharedResult(
               quizResult.id,
               maskedName,
               title,
-              description
+              description,
+              analysis?.image_url,
+              analysis?.title_en,
+              analysis?.description_en
             );
-          })
-          .then((sharedResult) => {
+
             if (sharedResult) {
               setSharedResultId(sharedResult.id);
             }
           })
-          .catch((err) => console.error('결과 저장 실패:', err));
+          .catch((err) => {
+            console.error('결과 저장 실패:', err);
+            setAiLoading(false);
+          });
       }
     }
   }, [state.answers, state.savedResult, state.sessionId, state.userInfo, calculateMBTI, calculateTCI, calculateValue, isSharedView, sharedResult]);
@@ -309,29 +354,64 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         {/* 요약 탭 */}
         {activeTab === 'summary' && (
           <div className="mb-6">
-          {/* 이미지 - 전체 너비 */}
-          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] rounded-2xl mb-4 flex items-center justify-center">
-            <svg className="w-16 h-16 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
+          {/* 로딩 상태 */}
+          {aiLoading ? (
+            <>
+              {/* 이미지 스켈레톤 */}
+              <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] rounded-2xl mb-4 flex flex-col items-center justify-center animate-pulse">
+                <svg className="w-12 h-12 text-[#3182F6] animate-spin mb-3" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                <p className="text-[#4E5968] font-medium">AI가 분석 중이에요...</p>
+              </div>
 
-          {/* 분석 텍스트 */}
-          <div className="bg-[#FAFAFA] rounded-2xl p-5 mb-4">
-            <h3 className="text-lg font-bold text-[#191F28] mb-3">
-              풍부한 감성과 깊은 사고력의 소유자!
-            </h3>
-            <p className="text-[#333D4B] leading-7 text-base">
-              {displayUserInfo?.name}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다.
-              새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게
-              여러 각도에서 검토하는 성향을 보입니다.
-            </p>
-            <p className="text-[#333D4B] leading-7 text-base mt-4">
-              타인의 감정에 공감하는 능력이 뛰어나며, 조화로운 관계를 중시합니다.
-              창의적인 문제 해결 능력과 직관력이 강점이며, 의미 있는 일에 깊이 몰입할 때
-              가장 큰 만족감을 느낍니다.
-            </p>
-          </div>
+              {/* 텍스트 스켈레톤 */}
+              <div className="bg-[#FAFAFA] rounded-2xl p-5 mb-4">
+                <div className="h-6 bg-[#E5E8EB] rounded-lg w-3/4 mb-4 animate-pulse" />
+                <div className="space-y-3">
+                  <div className="h-4 bg-[#E5E8EB] rounded w-full animate-pulse" />
+                  <div className="h-4 bg-[#E5E8EB] rounded w-full animate-pulse" />
+                  <div className="h-4 bg-[#E5E8EB] rounded w-5/6 animate-pulse" />
+                  <div className="h-4 bg-[#E5E8EB] rounded w-full animate-pulse mt-6" />
+                  <div className="h-4 bg-[#E5E8EB] rounded w-4/5 animate-pulse" />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* 이미지 - 전체 너비 */}
+              {aiAnalysis?.image_url ? (
+                <div className="w-full aspect-[4/3] rounded-2xl mb-4 overflow-hidden">
+                  <img
+                    src={aiAnalysis.image_url}
+                    alt="AI 생성 이미지"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] rounded-2xl mb-4 flex items-center justify-center">
+                  <svg className="w-16 h-16 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              )}
+
+              {/* 분석 텍스트 */}
+              <div className="bg-[#FAFAFA] rounded-2xl p-5 mb-4">
+                <h3 className="text-lg font-bold text-[#191F28] mb-3">
+                  {aiAnalysis?.title_ko || '풍부한 감성과 깊은 사고력의 소유자!'}
+                </h3>
+                {(aiAnalysis?.description_ko || `${displayUserInfo?.name}님은 내면의 풍부한 감성과 깊은 사고력을 가진 분입니다. 새로운 아이디어와 가능성에 열려 있으면서도, 중요한 결정을 내릴 때는 신중하게 여러 각도에서 검토하는 성향을 보입니다.\n\n타인의 감정에 공감하는 능력이 뛰어나며, 조화로운 관계를 중시합니다. 창의적인 문제 해결 능력과 직관력이 강점이며, 의미 있는 일에 깊이 몰입할 때 가장 큰 만족감을 느낍니다.`)
+                  .split('\n\n')
+                  .map((paragraph, index) => (
+                    <p key={index} className={`text-[#333D4B] leading-7 text-base ${index > 0 ? 'mt-4' : ''}`}>
+                      {paragraph}
+                    </p>
+                  ))}
+              </div>
+            </>
+          )}
 
           {/* 버튼 영역 */}
           <div className="flex gap-2">
@@ -343,7 +423,12 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
             </Link>
             <button
               onClick={handleShare}
-              className="flex-1 py-3 px-4 rounded-xl font-semibold text-white bg-[#3182F6] hover:bg-[#1B64DA] transition-colors"
+              disabled={aiLoading}
+              className={`flex-1 py-3 px-4 rounded-xl font-semibold text-white transition-colors ${
+                aiLoading
+                  ? 'bg-[#B0B8C1] cursor-not-allowed'
+                  : 'bg-[#3182F6] hover:bg-[#1B64DA]'
+              }`}
             >
               {copied ? (
                 <span className="flex items-center justify-center gap-2">

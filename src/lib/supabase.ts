@@ -185,9 +185,60 @@ export interface SharedResultPublic {
   user_name_privacy: string;
   title: string;
   description: string;
+  title_en: string | null;
+  description_en: string | null;
   image_url: string | null;
   is_public: boolean;
   created_at: string;
+}
+
+// AI 분석 요청/응답 타입
+export interface AIAnalysisRequest {
+  userName: string;
+  mbti: {
+    type: string;
+    dimensions: {
+      IE: { dominant: string; percentage: number };
+      NS: { dominant: string; percentage: number };
+      TF: { dominant: string; percentage: number };
+      JP: { dominant: string; percentage: number };
+    };
+  };
+  tci: Record<string, { level: string; score?: number }>;
+  saju: {
+    coloredZodiac: { animal: string; colorName: string; fullName: string };
+    zodiacSign: { name: string; nameEn: string; emoji: string };
+  };
+  value: Record<string, { score: number; rank: number }>;
+}
+
+export interface AIAnalysisResponse {
+  title_ko: string;
+  title_en: string;
+  description_ko: string;
+  description_en: string;
+  image_url?: string;
+}
+
+// AI 분석 생성
+export async function generateAIAnalysis(data: AIAnalysisRequest): Promise<AIAnalysisResponse> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+  const response = await fetch(`${supabaseUrl}/functions/v1/generate-analysis`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error(`AI analysis failed: ${response.status}`);
+  }
+
+  return response.json();
 }
 
 // 공유 결과 저장
@@ -196,7 +247,9 @@ export async function saveSharedResult(
   userNamePrivacy: string,
   title: string,
   description: string,
-  imageUrl?: string
+  imageUrl?: string,
+  titleEn?: string,
+  descriptionEn?: string
 ): Promise<SharedResultPublic> {
   // 기존 공유 결과 확인 (quiz_result_id 기준)
   const { data: existing } = await supabase
@@ -214,6 +267,8 @@ export async function saveSharedResult(
         title,
         description,
         image_url: imageUrl || null,
+        title_en: titleEn || null,
+        description_en: descriptionEn || null,
       })
       .eq('id', existing.id)
       .select()
@@ -232,6 +287,8 @@ export async function saveSharedResult(
       title,
       description,
       image_url: imageUrl || null,
+      title_en: titleEn || null,
+      description_en: descriptionEn || null,
     })
     .select()
     .single();
@@ -259,6 +316,68 @@ export async function getSharedResultById(id: string): Promise<SharedResultPubli
     .from('shared_results')
     .select('*')
     .eq('id', id)
+    .single();
+
+  if (error) return null;
+  return data;
+}
+
+// quiz_result_id로 원본 퀴즈 결과 + 사용자 정보 조회 (재생성용)
+export interface QuizResultWithUser {
+  id: string;
+  userName: string;
+  mbtiResult: string | null;
+  sajuResult: Record<string, unknown> | null;
+  tciScores: Record<string, unknown> | null;
+  valueScores: Record<string, unknown> | null;
+}
+
+export async function getQuizResultWithUserById(quizResultId: string): Promise<QuizResultWithUser | null> {
+  const { data: result, error } = await supabase
+    .from('quiz_results')
+    .select('id, session_id, mbti_result, saju_result, tci_scores, value_scores')
+    .eq('id', quizResultId)
+    .single();
+
+  if (error || !result) return null;
+
+  // 사용자 이름 조회
+  const { data: session } = await supabase
+    .from('user_sessions')
+    .select('name')
+    .eq('id', result.session_id)
+    .single();
+
+  return {
+    id: result.id,
+    userName: session?.name || '익명',
+    mbtiResult: result.mbti_result,
+    sajuResult: result.saju_result,
+    tciScores: result.tci_scores,
+    valueScores: result.value_scores,
+  };
+}
+
+// 공유 결과 업데이트 (재생성용)
+export async function updateSharedResult(
+  sharedResultId: string,
+  title: string,
+  description: string,
+  imageUrl?: string,
+  titleEn?: string,
+  descriptionEn?: string
+): Promise<SharedResultPublic | null> {
+  const { data, error } = await supabase
+    .from('shared_results')
+    .update({
+      title,
+      description,
+      image_url: imageUrl || null,
+      title_en: titleEn || null,
+      description_en: descriptionEn || null,
+    })
+    .eq('id', sharedResultId)
+    .select()
     .single();
 
   if (error) return null;
