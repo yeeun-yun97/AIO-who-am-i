@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 import { getSharedResultById } from '@/lib/supabase';
-import { Locale } from '@/i18n/config';
+import { locales, Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import Card from '@/components/ui/Card';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 interface Props {
   params: Promise<{
@@ -14,8 +14,12 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id, locale: localeParam } = await params;
-  const result = await getSharedResultById(id);
   const locale = localeParam as Locale;
+  
+  // Enable static rendering
+  setRequestLocale(locale);
+
+  const result = await getSharedResultById(id);
 
   if (!result) {
     return {
@@ -44,12 +48,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export async function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
 export default async function ResultDetailPage({ params }: Props) {
   const { id, locale: localeParam } = await params;
+  const locale = localeParam as Locale;
+  
+  // Enable static rendering
+  setRequestLocale(locale);
+
   const result = await getSharedResultById(id);
   const t = await getTranslations('gallery');
   const commonT = await getTranslations('common');
-  const locale = localeParam as Locale;
 
   if (!result) {
     return (
