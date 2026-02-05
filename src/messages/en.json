@@ -89,11 +89,11 @@
     "unknown": "Unknown"
   },
   "zodiac": {
-    "title": "Zodiac Sign",
+    "title": "Animal Sign",
     "suffix": ""
   },
   "star": {
-    "title": "Star Sign"
+    "title": "Zodiac Sign"
   },
   "value": {
     "title": "Values"
