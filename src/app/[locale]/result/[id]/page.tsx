@@ -3,6 +3,7 @@ import { getSharedResultById } from '@/lib/supabase';
 import { locales, Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import Card from '@/components/ui/Card';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 interface Props {
@@ -86,18 +87,21 @@ export default async function ResultDetailPage({ params }: Props) {
     <main className="min-h-screen flex flex-col items-center px-4 py-12 bg-[#F9FAFB]">
       <div className="w-full max-w-lg">
         {/* 헤더 */}
-        <div className="flex items-center gap-3 mb-6">
-          <Link
-            href="/results"
-            className="flex items-center justify-center text-[#3182F6] hover:text-[#1B64DA] transition-colors"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Link>
-          <h1 className="text-xl font-bold text-[#191F28]">
-            {t('resultOf', { name: result.user_name_privacy })}
-          </h1>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/results"
+              className="flex items-center justify-center text-[#3182F6] hover:text-[#1B64DA] transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </Link>
+            <h1 className="text-xl font-bold text-[#191F28]">
+              {t('resultOf', { name: result.user_name_privacy })}
+            </h1>
+          </div>
+          <LanguageSwitcher />
         </div>
 
         {/* 안내 문구 카드 */}
