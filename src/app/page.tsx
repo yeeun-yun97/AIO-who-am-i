@@ -1,22 +1,63 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import DateSelect from '@/components/ui/DateSelect';
+import ProgressBar from '@/components/ui/ProgressBar';
+import QuestionCard from '@/components/quiz/QuestionCard';
+import ResultClient from '@/components/result/ResultClient';
 import { useQuiz } from '@/contexts/QuizContext';
 import { findOrCreateSession } from '@/lib/supabase';
+import { questions, TOTAL_QUESTIONS } from '@/data/questions';
+
+type Phase = 'intro' | 'quiz' | 'result';
 
 export default function Home() {
-  const router = useRouter();
-  const { reset, setUserInfo, setSessionId, setSavedResult } = useQuiz();
+  const {
+    reset,
+    setUserInfo,
+    setSessionId,
+    setSavedResult,
+    state,
+    selectOption,
+    nextQuestion,
+    getCurrentAnswer,
+  } = useQuiz();
 
+  const [phase, setPhase] = useState<Phase>('intro');
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const isFormValid = name.trim() !== '' && birthDate !== '';
+
+  // 퀴즈 관련 변수
+  const { currentIndex, isCompleted } = state;
+  const currentQuestion = questions[currentIndex];
+  const currentAnswer = getCurrentAnswer();
+
+  // 퀴즈 완료 시 결과 화면으로 전환
+  useEffect(() => {
+    if (isCompleted && phase === 'quiz') {
+      window.history.replaceState(null, '', '/');
+      setPhase('result');
+    }
+  }, [isCompleted, phase]);
+
+  // 퀴즈/결과 화면에서 뒤로가기 방지
+  useEffect(() => {
+    if (phase !== 'intro') {
+      const handlePopState = () => {
+        window.history.pushState(null, '', '/');
+      };
+
+      window.history.pushState(null, '', '/');
+      window.addEventListener('popstate', handlePopState);
+
+      return () => window.removeEventListener('popstate', handlePopState);
+    }
+  }, [phase]);
 
   const handleStart = async () => {
     if (!isFormValid || isLoading) return;
@@ -39,14 +80,15 @@ export default function Home() {
         birthDate,
       });
 
-      // 기존 결과가 있으면 결과 페이지로 이동
+      // 기존 결과가 있으면 결과 화면으로 이동
       if (existingResult && existingResult.mbti_result) {
         setSavedResult({
           mbti_result: existingResult.mbti_result,
           saju_result: existingResult.saju_result as Record<string, unknown>,
           tci_scores: existingResult.tci_scores as Record<string, unknown>,
+          value_scores: existingResult.value_scores as Record<string, unknown>,
         });
-        router.push('/result');
+        setPhase('result');
       } else {
         // 새로 시작
         reset();
@@ -55,7 +97,7 @@ export default function Home() {
           name: name.trim(),
           birthDate,
         });
-        router.push('/quiz');
+        setPhase('quiz');
       }
     } catch (error) {
       console.error('세션 생성 실패:', error);
@@ -65,12 +107,53 @@ export default function Home() {
         name: name.trim(),
         birthDate,
       });
-      router.push('/quiz');
+      setPhase('quiz');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleNext = () => {
+    if (currentAnswer) {
+      nextQuestion();
+    }
+  };
+
+  // 결과 화면
+  if (phase === 'result') {
+    return <ResultClient />;
+  }
+
+  // 퀴즈 화면
+  if (phase === 'quiz') {
+    if (!currentQuestion) {
+      return null;
+    }
+
+    return (
+      <main className="min-h-screen flex flex-col px-4 py-8">
+        <div className="w-full max-w-lg mx-auto mb-8">
+          <ProgressBar current={currentIndex + 1} total={TOTAL_QUESTIONS} />
+        </div>
+
+        <div className="flex-1 flex flex-col items-center justify-center">
+          <QuestionCard
+            question={currentQuestion}
+            selectedOptionKey={currentAnswer?.optionKey}
+            onSelectOption={selectOption}
+          />
+
+          <div className="w-full max-w-lg mx-auto mt-8">
+            <Button size="large" onClick={handleNext} disabled={!currentAnswer}>
+              {currentIndex === TOTAL_QUESTIONS - 1 ? '결과 보기' : '다음'}
+            </Button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // 시작 화면 (intro)
   return (
     <main className="min-h-screen flex items-center justify-center px-4 py-12">
       <Card className="max-w-md w-full p-8 md:p-12">
