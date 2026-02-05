@@ -1,7 +1,10 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useLocale, useTranslations } from 'next-intl';
+import { Locale } from '@/i18n/config';
 import results from '@/data/results.json';
+import resultsEn from '@/data/results-en.json';
 
 interface TCIEntry {
   label: string;
@@ -24,18 +27,22 @@ const LEVEL_MAP: Record<string, 'Low' | 'Medium' | 'High'> = {
   '높음': 'High',
 };
 
-// TCI 데이터에서 상세 설명 가져오기
-function getTCIDetail(dimensionId: string, level: '높음' | '중간' | '낮음') {
-  const levelKey = LEVEL_MAP[level];
-  const dimension = results.tci.find(
-    (item) => dimensionId in item
-  );
-  if (!dimension) return null;
-  const entry = (dimension as unknown as Record<string, TCIEntry>)[dimensionId];
-  return entry?.[levelKey] || null;
-}
-
 export default function TCIScore({ dimensionId, name, level, delay = 0 }: TCIScoreProps) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations('tci');
+  const resultsData = locale === 'en' ? resultsEn : results;
+  
+  // TCI 데이터에서 상세 설명 가져오기
+  const getTCIDetail = (dimensionId: string, level: '높음' | '중간' | '낮음') => {
+    const levelKey = LEVEL_MAP[level];
+    const dimension = resultsData.tci.find(
+      (item) => dimensionId in item
+    );
+    if (!dimension) return null;
+    const entry = (dimension as unknown as Record<string, TCIEntry>)[dimensionId];
+    return entry?.[levelKey] || null;
+  };
+  
   const detail = getTCIDetail(dimensionId, level);
 
   const getLevelColor = (level: string) => {
@@ -48,6 +55,19 @@ export default function TCIScore({ dimensionId, name, level, delay = 0 }: TCISco
         return 'bg-[#8B95A1] text-white';
       default:
         return 'bg-[#F4F4F4] text-[#191F28]';
+    }
+  };
+
+  const getLevelTranslation = (level: string) => {
+    switch (level) {
+      case '높음':
+        return t('levels.high');
+      case '중간':
+        return t('levels.medium');
+      case '낮음':
+        return t('levels.low');
+      default:
+        return level;
     }
   };
 
@@ -78,7 +98,7 @@ export default function TCIScore({ dimensionId, name, level, delay = 0 }: TCISco
           <span
             className={cn('text-xs font-medium px-2 py-1 rounded-md', getLevelColor(level))}
           >
-            {level}
+            {getLevelTranslation(level)}
           </span>
         </div>
       </div>

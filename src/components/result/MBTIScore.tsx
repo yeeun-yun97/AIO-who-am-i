@@ -1,7 +1,10 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useLocale } from 'next-intl';
+import { Locale } from '@/i18n/config';
 import results from '@/data/results.json';
+import resultsEn from '@/data/results-en.json';
 
 interface MBTIDimensionEntry {
   full: string;
@@ -17,13 +20,6 @@ interface MBTIScoreProps {
   delay?: number;
 }
 
-// MBTI 차원별 설명 가져오기
-function getMBTIDimensionDescription(letter: string): MBTIDimensionEntry | null {
-  const dimension = results.mbtiDimension.find((item) => letter in item);
-  if (!dimension) return null;
-  return (dimension as unknown as Record<string, MBTIDimensionEntry>)[letter] || null;
-}
-
 export default function MBTIScore({
   name,
   leftLabel,
@@ -32,6 +28,16 @@ export default function MBTIScore({
   percentage,
   delay = 0,
 }: MBTIScoreProps) {
+  const locale = useLocale() as Locale;
+  const resultsData = locale === 'en' ? resultsEn : results;
+  
+  // MBTI 차원별 설명 가져오기
+  const getMBTIDimensionDescription = (letter: string): MBTIDimensionEntry | null => {
+    const dimension = resultsData.mbtiDimension.find((item) => letter in item);
+    if (!dimension) return null;
+    return (dimension as unknown as Record<string, MBTIDimensionEntry>)[letter] || null;
+  };
+
   const isRight = ['E', 'N', 'T', 'J'].includes(dominant);
   const isMiddle = dominant === 'Ambivert' || dominant === '중간';
   const detail = !isMiddle ? getMBTIDimensionDescription(dominant) : null;

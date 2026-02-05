@@ -1,19 +1,24 @@
 'use client';
 
-import { ValueResult, VALUE_DIMENSIONS } from '@/types/quiz';
+import { ValueResult, getValueDimensions } from '@/types/quiz';
 import Card from '@/components/ui/Card';
+import { useTranslations } from 'next-intl';
 
 interface ValueCardProps {
   value: ValueResult;
 }
 
 export default function ValueCard({ value }: ValueCardProps) {
+  const t = useTranslations();
+  const tValue = useTranslations('value');
+  const valueDimensions = getValueDimensions(t);
+
   return (
     <Card className="mb-6">
-      <h2 className="text-lg font-bold text-[#191F28] mb-6">가치관</h2>
+      <h2 className="text-lg font-bold text-[#191F28] mb-6">{tValue('title')}</h2>
 
       <div className="space-y-6">
-        {VALUE_DIMENSIONS.map((dim) => {
+        {valueDimensions.map((dim) => {
           const result = value[dim.id];
           const total = result.scores.left + result.scores.right;
           const leftPercent = total > 0 ? Math.round((result.scores.left / total) * 100) : 50;

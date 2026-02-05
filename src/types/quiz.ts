@@ -132,26 +132,39 @@ export interface DimensionInfo {
   description: string;
 }
 
-export const MBTI_DIMENSIONS: DimensionInfo[] = [
-  { id: 'IE', name: '에너지 방향', description: '외향(E) vs 내향(I)' },
-  { id: 'NS', name: '인식 기능', description: '직관(N) vs 감각(S)' },
-  { id: 'TF', name: '판단 기능', description: '사고(T) vs 감정(F)' },
-  { id: 'JP', name: '생활 양식', description: '판단(J) vs 인식(P)' },
+export const getTCIDimensions = (t: any): DimensionInfo[] => [
+  { id: 'NS', name: t('tci.dimensions.NS.name'), description: t('tci.dimensions.NS.desc') },
+  { id: 'HA', name: t('tci.dimensions.HA.name'), description: t('tci.dimensions.HA.desc') },
+  { id: 'RD', name: t('tci.dimensions.RD.name'), description: t('tci.dimensions.RD.desc') },
+  { id: 'PS', name: t('tci.dimensions.PS.name'), description: t('tci.dimensions.PS.desc') },
+  { id: 'SD', name: t('tci.dimensions.SD.name'), description: t('tci.dimensions.SD.desc') },
+  { id: 'CO', name: t('tci.dimensions.CO.name'), description: t('tci.dimensions.CO.desc') },
+  { id: 'ST', name: t('tci.dimensions.ST.name'), description: t('tci.dimensions.ST.desc') },
 ];
 
-export const TCI_DIMENSIONS: DimensionInfo[] = [
-  { id: 'NS', name: '새로움 추구', description: '새로운 자극과 경험에 대한 선호도' },
-  { id: 'HA', name: '위험 회피', description: '불확실성과 위험에 대한 민감도' },
-  { id: 'RD', name: '보상 의존', description: '타인의 인정과 관계에 대한 민감도' },
-  { id: 'PS', name: '인내력', description: '목표를 향한 지속적 노력 성향' },
-  { id: 'SD', name: '자기주도성', description: '책임감과 목표지향적 자기통제' },
-  { id: 'CO', name: '협동성', description: '타인과의 협력 및 공감 능력' },
-  { id: 'ST', name: '자기초월', description: '더 넓은 관점에서 삶을 이해하려는 성향' },
-];
-
-export const VALUE_DIMENSIONS: { id: ValueDimension; name: string; left: string; right: string }[] = [
-  { id: 'Stability/Change', name: '안정 vs 변화', left: 'Stability', right: 'Change' },
-  { id: 'Relationship/Individual', name: '관계 vs 개인', left: 'Relationship', right: 'Individual' },
-  { id: 'Achievement/Balance', name: '성과 vs 균형', left: 'Achievement', right: 'Balance' },
-  { id: 'Reality/Meaning', name: '현실 vs 의미', left: 'Reality', right: 'Meaning' },
+export const getValueDimensions = (t: any): { id: ValueDimension; name: string; left: string; right: string }[] => [
+  { 
+    id: 'Stability/Change', 
+    name: t('valueDimensions.stabilityChange.name'), 
+    left: t('valueDimensions.stabilityChange.left'), 
+    right: t('valueDimensions.stabilityChange.right') 
+  },
+  { 
+    id: 'Relationship/Individual', 
+    name: t('valueDimensions.relationshipIndividual.name'), 
+    left: t('valueDimensions.relationshipIndividual.left'), 
+    right: t('valueDimensions.relationshipIndividual.right') 
+  },
+  { 
+    id: 'Achievement/Balance', 
+    name: t('valueDimensions.achievementBalance.name'), 
+    left: t('valueDimensions.achievementBalance.left'), 
+    right: t('valueDimensions.achievementBalance.right') 
+  },
+  { 
+    id: 'Reality/Meaning', 
+    name: t('valueDimensions.realityMeaning.name'), 
+    left: t('valueDimensions.realityMeaning.left'), 
+    right: t('valueDimensions.realityMeaning.right') 
+  },
 ];

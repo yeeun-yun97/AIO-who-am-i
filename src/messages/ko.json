@@ -77,5 +77,84 @@
         "J": "J (판단)"
       }
     }
+  },
+  "saju": {
+    "title": "사주 팔자",
+    "hour": "시주",
+    "day": "일주",
+    "month": "월주",
+    "year": "년주",
+    "stem": "일간",
+    "branch": "일지",
+    "unknown": "미상"
+  },
+  "zodiac": {
+    "title": "동물띠",
+    "suffix": "띠"
+  },
+  "star": {
+    "title": "별자리"
+  },
+  "value": {
+    "title": "가치관"
+  },
+  "tci": {
+    "dimensions": {
+      "NS": {
+        "name": "새로움 추구",
+        "desc": "새로운 자극과 경험에 대한 선호도"
+      },
+      "HA": {
+        "name": "위험 회피",
+        "desc": "불확실성과 위험에 대한 민감도"
+      },
+      "RD": {
+        "name": "보상 의존",
+        "desc": "타인의 인정과 관계에 대한 민감도"
+      },
+      "PS": {
+        "name": "인내력",
+        "desc": "목표를 향한 지속적 노력 성향"
+      },
+      "SD": {
+        "name": "자기주도성",
+        "desc": "책임감과 목표지향적 자기통제"
+      },
+      "CO": {
+        "name": "협동성",
+        "desc": "타인과의 협력 및 공감 능력"
+      },
+      "ST": {
+        "name": "자기초월",
+        "desc": "더 넓은 관점에서 삶을 이해하려는 성향"
+      }
+    },
+    "levels": {
+      "high": "높음",
+      "medium": "중간",
+      "low": "낮음"
+    }
+  },
+  "valueDimensions": {
+    "stabilityChange": {
+      "name": "안정 vs 변화",
+      "left": "안정",
+      "right": "변화"
+    },
+    "relationshipIndividual": {
+      "name": "관계 vs 개인",
+      "left": "관계",
+      "right": "개인"
+    },
+    "achievementBalance": {
+      "name": "성과 vs 균형",
+      "left": "성과",
+      "right": "균형"
+    },
+    "realityMeaning": {
+      "name": "현실 vs 의미",
+      "left": "현실",
+      "right": "의미"
+    }
   }
 }

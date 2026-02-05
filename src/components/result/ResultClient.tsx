@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { useQuiz } from '@/contexts/QuizContext';
-import { MBTIResult, TCIResult, ValueResult, TCI_DIMENSIONS } from '@/types/quiz';
+import { MBTIResult, TCIResult, ValueResult, getTCIDimensions } from '@/types/quiz';
 import { calculateSaju, SajuResult } from '@/lib/saju';
 import { saveQuizResult, saveSharedResult, generateAIAnalysis, AIAnalysisResponse, SharedResult } from '@/lib/supabase';
 import { maskName } from '@/lib/utils';
@@ -528,7 +528,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
         {tciResult && (
           <Card className="mb-6">
             <h2 className="text-lg font-bold text-[#191F28] mb-6">TCI</h2>
-            {TCI_DIMENSIONS.map((dim, index) => {
+            {getTCIDimensions(t).map((dim, index) => {
               const result = tciResult[dim.id as keyof TCIResult];
               return (
                 <TCIScore

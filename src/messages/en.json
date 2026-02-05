@@ -77,5 +77,84 @@
         "J": "J (Judging)"
       }
     }
+  },
+  "saju": {
+    "title": "Saju (Four Pillars)",
+    "hour": "Hour",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    "stem": "Day Stem",
+    "branch": "Day Branch",
+    "unknown": "Unknown"
+  },
+  "zodiac": {
+    "title": "Zodiac Sign",
+    "suffix": ""
+  },
+  "star": {
+    "title": "Star Sign"
+  },
+  "value": {
+    "title": "Values"
+  },
+  "tci": {
+    "dimensions": {
+      "NS": {
+        "name": "Novelty Seeking",
+        "desc": "Preference for new stimuli and experiences"
+      },
+      "HA": {
+        "name": "Harm Avoidance",
+        "desc": "Sensitivity to uncertainty and risk"
+      },
+      "RD": {
+        "name": "Reward Dependence",
+        "desc": "Sensitivity to others' recognition and relationships"
+      },
+      "PS": {
+        "name": "Persistence",
+        "desc": "Tendency for continuous effort toward goals"
+      },
+      "SD": {
+        "name": "Self-Directedness",
+        "desc": "Responsibility and goal-oriented self-control"
+      },
+      "CO": {
+        "name": "Cooperativeness",
+        "desc": "Ability to cooperate and empathize with others"
+      },
+      "ST": {
+        "name": "Self-Transcendence",
+        "desc": "Tendency to understand life from a broader perspective"
+      }
+    },
+    "levels": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    }
+  },
+  "valueDimensions": {
+    "stabilityChange": {
+      "name": "Stability vs Change",
+      "left": "Stability",
+      "right": "Change"
+    },
+    "relationshipIndividual": {
+      "name": "Relationship vs Individual",
+      "left": "Relationship",
+      "right": "Individual"
+    },
+    "achievementBalance": {
+      "name": "Achievement vs Balance",
+      "left": "Achievement",
+      "right": "Balance"
+    },
+    "realityMeaning": {
+      "name": "Reality vs Meaning",
+      "left": "Reality",
+      "right": "Meaning"
+    }
   }
 }

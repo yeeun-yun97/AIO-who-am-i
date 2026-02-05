@@ -4,10 +4,12 @@
 // 천간 (天干) - 10개
 const HEAVENLY_STEMS = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
 const HEAVENLY_STEMS_HANJA = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+const HEAVENLY_STEMS_EN = ['Gap', 'Eul', 'Byeong', 'Jeong', 'Mu', 'Gi', 'Gyeong', 'Sin', 'Im', 'Gye'];
 
 // 지지 (地支) - 12개
 const EARTHLY_BRANCHES = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
 const EARTHLY_BRANCHES_HANJA = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+const EARTHLY_BRANCHES_EN = ['Ja', 'Chuk', 'In', 'Myo', 'Jin', 'Sa', 'Oh', 'Mi', 'Sin', 'Yu', 'Sul', 'Hae'];
 
 // 띠 (12지신)
 const ZODIAC_ANIMALS = ['쥐', '소', '호랑이', '토끼', '용', '뱀', '말', '양', '원숭이', '닭', '개', '돼지'];
@@ -68,6 +70,8 @@ export interface SajuPillar {
   branch: string;    // 지지
   stemHanja: string;
   branchHanja: string;
+  stemEn: string;
+  branchEn: string;
   element: string;   // 오행
 }
 
@@ -111,6 +115,8 @@ function getYearPillar(year: number): SajuPillar {
     branch: EARTHLY_BRANCHES[branchIndex >= 0 ? branchIndex : branchIndex + 12],
     stemHanja: HEAVENLY_STEMS_HANJA[stemIndex >= 0 ? stemIndex : stemIndex + 10],
     branchHanja: EARTHLY_BRANCHES_HANJA[branchIndex >= 0 ? branchIndex : branchIndex + 12],
+    stemEn: HEAVENLY_STEMS_EN[stemIndex >= 0 ? stemIndex : stemIndex + 10],
+    branchEn: EARTHLY_BRANCHES_EN[branchIndex >= 0 ? branchIndex : branchIndex + 12],
     element: FIVE_ELEMENTS[HEAVENLY_STEMS[stemIndex >= 0 ? stemIndex : stemIndex + 10]],
   };
 }
@@ -144,6 +150,8 @@ function getMonthPillar(year: number, month: number): SajuPillar {
     branch: EARTHLY_BRANCHES[monthBranchIndex],
     stemHanja: HEAVENLY_STEMS_HANJA[monthStemIndex],
     branchHanja: EARTHLY_BRANCHES_HANJA[monthBranchIndex],
+    stemEn: HEAVENLY_STEMS_EN[monthStemIndex],
+    branchEn: EARTHLY_BRANCHES_EN[monthBranchIndex],
     element: FIVE_ELEMENTS[HEAVENLY_STEMS[monthStemIndex]],
   };
 }
@@ -170,6 +178,8 @@ function getDayPillar(year: number, month: number, day: number): SajuPillar {
     branch: EARTHLY_BRANCHES[branchIndex],
     stemHanja: HEAVENLY_STEMS_HANJA[stemIndex],
     branchHanja: EARTHLY_BRANCHES_HANJA[branchIndex],
+    stemEn: HEAVENLY_STEMS_EN[stemIndex],
+    branchEn: EARTHLY_BRANCHES_EN[branchIndex],
     element: FIVE_ELEMENTS[HEAVENLY_STEMS[stemIndex]],
   };
 }
@@ -189,6 +199,8 @@ function getHourPillar(dayStem: string, hour: number): SajuPillar {
     branch: EARTHLY_BRANCHES[hourBranchIndex],
     stemHanja: HEAVENLY_STEMS_HANJA[hourStemIndex],
     branchHanja: EARTHLY_BRANCHES_HANJA[hourBranchIndex],
+    stemEn: HEAVENLY_STEMS_EN[hourStemIndex],
+    branchEn: EARTHLY_BRANCHES_EN[hourBranchIndex],
     element: FIVE_ELEMENTS[HEAVENLY_STEMS[hourStemIndex]],
   };
 }
