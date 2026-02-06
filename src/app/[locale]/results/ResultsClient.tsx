@@ -164,7 +164,7 @@ function ResultsContent() {
                   <img
                     src={result.imageUrl}
                     alt={result.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover scale-[1.2]"
                   />
                 ) : (
                   <svg className="w-8 h-8 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,7 +200,7 @@ function ResultsLoading() {
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="aspect-square rounded-xl bg-[#F4F4F4] animate-pulse"
+              className="aspect-[4/3] rounded-xl bg-[#F4F4F4] animate-pulse"
             />
           ))}
         </div>
