@@ -156,7 +156,7 @@ function ResultsContent() {
             <Link
               key={result.id}
               href={`/result/${result.id}`}
-              className="group relative aspect-square rounded-xl overflow-hidden text-left"
+              className="group relative aspect-[4/3] rounded-xl overflow-hidden text-left"
             >
               {/* 이미지 배경 */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] flex items-center justify-center">
