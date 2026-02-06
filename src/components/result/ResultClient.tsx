@@ -18,6 +18,7 @@ import ValueCard from '@/components/result/ValueCard';
 import results from '@/data/results.json';
 import resultsEn from '@/data/results-en.json';
 import MBTIScore from '@/components/result/MBTIScore';
+import DetailPageHeader from '@/components/ui/DetailPageHeader';
 import { Locale } from '@/i18n/config';
 
 interface ResultClientProps {
@@ -337,47 +338,25 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
     <main className="min-h-screen flex flex-col items-center px-4 py-12">
       <div className="w-full max-w-lg">
         {/* 헤더 + 탭 */}
-        <div className="flex items-center justify-between mb-6">
-          {displayUserInfo && (
-            <h1 className="text-2xl font-bold text-[#191F28] flex items-center gap-2">
-              <span className="text-[#3182F6]">✦</span>
-              {t('result.yourResult', { name: displayUserInfo.name })}
-            </h1>
-          )}
-
-          {/* 탭 - iOS 스타일 세그먼트 컨트롤 */}
-          <div className="inline-flex bg-[#F2F2F7] p-1 rounded-lg">
-            <button
-              onClick={() => handleTabChange('summary')}
-              className={`relative py-1.5 px-3 text-sm font-medium rounded-md transition-all flex items-center gap-1 ${
-                activeTab === 'summary'
-                  ? 'text-[#191F28] bg-white shadow-sm'
-                  : 'text-[#8B95A1]'
-              }`}
-            >
-              {t('result.analysis')}
-              <span className={`text-[10px] px-1 py-0.5 rounded font-semibold ${
-                activeTab === 'summary'
-                  ? 'bg-[#3182F6] text-white'
-                  : 'bg-[#B0B8C1] text-white'
-              }`}>AI</span>
-              {/* 알림 배지 - AI 완료되었고 아직 안 본 경우 */}
-              {!aiLoading && aiAnalysis && !hasSeenAiAnalysis && (
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#FF3B30] rounded-full animate-pulse" />
-              )}
-            </button>
-            <button
-              onClick={() => handleTabChange('detail')}
-              className={`py-1.5 px-3 text-sm font-medium rounded-md transition-all ${
-                activeTab === 'detail'
-                  ? 'text-[#191F28] bg-white shadow-sm'
-                  : 'text-[#8B95A1]'
-              }`}
-            >
-              {t('result.detail')}
-            </button>
-          </div>
-        </div>
+        {displayUserInfo && (
+          <DetailPageHeader
+            title={t('result.yourResult', { name: displayUserInfo.name })}
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            tabs={[
+              {
+                id: 'summary',
+                label: t('result.analysis'),
+                badgeLabel: 'AI',
+                showBadge: !aiLoading && !!aiAnalysis && !hasSeenAiAnalysis,
+              },
+              {
+                id: 'detail',
+                label: t('result.detail'),
+              },
+            ]}
+          />
+        )}
 
         {/* 요약 탭 */}
         {activeTab === 'summary' && (

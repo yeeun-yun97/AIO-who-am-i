@@ -80,11 +80,11 @@ function ResultsContent() {
               {t('gallery.title')}
             </h1>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            {[...Array(6)].map((_, i) => (
+          <div className="grid grid-cols-3 gap-2">
+            {[...Array(9)].map((_, i) => (
               <div
                 key={i}
-                className="aspect-[4/3] rounded-2xl bg-[#F4F4F4] animate-pulse"
+                className="aspect-square rounded-xl bg-[#F4F4F4] animate-pulse"
               />
             ))}
           </div>
@@ -161,12 +161,12 @@ function ResultsContent() {
         </div>
 
         {/* 그리드 */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-2">
           {sortedResults.map((result) => (
             <Link
               key={result.id}
               href={`/result/${result.id}`}
-              className="group relative aspect-[4/3] rounded-2xl overflow-hidden text-left"
+              className="group relative aspect-square rounded-xl overflow-hidden text-left"
             >
               {/* 이미지 배경 */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] flex items-center justify-center">
@@ -177,15 +177,15 @@ function ResultsContent() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <svg className="w-12 h-12 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 )}
               </div>
               {/* 호버 오버레이 */}
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white">
-                <p className="text-base font-bold">{result.name}</p>
-                <p className="text-sm text-white/80">{result.title}</p>
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-2 text-center">
+                <p className="text-xs font-bold truncate w-full">{result.name}</p>
+                <p className="text-[10px] text-white/80 line-clamp-2">{result.title}</p>
               </div>
             </Link>
           ))}
