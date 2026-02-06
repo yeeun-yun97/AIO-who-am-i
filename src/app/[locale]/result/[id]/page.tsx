@@ -111,7 +111,7 @@ export default async function ResultDetailPage({ params }: Props) {
               <img
                 src={result.image_url}
                 alt={title}
-                className="w-full h-full object-cover scale-[1.2]"
+                className="w-full h-full object-cover"
               />
             ) : (
               <svg className="w-16 h-16 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
