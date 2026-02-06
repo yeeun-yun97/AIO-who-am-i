@@ -140,27 +140,55 @@ export default function DateSelect({ value, onChange, className = '' }: DateSele
               </button>
 
               <div className="flex items-center gap-2">
-                {/* 년도 선택 */}
-                <select
-                  value={viewYear}
-                  onChange={(e) => setViewYear(Number(e.target.value))}
-                  className="h-10 px-3 bg-[#F4F4F4] rounded-lg text-[#191F28] font-bold text-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3182F6]"
-                >
-                  {years.map((y) => (
-                    <option key={y} value={y}>{formatYear(y)}</option>
-                  ))}
-                </select>
+                {locale === 'en' ? (
+                  <>
+                    {/* 월 선택 */}
+                    <select
+                      value={viewMonth}
+                      onChange={(e) => setViewMonth(Number(e.target.value))}
+                      className="h-10 px-3 bg-[#F4F4F4] rounded-lg text-[#191F28] font-bold text-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3182F6] text-center"
+                    >
+                      {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                        <option key={m} value={m}>{formatMonth(m)}</option>
+                      ))}
+                    </select>
 
-                {/* 월 선택 */}
-                <select
-                  value={viewMonth}
-                  onChange={(e) => setViewMonth(Number(e.target.value))}
-                  className="h-10 px-3 bg-[#F4F4F4] rounded-lg text-[#191F28] font-bold text-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3182F6]"
-                >
-                  {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                    <option key={m} value={m}>{formatMonth(m)}</option>
-                  ))}
-                </select>
+                    {/* 년도 선택 */}
+                    <select
+                      value={viewYear}
+                      onChange={(e) => setViewYear(Number(e.target.value))}
+                      className="h-10 px-3 bg-[#F4F4F4] rounded-lg text-[#191F28] font-bold text-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3182F6] text-center"
+                    >
+                      {years.map((y) => (
+                        <option key={y} value={y}>{formatYear(y)}</option>
+                      ))}
+                    </select>
+                  </>
+                ) : (
+                  <>
+                    {/* 년도 선택 */}
+                    <select
+                      value={viewYear}
+                      onChange={(e) => setViewYear(Number(e.target.value))}
+                      className="h-10 px-3 bg-[#F4F4F4] rounded-lg text-[#191F28] font-bold text-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3182F6] text-center"
+                    >
+                      {years.map((y) => (
+                        <option key={y} value={y}>{formatYear(y)}</option>
+                      ))}
+                    </select>
+
+                    {/* 월 선택 */}
+                    <select
+                      value={viewMonth}
+                      onChange={(e) => setViewMonth(Number(e.target.value))}
+                      className="h-10 px-3 bg-[#F4F4F4] rounded-lg text-[#191F28] font-bold text-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3182F6] text-center"
+                    >
+                      {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                        <option key={m} value={m}>{formatMonth(m)}</option>
+                      ))}
+                    </select>
+                  </>
+                )}
               </div>
 
               <button
