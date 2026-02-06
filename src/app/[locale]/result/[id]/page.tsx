@@ -106,12 +106,12 @@ export default async function ResultDetailPage({ params }: Props) {
 
         <Card className="overflow-hidden p-0 border-none shadow-sm rounded-2xl !p-0">
           {/* 이미지 - 전체 너비 및 상단 여백 제거 */}
-          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] flex items-center justify-center">
+          <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] flex items-center justify-center overflow-hidden relative">
             {result.image_url ? (
               <img
                 src={result.image_url}
                 alt={title}
-                className="w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover scale-[1.2] origin-center"
               />
             ) : (
               <svg className="w-16 h-16 text-[#B0B8C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

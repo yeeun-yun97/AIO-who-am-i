@@ -389,11 +389,11 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
             <>
               {/* 이미지 - 전체 너비 */}
               {aiAnalysis?.image_url ? (
-                <div className="w-full aspect-[4/3] rounded-2xl mb-4 overflow-hidden">
+                <div className="w-full aspect-[4/3] rounded-2xl mb-4 overflow-hidden relative">
                   <img
                     src={aiAnalysis.image_url}
                     alt="AI generated image"
-                    className="w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover scale-[1.2] origin-center"
                   />
                 </div>
               ) : (
