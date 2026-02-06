@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import DetailPageHeader from '@/components/ui/DetailPageHeader';
 import {
   getPublicResults,
   SharedResultPublic
@@ -173,8 +174,8 @@ function ResultsContent() {
               </div>
               {/* 호버 오버레이 */}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-2 text-center">
-                <p className="text-xs font-bold truncate w-full">{result.name}</p>
-                <p className="text-[10px] text-white/80 line-clamp-2">{result.title}</p>
+                <p className="text-xs font-bold truncate w-full mb-0.5">{result.title}</p>
+                <p className="text-[10px] text-white/80 truncate w-full">{result.name}</p>
               </div>
             </Link>
           ))}
