@@ -174,7 +174,7 @@ function ResultsContent() {
               </div>
               {/* 호버 오버레이 */}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-4 text-center">
-                <p className="text-sm font-bold truncate w-full mb-1">{result.title}</p>
+                <p className="text-sm font-bold line-clamp-3 w-full mb-1">{result.title}</p>
                 <p className="text-xs text-white/80 truncate w-full">{result.name}</p>
               </div>
             </Link>
