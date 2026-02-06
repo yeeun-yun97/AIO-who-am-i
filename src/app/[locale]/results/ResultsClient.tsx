@@ -81,8 +81,8 @@ function ResultsContent() {
               {t('gallery.title')}
             </h1>
           </div>
-          <div className="grid grid-cols-3 gap-2">
-            {[...Array(9)].map((_, i) => (
+          <div className="grid grid-cols-2 gap-3">
+            {[...Array(6)].map((_, i) => (
               <div
                 key={i}
                 className="aspect-square rounded-xl bg-[#F4F4F4] animate-pulse"
@@ -151,7 +151,7 @@ function ResultsContent() {
         </div>
 
         {/* 그리드 */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           {sortedResults.map((result) => (
             <Link
               key={result.id}
@@ -173,9 +173,9 @@ function ResultsContent() {
                 )}
               </div>
               {/* 호버 오버레이 */}
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-2 text-center">
-                <p className="text-xs font-bold truncate w-full mb-0.5">{result.title}</p>
-                <p className="text-[10px] text-white/80 truncate w-full">{result.name}</p>
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-4 text-center">
+                <p className="text-sm font-bold truncate w-full mb-1">{result.title}</p>
+                <p className="text-xs text-white/80 truncate w-full">{result.name}</p>
               </div>
             </Link>
           ))}
@@ -200,7 +200,7 @@ function ResultsLoading() {
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="aspect-[4/3] rounded-2xl bg-[#F4F4F4] animate-pulse"
+              className="aspect-square rounded-xl bg-[#F4F4F4] animate-pulse"
             />
           ))}
         </div>
