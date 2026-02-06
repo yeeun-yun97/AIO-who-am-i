@@ -1,9 +1,12 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { Link } from '@/i18n/navigation';
 
 interface DetailPageHeaderProps {
   title: ReactNode;
+  backHref?: string;
+  rightElement?: ReactNode;
   activeTab?: string;
   tabs?: {
     id: string;
@@ -16,16 +19,33 @@ interface DetailPageHeaderProps {
 
 export default function DetailPageHeader({
   title,
+  backHref,
+  rightElement,
   activeTab,
   tabs,
   onTabChange,
 }: DetailPageHeaderProps) {
   return (
     <div className="flex items-center justify-between mb-6">
-      <h1 className="text-2xl font-bold text-[#191F28] flex items-center gap-2">
-        <span className="text-[#3182F6]">✦</span>
-        {title}
-      </h1>
+      <div className="flex items-center gap-3">
+        {backHref && (
+          <Link
+            href={backHref}
+            className="flex items-center justify-center text-[#3182F6] hover:text-[#1B64DA] transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
+        )}
+        <h1 className="text-xl font-bold text-[#191F28] flex items-center gap-3">
+          {!backHref && <span className="text-[#3182F6]">✦</span>}
+          {title}
+        </h1>
+      </div>
+
+      {/* 우측 요소 (예: LanguageSwitcher) */}
+      {rightElement && <div>{rightElement}</div>}
 
       {/* 탭 - iOS 스타일 세그먼트 컨트롤 */}
       {tabs && tabs.length > 0 && (
