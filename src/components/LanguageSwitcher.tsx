@@ -25,12 +25,20 @@ export default function LanguageSwitcher() {
   const otherLocale = locales.find((l) => l !== locale) as Locale;
 
   return (
-    <button
-      onClick={() => switchLocale(otherLocale)}
-      className="px-3 py-1.5 text-sm font-medium text-[#4E5968] bg-[#F4F4F4] hover:bg-[#E5E8EB] rounded-lg transition-colors"
-      aria-label={`Switch to ${languageLabels[otherLocale]}`}
-    >
-      {languageLabels[otherLocale]}
-    </button>
+    <div className="inline-flex bg-[#F2F2F7] p-1 rounded-lg">
+      {locales.map((l) => (
+        <button
+          key={l}
+          onClick={() => switchLocale(l)}
+          className={`py-1.5 px-3 text-sm font-medium rounded-md transition-all ${
+            locale === l
+              ? 'text-[#191F28] bg-white shadow-sm'
+              : 'text-[#8B95A1]'
+          }`}
+        >
+          {languageLabels[l]}
+        </button>
+      ))}
+    </div>
   );
 }
