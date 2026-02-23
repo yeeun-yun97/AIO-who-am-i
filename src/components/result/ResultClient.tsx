@@ -144,7 +144,7 @@ export default function ResultClient({ sharedResult, sharedSessionId, sharedResu
   const showAiButton = (!aiLoading && !!aiAnalysis) || !!state.savedResult || isSharedView;
 
   return (
-    <main className="min-h-screen flex flex-col items-center px-4 py-12">
+    <main className="min-h-screen flex flex-col items-center px-4 py-6">
       <div className="w-full max-w-lg">
         {displayUserInfo && (
           <DetailPageHeader

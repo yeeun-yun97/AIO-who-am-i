@@ -66,7 +66,7 @@ function ResultsContent() {
 
   if (loading) {
     return (
-      <main className="min-h-screen px-4 py-8">
+      <main className="min-h-screen px-4 py-6">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center gap-3 mb-6">
             <Link
@@ -96,7 +96,7 @@ function ResultsContent() {
 
   if (error) {
     return (
-      <main className="min-h-screen px-4 py-8">
+      <main className="min-h-screen px-4 py-6">
         <div className="max-w-lg mx-auto text-center">
           <p className="text-[#8B95A1]">{error}</p>
         </div>
@@ -106,7 +106,7 @@ function ResultsContent() {
 
   if (results.length === 0) {
     return (
-      <main className="min-h-screen px-4 py-8">
+      <main className="min-h-screen px-4 py-6">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center gap-3 mb-6">
             <Link
@@ -131,7 +131,7 @@ function ResultsContent() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-8">
+    <main className="min-h-screen px-4 py-6">
       <div className="max-w-lg mx-auto">
         {/* 헤더 */}
         <DetailPageHeader
@@ -189,7 +189,7 @@ function ResultsLoading() {
   const t = useTranslations();
 
   return (
-    <main className="min-h-screen px-4 py-8">
+    <main className="min-h-screen px-4 py-6">
       <div className="max-w-lg mx-auto">
         <DetailPageHeader
           title={t('gallery.title')}
