@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import DateSelect from '@/components/ui/DateSelect';
@@ -10,13 +10,16 @@ import QuestionCard from '@/components/quiz/QuestionCard';
 import ResultClient from '@/components/result/ResultClient';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useQuiz } from '@/contexts/QuizContext';
-import { findOrCreateSession } from '@/lib/supabase';
+import { findOrCreateSession, getSharedResultIdByQuizResultId } from '@/lib/supabase';
 import { TOTAL_QUESTIONS } from '@/data/questions';
+import { useRouter } from 'next/navigation';
 
 type Phase = 'intro' | 'quiz' | 'result';
 
 export default function HomeClient() {
   const t = useTranslations();
+  const locale = useLocale();
+  const router = useRouter();
   const {
     reset,
     setUserInfo,
@@ -84,8 +87,15 @@ export default function HomeClient() {
         birthDate,
       });
 
-      // 기존 결과가 있으면 결과 화면으로 이동
+      // 기존 결과가 있으면 결과 페이지로 이동
       if (existingResult && existingResult.mbti_result) {
+        // 이미 공유된 결과가 있으면 해당 페이지로 이동
+        const sharedId = await getSharedResultIdByQuizResultId(existingResult.id);
+        if (sharedId) {
+          router.replace(`/${locale}/result/${sharedId}`);
+          return;
+        }
+        // 공유 결과가 없으면 savedResult로 기존 방식 유지 (ResultClient에서 처리)
         setSavedResult({
           mbti_result: existingResult.mbti_result,
           saju_result: existingResult.saju_result as Record<string, unknown>,

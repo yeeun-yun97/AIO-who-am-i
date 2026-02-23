@@ -322,6 +322,18 @@ export async function getSharedResultById(id: string): Promise<SharedResultPubli
   return data;
 }
 
+// quiz_result_id로 shared_result ID 조회
+export async function getSharedResultIdByQuizResultId(quizResultId: string): Promise<string | null> {
+  const { data, error } = await supabase
+    .from('shared_results')
+    .select('id')
+    .eq('quiz_result_id', quizResultId)
+    .single();
+
+  if (error || !data) return null;
+  return data.id;
+}
+
 // quiz_result_id로 원본 퀴즈 결과 + 사용자 정보 조회 (재생성용)
 export interface QuizResultWithUser {
   id: string;
