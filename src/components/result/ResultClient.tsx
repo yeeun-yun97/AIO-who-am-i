@@ -6,6 +6,7 @@ import { useQuiz } from '@/contexts/QuizContext';
 import { SharedResult } from '@/lib/supabase';
 import DetailPageHeader from '@/components/ui/DetailPageHeader';
 import { Locale } from '@/i18n/config';
+import { useRouter } from 'next/navigation';
 
 // Hooks
 import { useResultData } from '@/hooks/useResultData';
@@ -25,6 +26,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const { reset } = useQuiz();
+  const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -56,6 +58,13 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
     isSharedView,
     hasSavedResult: !!state.savedResult,
   });
+
+  // 퀴즈 완료 후 sharedResultId가 생성되면 결과 페이지로 이동
+  useEffect(() => {
+    if (!isSharedView && sharedResultId) {
+      router.replace(`/${locale}/result/${sharedResultId}`);
+    }
+  }, [isSharedView, sharedResultId, locale, router]);
 
   useEffect(() => {
     setMounted(true);
@@ -100,6 +109,25 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
   if (!hasValidResult) {
     return <ResultErrorState type="incomplete" onReset={reset} />;
   }
+
+  // 퀴즈 완료 직후: AI 분석 중이거나 결과 페이지로 이동 대기 중
+  if (!isSharedView && !state.savedResult && (aiLoading || !sharedResultId)) {
+    return (
+      <main className="min-h-screen flex items-center justify-center px-4 py-12">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#3182F6]/10 flex items-center justify-center">
+            <svg className="w-8 h-8 text-[#3182F6] animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+          </div>
+          <p className="text-[#333D4B] font-semibold text-lg mb-2">{t('result.analyzing')}</p>
+          <p className="text-[#8B95A1] text-sm">{t('result.analyzingDesc')}</p>
+        </div>
+      </main>
+    );
+  }
+
 
   // 언어별 AI 분석 텍스트
   const aiTitle = locale === 'en' && aiAnalysis?.title_en
