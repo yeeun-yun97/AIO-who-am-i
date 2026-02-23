@@ -124,11 +124,21 @@ export default function ProfileSummaryCard({
 
                 {/* TCI 주요 기질 */}
                 {highTciItems.length > 0 && (
-                    <SummaryRow
-                        label={locale === 'en' ? 'Key Traits' : '주요 기질'}
-                        value={highTciItems.map((item) => item.name).join(', ')}
-                        valueColor="text-[#00C471]"
-                    />
+                    <div className="flex justify-between py-3 border-b border-[#F4F4F4]">
+                        <span className="text-sm font-medium text-[#8B95A1]">
+                            {locale === 'en' ? 'Key Traits' : '주요 기질'}
+                        </span>
+                        <div className="flex flex-col gap-1 items-end">
+                            {highTciItems.map((item, i) => (
+                                <span
+                                    key={i}
+                                    className="text-sm font-semibold text-[#00C471]"
+                                >
+                                    {item.name}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
                 )}
 
                 {/* 가치관 TOP 3 */}
