@@ -197,7 +197,7 @@ export function QuizProvider({ children, locale = 'ko' }: { children: ReactNode;
       return '중간';
     };
 
-    const descriptions = {
+    const descriptionsKo = {
       NS: {
         '높음': '충동적이고 새로운 자극을 선호함',
         '중간': '상황에 따라 새로움과 안정성을 균형 있게 추구함',
@@ -234,6 +234,46 @@ export function QuizProvider({ children, locale = 'ko' }: { children: ReactNode;
         '낮음': '개인적·현실적 관점에 초점을 두는 편',
       },
     };
+
+    const descriptionsEn = {
+      NS: {
+        '높음': 'Impulsive; prefers new stimulation and excitement',
+        '중간': 'Balances novelty-seeking and stability depending on the situation',
+        '낮음': 'Prefers stability and familiar routines',
+      },
+      HA: {
+        '높음': 'High anxiety sensitivity; cautious and risk-avoidant',
+        '중간': 'Balances caution and boldness depending on the situation',
+        '낮음': 'Optimistic with little fear of risk',
+      },
+      RD: {
+        '높음': 'Sensitive to others\' reactions; values emotional bonds and relationships',
+        '중간': 'Balances relational awareness and independence',
+        '낮음': 'Independent; not strongly influenced by external approval',
+      },
+      PS: {
+        '높음': 'Persistent; consistently works toward goals',
+        '중간': 'Adjusts between perseverance and flexibility as needed',
+        '낮음': 'Flexible but may find long-term persistence challenging',
+      },
+      SD: {
+        '높음': 'Strong sense of responsibility and self-discipline; goal-oriented',
+        '중간': 'Demonstrates both self-direction and adaptability depending on context',
+        '낮음': 'Sensitive to external influences; may struggle with setting direction',
+      },
+      CO: {
+        '높음': 'Highly empathetic; values cooperation and consideration for others',
+        '중간': 'Adjusts between cooperation and personal standards situationally',
+        '낮음': 'Independent; tends to prioritize personal standards',
+      },
+      ST: {
+        '높음': 'Transcends self-interest; seeks to understand life from a broad perspective',
+        '중간': 'Balances self and others according to the situation and needs',
+        '낮음': 'Focuses on a personal and practical perspective',
+      },
+    };
+
+    const descriptions = locale === 'en' ? descriptionsEn : descriptionsKo;
 
     const result: TCIResult = {
       NS: { score: scores.NS, level: getLevel(scores.NS, 'NS'), description: '' },

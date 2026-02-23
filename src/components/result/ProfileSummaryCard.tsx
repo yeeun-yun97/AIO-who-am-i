@@ -5,6 +5,8 @@ import { MBTIResult, TCIResult, ValueResult, getTCIDimensions, getValueDimension
 import { SajuResult } from '@/lib/saju';
 import Card from '@/components/ui/Card';
 import { Locale } from '@/i18n/config';
+import results from '@/data/results.json';
+import resultsEn from '@/data/results-en.json';
 
 // 동물 이모지 매핑
 const ANIMAL_EMOJI: Record<string, string> = {
@@ -40,19 +42,23 @@ export default function ProfileSummaryCard({
 
     // 가치관 TOP 3: 스코어 차이가 큰 순서로 정렬
     const valueDimensions = getValueDimensions(t);
+    const resultsData = locale === 'en' ? resultsEn : results;
     const valueSorted = valueResult
         ? valueDimensions
             .map((dim) => {
                 const result = valueResult[dim.id];
-                return { name: dim.name, label: result.label, dominant: result.dominant };
+                const dimData = (resultsData.value as Record<string, Record<string, { label: string; description: string }>>)[dim.id];
+                const localizedLabel = dimData?.[result.dominant]?.label || result.label;
+                return { name: dim.name, label: localizedLabel, dominant: result.dominant };
             })
             .slice(0, 3)
         : [];
 
     // 동물띠 표시명
+    const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
     const zodiacDisplay = sajuResult?.coloredZodiac
         ? locale === 'en'
-            ? `${sajuResult.coloredZodiac.colorName} ${sajuResult.coloredZodiac.animal}`
+            ? `${capitalize(sajuResult.coloredZodiac.colorKey)} ${capitalize(sajuResult.coloredZodiac.animalKey)}`
             : `${sajuResult.coloredZodiac.fullName}${t('zodiac.suffix')}`
         : null;
 
@@ -127,12 +133,21 @@ export default function ProfileSummaryCard({
 
                 {/* 가치관 TOP 3 */}
                 {valueSorted.length > 0 && (
-                    <SummaryRow
-                        label={locale === 'en' ? 'Values' : '가치관'}
-                        value={valueSorted.map((v) => v.label).join(' · ')}
-                        valueColor="text-[#6366F1]"
-                        isLast
-                    />
+                    <div className={`flex justify-between py-3`}>
+                        <span className="text-sm font-medium text-[#8B95A1]">
+                            {locale === 'en' ? 'Values' : '가치관'}
+                        </span>
+                        <div className="flex flex-col gap-1 items-end">
+                            {valueSorted.map((v, i) => (
+                                <span
+                                    key={i}
+                                    className="text-sm font-semibold text-[#6366F1]"
+                                >
+                                    {v.label}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
                 )}
             </div>
         </Card>

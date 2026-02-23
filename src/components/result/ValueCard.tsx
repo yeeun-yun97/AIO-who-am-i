@@ -2,7 +2,9 @@
 
 import { ValueResult, getValueDimensions } from '@/types/quiz';
 import Card from '@/components/ui/Card';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import results from '@/data/results.json';
+import resultsEn from '@/data/results-en.json';
 
 interface ValueCardProps {
   value: ValueResult;
@@ -11,7 +13,15 @@ interface ValueCardProps {
 export default function ValueCard({ value }: ValueCardProps) {
   const t = useTranslations();
   const tValue = useTranslations('value');
+  const locale = useLocale();
   const valueDimensions = getValueDimensions(t);
+  const resultsData = locale === 'en' ? resultsEn : results;
+
+  // dominant 키로 현재 로케일의 data에서 label/description 조회
+  const getLocalizedValue = (dimension: string, dominant: string) => {
+    const dimData = (resultsData.value as Record<string, Record<string, { label: string; description: string }>>)[dimension];
+    return dimData?.[dominant] ?? { label: dominant, description: '' };
+  };
 
   return (
     <Card className="mb-6">
@@ -23,6 +33,7 @@ export default function ValueCard({ value }: ValueCardProps) {
           const total = result.scores.left + result.scores.right;
           const leftPercent = total > 0 ? Math.round((result.scores.left / total) * 100) : 50;
           const rightPercent = 100 - leftPercent;
+          const localized = getLocalizedValue(dim.id, result.dominant);
 
           return (
             <div key={dim.id} className="mb-4">
@@ -30,7 +41,7 @@ export default function ValueCard({ value }: ValueCardProps) {
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-base font-semibold text-[#191F28]">{dim.name}</h3>
                 <span className="text-xs font-medium px-2 py-1 rounded-md bg-[#3182F6] text-white">
-                  {result.label}
+                  {localized.label}
                 </span>
               </div>
 
@@ -54,7 +65,7 @@ export default function ValueCard({ value }: ValueCardProps) {
 
               {/* 설명 */}
               <p className="text-sm text-[#4E5968] leading-relaxed">
-                {result.description}
+                {localized.description}
               </p>
             </div>
           );
