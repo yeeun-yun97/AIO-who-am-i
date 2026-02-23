@@ -16,6 +16,7 @@ import { useAIAnalysis } from '@/hooks/useAIAnalysis';
 import SummaryTab from './SummaryTab';
 import DetailTab from './DetailTab';
 import ResultErrorState from './ResultErrorState';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 interface ResultClientProps {
   sharedResult?: SharedResult | null;
@@ -148,22 +149,50 @@ export default function ResultClient({ sharedResult, sharedSessionId, sharedResu
         {displayUserInfo && (
           <DetailPageHeader
             title={t('result.yourResult', { name: displayUserInfo.name })}
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-            tabs={[
+            backHref="/results"
+            rightElement={<LanguageSwitcher />}
+          />
+        )}
+
+        {/* 분석/상세 탭 */}
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex bg-[#F2F2F7] p-1 rounded-lg">
+            {[
               {
-                id: 'summary',
+                id: 'summary' as const,
                 label: t('result.analysis'),
                 badgeLabel: 'AI',
                 showBadge: !aiLoading && !!aiAnalysis && !hasSeenAiAnalysis,
               },
               {
-                id: 'detail',
+                id: 'detail' as const,
                 label: t('result.detail'),
               },
-            ]}
-          />
-        )}
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id)}
+                className={`relative py-1.5 px-4 text-sm font-medium rounded-md transition-all flex items-center gap-1 ${activeTab === tab.id
+                  ? 'text-[#191F28] bg-white shadow-sm'
+                  : 'text-[#8B95A1]'
+                  }`}
+              >
+                {tab.label}
+                {'badgeLabel' in tab && tab.badgeLabel && (
+                  <span className={`text-[10px] px-1 py-0.5 rounded font-semibold ${activeTab === tab.id
+                    ? 'bg-[#3182F6] text-white'
+                    : 'bg-[#B0B8C1] text-white'
+                    }`}>
+                    {tab.badgeLabel}
+                  </span>
+                )}
+                {'showBadge' in tab && tab.showBadge && (
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#FF3B30] rounded-full animate-pulse" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {activeTab === 'summary' ? (
           <SummaryTab
