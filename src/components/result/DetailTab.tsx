@@ -9,6 +9,7 @@ import SajuCard from './SajuCard';
 import MBTICard from './MBTICard';
 import TCICard from './TCICard';
 import ValueCard from './ValueCard';
+import ProfileSummaryCard from './ProfileSummaryCard';
 
 interface DetailTabProps {
   mbtiResult: MBTIResult | null;
@@ -31,6 +32,14 @@ export default function DetailTab({
 
   return (
     <>
+      {/* 프로필 요약 */}
+      <ProfileSummaryCard
+        mbtiResult={mbtiResult}
+        tciResult={tciResult}
+        valueResult={valueResult}
+        sajuResult={sajuResult}
+      />
+
       {/* 동물띠 */}
       {sajuResult && <ZodiacCard coloredZodiac={sajuResult.coloredZodiac} />}
 
