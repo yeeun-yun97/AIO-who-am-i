@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useQuiz } from '@/contexts/QuizContext';
-import { SharedResult } from '@/lib/supabase';
+import { SharedResult, SharedResultPublic } from '@/lib/supabase';
 import DetailPageHeader from '@/components/ui/DetailPageHeader';
 import { Locale } from '@/i18n/config';
 import { useRouter } from 'next/navigation';
@@ -20,9 +20,10 @@ import ResultErrorState from './ResultErrorState';
 interface ResultClientProps {
   sharedResult?: SharedResult | null;
   sharedSessionId?: string | null;
+  sharedResultPublic?: SharedResultPublic | null;
 }
 
-export default function ResultClient({ sharedResult, sharedSessionId }: ResultClientProps) {
+export default function ResultClient({ sharedResult, sharedSessionId, sharedResultPublic }: ResultClientProps) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const { reset } = useQuiz();
@@ -57,6 +58,7 @@ export default function ResultClient({ sharedResult, sharedSessionId }: ResultCl
     sessionId: sharedSessionId || state.sessionId,
     isSharedView,
     hasSavedResult: !!state.savedResult,
+    sharedResultPublic,
   });
 
   // 퀴즈 완료 후 sharedResultId가 생성되면 결과 페이지로 이동

@@ -16,7 +16,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id, locale: localeParam } = await params;
   const locale = localeParam as Locale;
-  
+
   // Enable static rendering
   setRequestLocale(locale);
 
@@ -56,7 +56,7 @@ export async function generateStaticParams() {
 export default async function ResultDetailPage({ params }: Props) {
   const { id, locale: localeParam } = await params;
   const locale = localeParam as Locale;
-  
+
   // Enable static rendering
   setRequestLocale(locale);
 
@@ -85,19 +85,20 @@ export default async function ResultDetailPage({ params }: Props) {
   // ResultClient에 전달할 SharedResult 형태로 변환
   const sharedResultData = quizResultWithUser
     ? {
-        userName: sharedResult.user_name_privacy,
-        birthDate: '', // birthDate는 사주 계산에 사용되나, sajuResult를 직접 전달하므로 빈 값
-        mbtiResult: quizResultWithUser.mbtiResult,
-        sajuResult: quizResultWithUser.sajuResult,
-        tciScores: quizResultWithUser.tciScores,
-        valueScores: quizResultWithUser.valueScores,
-      }
+      userName: sharedResult.user_name_privacy,
+      birthDate: '', // birthDate는 사주 계산에 사용되나, sajuResult를 직접 전달하므로 빈 값
+      mbtiResult: quizResultWithUser.mbtiResult,
+      sajuResult: quizResultWithUser.sajuResult,
+      tciScores: quizResultWithUser.tciScores,
+      valueScores: quizResultWithUser.valueScores,
+    }
     : null;
 
   return (
     <ResultClient
       sharedResult={sharedResultData}
       sharedSessionId={id}
+      sharedResultPublic={sharedResult}
     />
   );
 }

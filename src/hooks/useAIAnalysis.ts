@@ -2,18 +2,19 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import { 
-  MBTIResult, 
-  TCIResult, 
-  ValueResult, 
-  UserInfo 
+import {
+  MBTIResult,
+  TCIResult,
+  ValueResult,
+  UserInfo
 } from '@/types/quiz';
 import { SajuResult } from '@/lib/saju';
-import { 
-  saveQuizResult, 
-  saveSharedResult, 
-  generateAIAnalysis, 
-  AIAnalysisResponse 
+import {
+  saveQuizResult,
+  saveSharedResult,
+  generateAIAnalysis,
+  AIAnalysisResponse,
+  SharedResultPublic
 } from '@/lib/supabase';
 import { maskName } from '@/lib/utils';
 
@@ -26,6 +27,7 @@ interface UseAIAnalysisProps {
   sessionId: string | null;
   isSharedView: boolean;
   hasSavedResult: boolean;
+  sharedResultPublic?: SharedResultPublic | null;
 }
 
 export function useAIAnalysis({
@@ -37,12 +39,26 @@ export function useAIAnalysis({
   sessionId,
   isSharedView,
   hasSavedResult,
+  sharedResultPublic,
 }: UseAIAnalysisProps) {
   const t = useTranslations();
   const [aiLoading, setAiLoading] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResponse | null>(null);
   const [sharedResultId, setSharedResultId] = useState<string | null>(null);
   const savedRef = useRef(false);
+
+  // 공유 뷰일 때 DB에 저장된 AI 분석 결과로 초기화
+  useEffect(() => {
+    if (isSharedView && sharedResultPublic) {
+      setAiAnalysis({
+        title_ko: sharedResultPublic.title,
+        title_en: sharedResultPublic.title_en || '',
+        description_ko: sharedResultPublic.description,
+        description_en: sharedResultPublic.description_en || '',
+        image_url: sharedResultPublic.image_url || undefined,
+      });
+    }
+  }, [isSharedView, sharedResultPublic]);
 
   useEffect(() => {
     if (isSharedView || hasSavedResult || !mbtiResult || !tciResult || !valueResult || !sessionId) {
@@ -120,14 +136,14 @@ export function useAIAnalysis({
         });
     }
   }, [
-    mbtiResult, 
-    tciResult, 
-    valueResult, 
-    sajuResult, 
-    userInfo, 
-    sessionId, 
-    isSharedView, 
-    hasSavedResult, 
+    mbtiResult,
+    tciResult,
+    valueResult,
+    sajuResult,
+    userInfo,
+    sessionId,
+    isSharedView,
+    hasSavedResult,
     t
   ]);
 
