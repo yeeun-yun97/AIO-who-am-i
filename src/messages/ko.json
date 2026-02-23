@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "나를 알아가는 여정",
+    "appName": "All in one: Who am I",
     "start": "시작하기",
     "next": "다음",
     "close": "닫기",
@@ -10,8 +10,8 @@
     "testStart": "테스트 시작하기"
   },
   "intro": {
-    "title": "나를 알아가는 여정",
-    "description": "45개의 질문으로 알아보는 MBTI와 기질",
+    "title": "All in one: Who am I",
+    "description": "나를 알아가는 여정 - 45개의 질문으로 알아보는 MBTI와 기질",
     "nameLabel": "이름",
     "namePlaceholder": "이름을 입력하세요",
     "birthLabel": "생년월일",

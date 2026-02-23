@@ -19,13 +19,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
 
   const titles = {
-    ko: '나를 알아가는 여정',
-    en: 'Journey of Self-Discovery',
+    ko: 'All in one: Who am I',
+    en: 'All in one: Who am I',
   };
 
   const descriptions = {
-    ko: '45개의 질문으로 알아보는 MBTI와 기질',
-    en: 'Discover your MBTI and temperament through 45 questions',
+    ko: '나를 알아가는 여정 - 45개의 질문으로 알아보는 MBTI와 기질',
+    en: 'Journey of Self-Discovery - Discover your MBTI and temperament through 45 questions',
   };
 
   return {

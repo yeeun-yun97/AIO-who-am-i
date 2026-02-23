@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Journey of Self-Discovery",
+    "appName": "All in one: Who am I",
     "start": "Start",
     "next": "Next",
     "close": "Close",
@@ -10,8 +10,8 @@
     "testStart": "Start Test"
   },
   "intro": {
-    "title": "Journey of Self-Discovery",
-    "description": "Discover your MBTI and temperament through 45 questions",
+    "title": "All in one: Who am I",
+    "description": "Journey of Self-Discovery - Discover your MBTI and temperament through 45 questions",
     "nameLabel": "Name",
     "namePlaceholder": "Enter your name",
     "birthLabel": "Birth Date",
