@@ -14,7 +14,7 @@ import { findOrCreateSession, getSharedResultIdByQuizResultId } from '@/lib/supa
 import { TOTAL_QUESTIONS } from '@/data/questions';
 import { useRouter } from 'next/navigation';
 
-type Phase = 'intro' | 'quiz' | 'result';
+type Phase = 'intro' | 'quiz';
 
 export default function HomeClient() {
   const t = useTranslations();
@@ -24,7 +24,6 @@ export default function HomeClient() {
     reset,
     setUserInfo,
     setSessionId,
-    setSavedResult,
     state,
     selectOption,
     nextQuestion,
@@ -43,14 +42,6 @@ export default function HomeClient() {
   const { currentIndex, isCompleted } = state;
   const currentQuestion = questions[currentIndex];
   const currentAnswer = getCurrentAnswer();
-
-  // 퀴즈 완료 시 결과 화면으로 전환
-  useEffect(() => {
-    if (isCompleted && phase === 'quiz') {
-      window.history.replaceState(null, '', window.location.pathname);
-      setPhase('result');
-    }
-  }, [isCompleted, phase]);
 
   // 퀴즈/결과 화면에서 뒤로가기 방지
   useEffect(() => {
@@ -89,20 +80,11 @@ export default function HomeClient() {
 
       // 기존 결과가 있으면 결과 페이지로 이동
       if (existingResult && existingResult.mbti_result) {
-        // 이미 공유된 결과가 있으면 해당 페이지로 이동
         const sharedId = await getSharedResultIdByQuizResultId(existingResult.id);
         if (sharedId) {
           router.replace(`/${locale}/result/${sharedId}`);
           return;
         }
-        // 공유 결과가 없으면 savedResult로 기존 방식 유지 (ResultClient에서 처리)
-        setSavedResult({
-          mbti_result: existingResult.mbti_result,
-          saju_result: existingResult.saju_result as Record<string, unknown>,
-          tci_scores: existingResult.tci_scores as Record<string, unknown>,
-          value_scores: existingResult.value_scores as Record<string, unknown>,
-        });
-        setPhase('result');
       } else {
         // 새로 시작
         reset();
@@ -133,8 +115,9 @@ export default function HomeClient() {
     }
   };
 
-  // 결과 화면
-  if (phase === 'result') {
+
+  // 퀴즈 완료 → ResultClient가 로딩 화면 보여주고 결과 페이지로 이동
+  if (isCompleted && phase === 'quiz') {
     return <ResultClient />;
   }
 
