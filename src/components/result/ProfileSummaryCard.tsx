@@ -86,7 +86,6 @@ export default function ProfileSummaryCard({
                 {/* 동물띠 */}
                 {zodiacDisplay && (
                     <SummaryRow
-                        emoji={animalEmoji || '🐾'}
                         label={t('zodiac.title')}
                         value={zodiacDisplay}
                     />
@@ -95,7 +94,6 @@ export default function ProfileSummaryCard({
                 {/* 별자리 */}
                 {starSignDisplay && (
                     <SummaryRow
-                        emoji={starSignEmoji || '⭐'}
                         label={t('star.title')}
                         value={starSignDisplay}
                     />
@@ -104,7 +102,6 @@ export default function ProfileSummaryCard({
                 {/* 사주 */}
                 {sajuDisplay && (
                     <SummaryRow
-                        emoji="🔮"
                         label={t('saju.title')}
                         value={sajuDisplay}
                     />
@@ -113,7 +110,6 @@ export default function ProfileSummaryCard({
                 {/* MBTI */}
                 {mbtiResult && (
                     <SummaryRow
-                        emoji="🧠"
                         label="MBTI"
                         value={mbtiResult.type}
                         valueBold
@@ -123,7 +119,6 @@ export default function ProfileSummaryCard({
                 {/* TCI 주요 기질 */}
                 {highTciItems.length > 0 && (
                     <SummaryRow
-                        emoji="🧬"
                         label={locale === 'en' ? 'Key Traits' : '주요 기질'}
                         value={highTciItems.map((item) => item.name).join(', ')}
                         valueColor="text-[#00C471]"
@@ -133,7 +128,6 @@ export default function ProfileSummaryCard({
                 {/* 가치관 TOP 3 */}
                 {valueSorted.length > 0 && (
                     <SummaryRow
-                        emoji="💎"
                         label={locale === 'en' ? 'Values' : '가치관'}
                         value={valueSorted.map((v) => v.label).join(' · ')}
                         valueColor="text-[#6366F1]"
@@ -147,14 +141,12 @@ export default function ProfileSummaryCard({
 
 // 한 줄 요약 행 컴포넌트
 function SummaryRow({
-    emoji,
     label,
     value,
     valueBold = false,
     valueColor = 'text-[#3182F6]',
     isLast = false,
 }: {
-    emoji: string;
     label: string;
     value: string;
     valueBold?: boolean;
@@ -166,10 +158,7 @@ function SummaryRow({
             className={`flex items-center justify-between py-3 ${!isLast ? 'border-b border-[#F4F4F4]' : ''
                 }`}
         >
-            <div className="flex items-center gap-2">
-                <span className="text-lg">{emoji}</span>
-                <span className="text-sm font-medium text-[#8B95A1]">{label}</span>
-            </div>
+            <span className="text-sm font-medium text-[#8B95A1]">{label}</span>
             <span
                 className={`text-sm ${valueBold ? 'font-bold' : 'font-semibold'} ${valueColor}`}
             >
