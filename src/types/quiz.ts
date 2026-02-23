@@ -65,9 +65,8 @@ export interface QuizState {
 // 저장된 퀴즈 결과
 export interface SavedQuizResult {
   mbti_result: string;
-  saju_result: Record<string, unknown>;
-  tci_scores: Record<string, unknown>;
-  value_scores?: Record<string, unknown>;
+  tci_scores: Record<string, number>;
+  value_scores?: Record<string, number>;
 }
 
 export type QuizAction =

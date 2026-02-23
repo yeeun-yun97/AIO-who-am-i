@@ -20,9 +20,8 @@ export interface QuizResult {
   id: string;
   session_id: string;
   mbti_result: string | null;
-  saju_result: Record<string, unknown> | null;
-  tci_scores: Record<string, unknown> | null;
-  value_scores: Record<string, unknown> | null;
+  tci_scores: Record<string, number> | null;
+  value_scores: Record<string, number> | null;
   created_at: string;
 }
 
@@ -80,9 +79,8 @@ export async function findOrCreateSession(
 export async function saveQuizResult(
   sessionId: string,
   mbtiResult: string,
-  sajuResult: Record<string, unknown>,
-  tciScores: Record<string, unknown>,
-  valueScores?: Record<string, unknown>
+  tciScores: Record<string, number>,
+  valueScores?: Record<string, number>
 ): Promise<QuizResult> {
   // 기존 결과가 있으면 업데이트, 없으면 생성
   const { data: existing } = await supabase
@@ -96,7 +94,6 @@ export async function saveQuizResult(
       .from('quiz_results')
       .update({
         mbti_result: mbtiResult,
-        saju_result: sajuResult,
         tci_scores: tciScores,
         value_scores: valueScores,
       })
@@ -113,7 +110,6 @@ export async function saveQuizResult(
     .insert({
       session_id: sessionId,
       mbti_result: mbtiResult,
-      saju_result: sajuResult,
       tci_scores: tciScores,
       value_scores: valueScores,
     })
@@ -142,9 +138,8 @@ export interface SharedResult {
   userName: string;
   birthDate: string;
   mbtiResult: string | null;
-  sajuResult: Record<string, unknown> | null;
-  tciScores: Record<string, unknown> | null;
-  valueScores: Record<string, unknown> | null;
+  tciScores: Record<string, number> | null;
+  valueScores: Record<string, number> | null;
 }
 
 export async function getSharedResult(sessionId: string): Promise<SharedResult | null> {
@@ -160,7 +155,7 @@ export async function getSharedResult(sessionId: string): Promise<SharedResult |
   // 결과 가져오기
   const { data: result } = await supabase
     .from('quiz_results')
-    .select('mbti_result, saju_result, tci_scores, value_scores')
+    .select('mbti_result, tci_scores, value_scores')
     .eq('session_id', sessionId)
     .order('created_at', { ascending: false })
     .limit(1)
@@ -172,7 +167,6 @@ export async function getSharedResult(sessionId: string): Promise<SharedResult |
     userName: session.name,
     birthDate: session.birth_date,
     mbtiResult: result.mbti_result,
-    sajuResult: result.saju_result,
     tciScores: result.tci_scores,
     valueScores: result.value_scores,
   };
@@ -206,7 +200,13 @@ export interface AIAnalysisRequest {
   };
   tci: Record<string, { level: string; score?: number }>;
   saju: {
-    coloredZodiac: { animal: string; colorName: string; fullName: string };
+    coloredZodiac: { 
+      animal: string; 
+      animalKey: string;
+      colorKey: string;
+      colorName: string; 
+      fullName: string 
+    };
     zodiacSign: { name: string; nameEn: string; emoji: string };
   };
   value: Record<string, { score: number; rank: number }>;
@@ -338,33 +338,33 @@ export async function getSharedResultIdByQuizResultId(quizResultId: string): Pro
 export interface QuizResultWithUser {
   id: string;
   userName: string;
+  birthDate: string;
   mbtiResult: string | null;
-  sajuResult: Record<string, unknown> | null;
-  tciScores: Record<string, unknown> | null;
-  valueScores: Record<string, unknown> | null;
+  tciScores: Record<string, number> | null;
+  valueScores: Record<string, number> | null;
 }
 
 export async function getQuizResultWithUserById(quizResultId: string): Promise<QuizResultWithUser | null> {
   const { data: result, error } = await supabase
     .from('quiz_results')
-    .select('id, session_id, mbti_result, saju_result, tci_scores, value_scores')
+    .select('id, session_id, mbti_result, tci_scores, value_scores')
     .eq('id', quizResultId)
     .single();
 
   if (error || !result) return null;
 
-  // 사용자 이름 조회
+  // 사용자 이름 및 생년월일 조회
   const { data: session } = await supabase
     .from('user_sessions')
-    .select('name')
+    .select('name, birth_date')
     .eq('id', result.session_id)
     .single();
 
   return {
     id: result.id,
     userName: session?.name || '익명',
+    birthDate: session?.birth_date || '',
     mbtiResult: result.mbti_result,
-    sajuResult: result.saju_result,
     tciScores: result.tci_scores,
     valueScores: result.value_scores,
   };

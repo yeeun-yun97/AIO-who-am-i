@@ -44,12 +44,14 @@ export default function ResultClient({ sharedResult, sharedSessionId, sharedResu
     displayUserInfo,
     isSharedView,
     state,
-  } = useResultData({ sharedResult, sharedSessionId });
+  } = useResultData({ sharedResult, sharedSessionId, locale });
 
   const {
     aiLoading,
     aiAnalysis,
     sharedResultId,
+    handleRefreshImage,
+    isRefreshing,
   } = useAIAnalysis({
     mbtiResult,
     tciResult,
@@ -202,6 +204,8 @@ export default function ResultClient({ sharedResult, sharedSessionId, sharedResu
             aiDescription={aiDescription}
             onShare={handleShare}
             copied={copied}
+            onRefreshImage={handleRefreshImage}
+            isRefreshing={isRefreshing}
           />
         ) : (
           <DetailTab

@@ -5,13 +5,16 @@ import { useQuiz } from '@/contexts/QuizContext';
 import { MBTIResult, TCIResult, ValueResult, UserInfo } from '@/types/quiz';
 import { calculateSaju, SajuResult } from '@/lib/saju';
 import { SharedResult } from '@/lib/supabase';
+import { getTCIInterpretation, getValueInterpretation } from '@/lib/quiz-utils';
+import { Locale } from '@/i18n/config';
 
 interface UseResultDataProps {
   sharedResult?: SharedResult | null;
   sharedSessionId?: string | null;
+  locale: Locale;
 }
 
-export function useResultData({ sharedResult, sharedSessionId }: UseResultDataProps) {
+export function useResultData({ sharedResult, sharedSessionId, locale }: UseResultDataProps) {
   const { calculateMBTI, calculateTCI, calculateValue, state } = useQuiz();
   const [mbtiResult, setMbtiResult] = useState<MBTIResult | null>(null);
   const [tciResult, setTciResult] = useState<TCIResult | null>(null);
@@ -20,11 +23,10 @@ export function useResultData({ sharedResult, sharedSessionId }: UseResultDataPr
   const isSharedView = !!sharedResult;
 
   const sajuResult = useMemo<SajuResult | null>(() => {
-    if (isSharedView && sharedResult?.sajuResult) {
-      return sharedResult.sajuResult as unknown as SajuResult;
-    }
-    if (state.userInfo?.birthDate) {
-      return calculateSaju(state.userInfo.birthDate, null);
+    // 공유 뷰든 아니든 birthDate가 있으면 재계산 (DB에 saju_result가 없으므로)
+    const birthDate = isSharedView ? sharedResult?.birthDate : state.userInfo?.birthDate;
+    if (birthDate) {
+      return calculateSaju(birthDate, null);
     }
     return null;
   }, [isSharedView, sharedResult, state.userInfo]);
@@ -54,18 +56,18 @@ export function useResultData({ sharedResult, sharedSessionId }: UseResultDataPr
         });
       }
       if (sharedResult.tciScores) {
-        setTciResult(sharedResult.tciScores as unknown as TCIResult);
+        setTciResult(getTCIInterpretation(sharedResult.tciScores as Record<string, number>, locale));
       }
       if (sharedResult.valueScores) {
-        setValueResult(sharedResult.valueScores as unknown as ValueResult);
+        setValueResult(getValueInterpretation(sharedResult.valueScores as Record<string, number>, locale));
       }
       return;
     }
 
     if (state.savedResult) {
       const savedMbti = state.savedResult.mbti_result;
-      const savedTci = state.savedResult.tci_scores as unknown as TCIResult;
-      const savedValue = state.savedResult.value_scores as unknown as ValueResult;
+      const savedTci = state.savedResult.tci_scores;
+      const savedValue = state.savedResult.value_scores;
 
       if (savedMbti) {
         setMbtiResult({
@@ -79,8 +81,8 @@ export function useResultData({ sharedResult, sharedSessionId }: UseResultDataPr
           },
         });
       }
-      if (savedTci) setTciResult(savedTci);
-      if (savedValue) setValueResult(savedValue);
+      if (savedTci) setTciResult(getTCIInterpretation(savedTci, locale));
+      if (savedValue) setValueResult(getValueInterpretation(savedValue, locale));
       return;
     }
 
@@ -89,7 +91,7 @@ export function useResultData({ sharedResult, sharedSessionId }: UseResultDataPr
       setTciResult(calculateTCI());
       setValueResult(calculateValue());
     }
-  }, [isSharedView, sharedResult, state.savedResult, state.answers, calculateMBTI, calculateTCI, calculateValue]);
+  }, [isSharedView, sharedResult, state.savedResult, state.answers, calculateMBTI, calculateTCI, calculateValue, locale]);
 
   return {
     mbtiResult,

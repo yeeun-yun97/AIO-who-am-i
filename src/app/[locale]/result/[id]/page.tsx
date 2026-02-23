@@ -86,9 +86,8 @@ export default async function ResultDetailPage({ params }: Props) {
   const sharedResultData = quizResultWithUser
     ? {
       userName: sharedResult.user_name_privacy,
-      birthDate: '', // birthDate는 사주 계산에 사용되나, sajuResult를 직접 전달하므로 빈 값
+      birthDate: quizResultWithUser.birthDate,
       mbtiResult: quizResultWithUser.mbtiResult,
-      sajuResult: quizResultWithUser.sajuResult,
       tciScores: quizResultWithUser.tciScores,
       valueScores: quizResultWithUser.valueScores,
     }

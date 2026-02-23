@@ -14,7 +14,8 @@ import {
   saveSharedResult,
   generateAIAnalysis,
   AIAnalysisResponse,
-  SharedResultPublic
+  SharedResultPublic,
+  updateSharedResult // 추가
 } from '@/lib/supabase';
 import { maskName } from '@/lib/utils';
 
@@ -45,7 +46,63 @@ export function useAIAnalysis({
   const [aiLoading, setAiLoading] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResponse | null>(null);
   const [sharedResultId, setSharedResultId] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const savedRef = useRef(false);
+
+  // 이미지 재생성 핸들러 (테스트용)
+  const handleRefreshImage = async () => {
+    if (!mbtiResult || !tciResult || !valueResult || !sajuResult || isRefreshing) return;
+
+    try {
+      setIsRefreshing(true);
+      const userName = userInfo?.name || '익명';
+
+      const analysis = await generateAIAnalysis({
+        userName,
+        mbti: {
+          type: mbtiResult.type,
+          dimensions: mbtiResult.dimensions,
+        },
+        tci: tciResult as unknown as Record<string, { level: string; score?: number }>,
+        saju: {
+          coloredZodiac: {
+            animal: sajuResult.coloredZodiac.animal,
+            animalKey: sajuResult.coloredZodiac.animalKey,
+            colorKey: sajuResult.coloredZodiac.colorKey,
+            colorName: sajuResult.coloredZodiac.colorName,
+            fullName: sajuResult.coloredZodiac.fullName,
+          },
+          zodiacSign: {
+            name: sajuResult.zodiacSign.name,
+            nameEn: sajuResult.zodiacSign.nameEn,
+            emoji: sajuResult.zodiacSign.emoji,
+          },
+        },
+        value: valueResult as unknown as Record<string, { score: number; rank: number }>,
+      });
+
+      if (analysis) {
+        setAiAnalysis(analysis);
+        
+        // DB 업데이트 (shared_results)
+        const currentSharedId = sharedResultId || sharedResultPublic?.id;
+        if (currentSharedId) {
+          await updateSharedResult(
+            currentSharedId,
+            analysis.title_ko,
+            analysis.description_ko,
+            analysis.image_url,
+            analysis.title_en,
+            analysis.description_en
+          );
+        }
+      }
+    } catch (err) {
+      console.error('이미지 재생성 실패:', err);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   // 공유 뷰일 때 DB에 저장된 AI 분석 결과로 초기화
   useEffect(() => {
@@ -82,6 +139,8 @@ export function useAIAnalysis({
         saju: {
           coloredZodiac: {
             animal: sajuResult.coloredZodiac.animal,
+            animalKey: sajuResult.coloredZodiac.animalKey,
+            colorKey: sajuResult.coloredZodiac.colorKey,
             colorName: sajuResult.coloredZodiac.colorName,
             fullName: sajuResult.coloredZodiac.fullName,
           },
@@ -100,9 +159,19 @@ export function useAIAnalysis({
       const quizResultPromise = saveQuizResult(
         sessionId,
         mbtiResult.type,
-        sajuResult as unknown as Record<string, unknown>,
-        tciResult as unknown as Record<string, unknown>,
-        valueResult as unknown as Record<string, unknown>
+        Object.fromEntries(
+          Object.entries(tciResult).map(([k, v]) => [k, (v as any).score])
+        ) as Record<string, number>,
+        Object.fromEntries(
+          Object.entries(valueResult).flatMap(([dim, v]) => {
+            const [left, right] = dim.split('/');
+            const scores = (v as any).scores;
+            return [
+              [left, scores.left],
+              [right, scores.right]
+            ];
+          })
+        ) as Record<string, number>
       );
 
       Promise.all([aiAnalysisPromise, quizResultPromise])
@@ -151,5 +220,7 @@ export function useAIAnalysis({
     aiLoading,
     aiAnalysis,
     sharedResultId,
+    handleRefreshImage,
+    isRefreshing,
   };
 }
