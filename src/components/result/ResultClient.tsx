@@ -50,8 +50,6 @@ export default function ResultClient({ sharedResult, sharedSessionId, sharedResu
     aiLoading,
     aiAnalysis,
     sharedResultId,
-    handleRefreshImage,
-    isRefreshing,
   } = useAIAnalysis({
     mbtiResult,
     tciResult,
@@ -204,8 +202,6 @@ export default function ResultClient({ sharedResult, sharedSessionId, sharedResu
             aiDescription={aiDescription}
             onShare={handleShare}
             copied={copied}
-            onRefreshImage={handleRefreshImage}
-            isRefreshing={isRefreshing}
           />
         ) : (
           <DetailTab

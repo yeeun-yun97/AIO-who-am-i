@@ -10,10 +10,8 @@ interface SummaryTabProps {
   aiAnalysis: AIAnalysisResponse | null;
   aiTitle: string;
   aiDescription: string;
-  onShare: () => void;
+    onShare: () => void;
   copied: boolean;
-  onRefreshImage?: () => void;
-  isRefreshing?: boolean;
 }
 
 export default function SummaryTab({
@@ -23,8 +21,6 @@ export default function SummaryTab({
   aiDescription,
   onShare,
   copied,
-  onRefreshImage,
-  isRefreshing,
 }: SummaryTabProps) {
   const t = useTranslations();
 
@@ -41,16 +37,8 @@ export default function SummaryTab({
                 <img
                   src={aiAnalysis.image_url}
                   alt="AI generated image"
-                  className={`absolute inset-0 w-full h-full object-cover scale-[1.2] origin-center transition-opacity duration-300 ${isRefreshing ? 'opacity-50' : 'opacity-100'}`}
+                  className="absolute inset-0 w-full h-full object-cover scale-[1.2] origin-center transition-opacity duration-300 opacity-100"
                 />
-                {isRefreshing && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-                    <svg className="w-10 h-10 text-white animate-spin" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                  </div>
-                )}
               </div>
             ) : (
               <div className="w-full aspect-[4/3] bg-gradient-to-br from-[#F4F4F4] to-[#E5E8EB] rounded-2xl mb-4 flex items-center justify-center">
@@ -58,20 +46,6 @@ export default function SummaryTab({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-            )}
-
-            {/* 이미지 재생성 버튼 (테스트용) */}
-            {onRefreshImage && !aiLoading && (
-              <button
-                onClick={onRefreshImage}
-                disabled={isRefreshing}
-                className="absolute top-3 right-3 p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg text-[#4E5968] hover:text-[#3182F6] transition-all hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed z-10"
-                title="이미지 다시 생성 (테스트)"
-              >
-                <svg className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              </button>
             )}
           </div>
 
