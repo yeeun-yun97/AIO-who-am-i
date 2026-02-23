@@ -32,19 +32,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = locale === 'en' && result.description_en ? result.description_en : result.description;
 
   return {
-    title: `${title} | Journey of Self-Discovery`,
+    title: `${title} | All in one: Who am I`,
     description,
     openGraph: {
-      title,
+      title: `${title} | All in one: Who am I`,
       description,
-      images: result.image_url ? [result.image_url] : [],
+      images: result.image_url ? [result.image_url] : ['/og-image.png'],
       type: 'article',
+      locale: locale === 'ko' ? 'ko_KR' : 'en_US',
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: `${title} | All in one: Who am I`,
       description,
-      images: result.image_url ? [result.image_url] : [],
+      images: result.image_url ? [result.image_url] : ['/og-image.png'],
     },
   };
 }

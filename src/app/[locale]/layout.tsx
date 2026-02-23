@@ -31,6 +31,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: titles[locale as Locale] || titles.ko,
     description: descriptions[locale as Locale] || descriptions.ko,
+    openGraph: {
+      title: titles[locale as Locale] || titles.ko,
+      description: descriptions[locale as Locale] || descriptions.ko,
+      type: 'website',
+      locale: locale === 'ko' ? 'ko_KR' : 'en_US',
+      images: [
+        {
+          url: '/og-image.png', // Make sure to add this file to public folder
+          width: 1200,
+          height: 630,
+          alt: titles[locale as Locale] || titles.ko,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: titles[locale as Locale] || titles.ko,
+      description: descriptions[locale as Locale] || descriptions.ko,
+      images: ['/og-image.png'],
+    },
   };
 }
 
