@@ -131,13 +131,12 @@ export function QuizProvider({ children, locale = 'ko' }: { children: ReactNode;
     };
 
     const middleLabel = locale === 'en' ? 'Balanced' : '중간';
-    const ambivertLabel = locale === 'en' ? 'Ambivert' : 'Ambivert';
 
     const dimensions = {
       IE: {
-        dominant: scores.E > scores.I ? 'E' : scores.I > scores.E ? 'I' : ambivertLabel,
+        dominant: scores.E > scores.I ? 'E' : scores.I > scores.E ? 'I' : middleLabel,
         percentage: getPercentage(scores.E, scores.I),
-      } as { dominant: 'E' | 'I' | 'Ambivert'; percentage: number },
+      } as { dominant: 'E' | 'I' | '중간'; percentage: number },
       NS: {
         dominant: scores.N > scores.S ? 'N' : scores.S > scores.N ? 'S' : middleLabel,
         percentage: getPercentage(scores.N, scores.S),
@@ -154,7 +153,7 @@ export function QuizProvider({ children, locale = 'ko' }: { children: ReactNode;
 
     // MBTI 타입 문자열 생성
     const type = [
-      dimensions.IE.dominant === ambivertLabel ? 'X' : dimensions.IE.dominant,
+      dimensions.IE.dominant === middleLabel ? 'X' : dimensions.IE.dominant,
       dimensions.NS.dominant === middleLabel ? 'X' : dimensions.NS.dominant,
       dimensions.TF.dominant === middleLabel ? 'X' : dimensions.TF.dominant,
       dimensions.JP.dominant === middleLabel ? 'X' : dimensions.JP.dominant,

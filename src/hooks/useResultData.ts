@@ -44,14 +44,15 @@ export function useResultData({ sharedResult, sharedSessionId, locale }: UseResu
   useEffect(() => {
     if (isSharedView && sharedResult) {
       if (sharedResult.mbtiResult) {
+        const mbti = sharedResult.mbtiResult;
         setMbtiResult({
-          type: sharedResult.mbtiResult,
+          type: mbti,
           scores: { E: 0, I: 0, N: 0, S: 0, T: 0, F: 0, J: 0, P: 0 },
           dimensions: {
-            IE: { dominant: sharedResult.mbtiResult[0] as 'E' | 'I' | 'Ambivert', percentage: 75 },
-            NS: { dominant: sharedResult.mbtiResult[1] as 'N' | 'S' | '중간', percentage: 75 },
-            TF: { dominant: sharedResult.mbtiResult[2] as 'T' | 'F' | '중간', percentage: 75 },
-            JP: { dominant: sharedResult.mbtiResult[3] as 'J' | 'P' | '중간', percentage: 75 },
+            IE: { dominant: (mbti[0] === 'X' ? '중간' : mbti[0]) as 'E' | 'I' | '중간', percentage: mbti[0] === 'X' ? 50 : 75 },
+            NS: { dominant: (mbti[1] === 'X' ? '중간' : mbti[1]) as 'N' | 'S' | '중간', percentage: mbti[1] === 'X' ? 50 : 75 },
+            TF: { dominant: (mbti[2] === 'X' ? '중간' : mbti[2]) as 'T' | 'F' | '중간', percentage: mbti[2] === 'X' ? 50 : 75 },
+            JP: { dominant: (mbti[3] === 'X' ? '중간' : mbti[3]) as 'J' | 'P' | '중간', percentage: mbti[3] === 'X' ? 50 : 75 },
           },
         });
       }
@@ -74,10 +75,10 @@ export function useResultData({ sharedResult, sharedSessionId, locale }: UseResu
           type: savedMbti,
           scores: { E: 0, I: 0, N: 0, S: 0, T: 0, F: 0, J: 0, P: 0 },
           dimensions: {
-            IE: { dominant: savedMbti[0] as 'E' | 'I' | 'Ambivert', percentage: 75 },
-            NS: { dominant: savedMbti[1] as 'N' | 'S' | '중간', percentage: 75 },
-            TF: { dominant: savedMbti[2] as 'T' | 'F' | '중간', percentage: 75 },
-            JP: { dominant: savedMbti[3] as 'J' | 'P' | '중간', percentage: 75 },
+            IE: { dominant: (savedMbti[0] === 'X' ? '중간' : savedMbti[0]) as 'E' | 'I' | '중간', percentage: savedMbti[0] === 'X' ? 50 : 75 },
+            NS: { dominant: (savedMbti[1] === 'X' ? '중간' : savedMbti[1]) as 'N' | 'S' | '중간', percentage: savedMbti[1] === 'X' ? 50 : 75 },
+            TF: { dominant: (savedMbti[2] === 'X' ? '중간' : savedMbti[2]) as 'T' | 'F' | '중간', percentage: savedMbti[2] === 'X' ? 50 : 75 },
+            JP: { dominant: (savedMbti[3] === 'X' ? '중간' : savedMbti[3]) as 'J' | 'P' | '중간', percentage: savedMbti[3] === 'X' ? 50 : 75 },
           },
         });
       }

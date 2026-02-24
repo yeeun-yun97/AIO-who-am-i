@@ -26,6 +26,10 @@
       "E": {
         "full": "Extraversion",
         "description": "You are an active person who gains life vitality through interactions with people and various external activities. You enjoy meeting new people or being in unfamiliar situations, and you experience your thoughts becoming clearer and energy surging when sharing ideas and talking with others rather than being alone. You prefer learning through the process of taking action first and experiencing things directly, and you have an outstanding ability to brighten the surrounding atmosphere by projecting your energy outward. You feel great happiness in maintaining a wide range of interpersonal relationships and actively communicating with the world."
+      },
+      "X": {
+        "full": "Balanced",
+        "description": "You flexibly balance both introverted and extraverted energy. You enjoy socializing and gain energy from being around others, but you equally value alone time to recharge. Depending on the situation, you can actively engage in communication or quietly observe and reflect, adapting naturally to any environment. Thanks to this balanced energy use, you can build deep relationships with diverse people while also cultivating a rich inner world."
       }
     },
     {
@@ -36,6 +40,10 @@
       "N": {
         "full": "Intuition",
         "description": "You are an insightful person inspired by patterns, possibilities, and future-oriented ideas beyond visible facts. Rather than getting buried in details, you strive to first grasp the overall flow and context, constantly exploring new approaches by asking 'what is possible.' With a rich imagination and intuition, you enjoy using metaphorical expressions and fully exercise your creativity in environments with change and innovation rather than repetitive routines. You pursue future visions and meaning over immediate reality and show an excellent ability to find solutions by interpreting complex problems from an original perspective."
+      },
+      "X": {
+        "full": "Balanced",
+        "description": "You have a flexible perception style that balances both intuition and sensing. You value realistic facts and data while also possessing the insight to read patterns and possibilities beyond them. Depending on the situation, you can focus on concrete details or survey the big picture, enabling you to view problems from multiple perspectives. This balanced perception ability allows you to find solutions that are both practical and creative."
       }
     },
     {
@@ -46,6 +54,10 @@
       "F": {
         "full": "Feeling",
         "description": "You are a warm person who carefully considers the feelings and values of others, placing harmony and bonds between people at the center of your judgment. Rather than logical right or wrong, you first worry about 'how this decision will affect people' and strive to choose directions where everyone can be happy through empathy and understanding appropriate to the situation. Valuing your own values and human relationships, you exhibit an excellent ability to mediate conflicts and create a cooperative atmosphere. You think based on deep affection and interest in people and have a gentle disposition with the power to move hearts through sincere encouragement and support."
+      },
+      "X": {
+        "full": "Balanced",
+        "description": "You harmoniously balance logical thinking and emotional empathy in your judgment. You take an analytical, cause-and-effect approach while also carefully considering the emotional impact decisions have on people. When cool judgment is needed, you respond rationally; when compassion is called for, you respond warmly. This balanced judgment allows you to reach conclusions that are both fair and caring, conveying trust and comfort to those around you."
       }
     },
     {
@@ -56,6 +68,10 @@
       "P": {
         "full": "Perceiving",
         "description": "You are a person who enjoys life by naturally adapting to changes in situations with a flexible and open attitude. Rather than being tied to strict plans, you prefer acting according to the flow of the moment and new possibilities, valuing the process of keeping various options open and gaining experience. You have excellent reflexes, handling sudden changes or unexpected situations nimbly without panic, and you feel joy in exploring new information due to your high curiosity. You sometimes emit creative energy amidst the urgency right before a deadline and have a charming disposition that pioneers life freely and flexibly outside of fixed frames."
+      },
+      "X": {
+        "full": "Balanced",
+        "description": "You harmoniously balance structured planning with flexible openness. When needed, you can systematically set plans and push work forward, yet you also know how to pivot direction flexibly when circumstances change. You possess both the drive to steadily pursue goals and the curiosity to stay open to new possibilities, allowing you to find the best approach in any environment. This balanced attitude lets you achieve stable results while never missing life's pleasant surprises."
       }
     }
   ],

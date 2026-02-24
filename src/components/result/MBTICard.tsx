@@ -23,11 +23,18 @@ export default function MBTICard({ mbtiResult }: MBTICardProps) {
     <Card className="mb-6">
       <h2 className="text-lg font-bold text-[#191F28] mb-4">MBTI</h2>
       <p className="text-2xl font-bold text-[#3182F6] mb-3">{mbtiResult.type}</p>
-      {resultsData.mbti[mbtiResult.type as keyof typeof resultsData.mbti] && (
-        <p className="text-sm text-[#4E5968] mb-6 leading-relaxed">
-          {resultsData.mbti[mbtiResult.type as keyof typeof resultsData.mbti]}
-        </p>
-      )}
+      {(() => {
+        // X가 포함된 타입은 기본값으로 대체하여 가장 가까운 표준 MBTI 설명 사용
+        const fallbackDefaults = ['E', 'N', 'T', 'J'];
+        const fallbackType = mbtiResult.type
+          .split('')
+          .map((char, i) => (char === 'X' ? fallbackDefaults[i] : char))
+          .join('');
+        const description = resultsData.mbti[fallbackType as keyof typeof resultsData.mbti];
+        return description ? (
+          <p className="text-sm text-[#4E5968] mb-6 leading-relaxed">{description}</p>
+        ) : null;
+      })()}
 
       {dimensions.map((dim, index) => {
         const labels = getDimensionLabel(dim.id, mbtiResult, t);
@@ -39,6 +46,7 @@ export default function MBTICard({ mbtiResult }: MBTICardProps) {
             rightLabel={labels.right}
             dominant={labels.dominant as string}
             percentage={labels.percentage}
+            dimensionIndex={index}
             delay={index * 100}
           />
         );

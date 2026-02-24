@@ -91,7 +91,7 @@ export interface MBTIResult {
     P: number;
   };
   dimensions: {
-    IE: { dominant: 'E' | 'I' | 'Ambivert'; percentage: number };
+    IE: { dominant: 'E' | 'I' | '중간'; percentage: number };
     NS: { dominant: 'N' | 'S' | '중간'; percentage: number };
     TF: { dominant: 'T' | 'F' | '중간'; percentage: number };
     JP: { dominant: 'J' | 'P' | '중간'; percentage: number };
@@ -142,28 +142,28 @@ export const getTCIDimensions = (t: any): DimensionInfo[] => [
 ];
 
 export const getValueDimensions = (t: any): { id: ValueDimension; name: string; left: string; right: string }[] => [
-  { 
-    id: 'Stability/Change', 
-    name: t('valueDimensions.stabilityChange.name'), 
-    left: t('valueDimensions.stabilityChange.left'), 
-    right: t('valueDimensions.stabilityChange.right') 
+  {
+    id: 'Stability/Change',
+    name: t('valueDimensions.stabilityChange.name'),
+    left: t('valueDimensions.stabilityChange.left'),
+    right: t('valueDimensions.stabilityChange.right')
   },
-  { 
-    id: 'Relationship/Individual', 
-    name: t('valueDimensions.relationshipIndividual.name'), 
-    left: t('valueDimensions.relationshipIndividual.left'), 
-    right: t('valueDimensions.relationshipIndividual.right') 
+  {
+    id: 'Relationship/Individual',
+    name: t('valueDimensions.relationshipIndividual.name'),
+    left: t('valueDimensions.relationshipIndividual.left'),
+    right: t('valueDimensions.relationshipIndividual.right')
   },
-  { 
-    id: 'Achievement/Balance', 
-    name: t('valueDimensions.achievementBalance.name'), 
-    left: t('valueDimensions.achievementBalance.left'), 
-    right: t('valueDimensions.achievementBalance.right') 
+  {
+    id: 'Achievement/Balance',
+    name: t('valueDimensions.achievementBalance.name'),
+    left: t('valueDimensions.achievementBalance.left'),
+    right: t('valueDimensions.achievementBalance.right')
   },
-  { 
-    id: 'Reality/Meaning', 
-    name: t('valueDimensions.realityMeaning.name'), 
-    left: t('valueDimensions.realityMeaning.left'), 
-    right: t('valueDimensions.realityMeaning.right') 
+  {
+    id: 'Reality/Meaning',
+    name: t('valueDimensions.realityMeaning.name'),
+    left: t('valueDimensions.realityMeaning.left'),
+    right: t('valueDimensions.realityMeaning.right')
   },
 ];

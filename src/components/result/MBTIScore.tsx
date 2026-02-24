@@ -17,6 +17,7 @@ interface MBTIScoreProps {
   rightLabel: string;
   dominant: string;
   percentage: number;
+  dimensionIndex: number;
   delay?: number;
 }
 
@@ -26,21 +27,27 @@ export default function MBTIScore({
   rightLabel,
   dominant,
   percentage,
+  dimensionIndex,
   delay = 0,
 }: MBTIScoreProps) {
   const locale = useLocale() as Locale;
   const resultsData = locale === 'en' ? resultsEn : results;
-  
+
   // MBTI 차원별 설명 가져오기
-  const getMBTIDimensionDescription = (letter: string): MBTIDimensionEntry | null => {
+  const getMBTIDimensionDescription = (letter: string, index?: number): MBTIDimensionEntry | null => {
+    if (index !== undefined) {
+      const dimension = resultsData.mbtiDimension[index];
+      if (!dimension) return null;
+      return (dimension as unknown as Record<string, MBTIDimensionEntry>)[letter] || null;
+    }
     const dimension = resultsData.mbtiDimension.find((item) => letter in item);
     if (!dimension) return null;
     return (dimension as unknown as Record<string, MBTIDimensionEntry>)[letter] || null;
   };
 
   const isRight = ['E', 'N', 'T', 'J'].includes(dominant);
-  const isMiddle = dominant === 'Ambivert' || dominant === '중간';
-  const detail = !isMiddle ? getMBTIDimensionDescription(dominant) : null;
+  const isMiddle = dominant === '중간' || dominant === 'X';
+  const detail = isMiddle ? getMBTIDimensionDescription('X', dimensionIndex) : getMBTIDimensionDescription(dominant);
 
   return (
     <div
@@ -54,7 +61,7 @@ export default function MBTIScore({
             <span className="text-xs text-[#4E5968]">{detail.full}</span>
           )}
           <span className={cn('text-xs font-medium px-2 py-1 rounded-md bg-[#3182F6] text-white')}>
-            {isMiddle ? dominant : `${percentage}%`}
+            {isMiddle ? '50%' : `${percentage}%`}
           </span>
         </div>
       </div>
